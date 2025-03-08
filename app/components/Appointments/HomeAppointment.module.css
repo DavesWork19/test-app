@@ -1,0 +1,15 @@
+.appointmentContainer {
+  @media (min-width: $mantine-breakpoint-xs) {
+    width: 100%;
+  }
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    width: 80%;
+  }
+}
+
+.appointmentBorder {
+  border: solid;
+  border-color: blue;
+  border-width: 5px;
+}
