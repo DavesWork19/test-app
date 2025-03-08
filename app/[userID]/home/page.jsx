@@ -1,21 +1,17 @@
-import { Footer } from '../../components/Footer';
-import { Header } from '../../components/Header';
+import { HomeAppointments } from '../../components/Appointments/HomeAppointments';
 
-export default function Home() {
+export default async function Home({ params }) {
+  const { userID } = await params;
+  const AppointmentDataResponse = await fetch(
+    `http://localhost:3000/api/${userID}/appointmentData/allAppointments`
+  );
+  const AppointmentData = await AppointmentDataResponse.json();
+
   return (
     <main>
-      <Header />
-      <div className='grid grid-cols-1 gap-4'>
-        <button className='p-8 border border-black'>
-          {'Send Generic Docs'}
-        </button>
-        <button className='p-8 border border-black'>
-          {'Send Custom Docs'}
-        </button>
+      <div className='grid grid-cols-1 place-items-center gap-4'>
+        <HomeAppointments appointments={AppointmentData} userID={userID} />
       </div>
-      <div className='p-8'></div>
-      <div className='p-8'></div>
-      <Footer />
     </main>
   );
 }
