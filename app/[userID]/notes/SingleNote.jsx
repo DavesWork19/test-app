@@ -2,7 +2,6 @@
 
 import { Input, Textarea, Grid } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import '@mantine/dates/styles.css';
 import { useState } from 'react';
 
 export const SingleNote = (props) => {
