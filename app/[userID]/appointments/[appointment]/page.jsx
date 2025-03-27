@@ -4,7 +4,7 @@ export default async function AppointmentPage({ params }) {
   const { userID, appointment } = await params;
 
   const appointmentDataResponse = await fetch(
-    `http://localhost:3000/api/${userID}/appointmentData/${appointment}`
+    `http://localhost:3000/api/${userID}/appointmentData/${appointment}/get`
   );
   const [appointmentData] = await appointmentDataResponse.json();
 
@@ -13,7 +13,11 @@ export default async function AppointmentPage({ params }) {
 
   return (
     <main>
-      <Appointments appointmentData={appointmentData} />
+      <Appointments
+        appointmentData={appointmentData}
+        userID={userID}
+        appointment={appointment}
+      />
     </main>
   );
 }
