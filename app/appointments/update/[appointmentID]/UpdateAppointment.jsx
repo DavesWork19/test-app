@@ -1,86 +1,132 @@
 'use client';
 
-import { Container, Button, Paper, Grid, Center, Text } from '@mantine/core';
-import { TextInput, NumberInput } from '@mantine/core';
-import { DateTimePicker } from '@mantine/dates';
-
-import { IconCircle, IconCircleCheck, IconCircleX } from '@tabler/icons-react';
 import {
-  appointmentStatusConversion,
-  months,
-} from '@/app/components/constants';
+  Container,
+  Button,
+  Paper,
+  Grid,
+  Center,
+  Text,
+  TextInput,
+  NumberInput,
+  NativeSelect,
+} from '@mantine/core';
+import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '../../../utils/supabase/client';
+import { IconCircleCheck, IconCircleX, IconCircle } from '@tabler/icons-react';
+import { appointmentStatusConversion } from '../../../components/constants';
 
-export const Appointments = (props) => {
-  const userID = props.userID;
-  const appointment = props.appointment;
-  const appointmentData = props.appointmentData;
-  const status = appointmentData.status;
+export const UpdateAppointment = (props) => {
   const [editButton, setEditButton] = useState(true);
+  const router = useRouter();
+  const supabase = createClient();
 
-  let color = '';
-  if (status === 0) {
-    color = 'red';
-  } else if (status === 1) {
-    color = 'green';
-  } else if (status === 2) {
-    color = 'blue';
-  }
-  let icon = '';
-  if (status === 0) {
-    icon = <IconCircleX size={10} />;
-  } else if (status === 1) {
-    icon = <IconCircleCheck size={10} />;
-  } else if (status === 2) {
-    icon = <IconCircle size={10} />;
-  }
+  const appointment = props.appointment;
+  const [status, setStatus] = useState(appointment.status);
 
-  const dateTime = new Date(appointmentData.datetime);
-  const date = `${
-    months[dateTime.getMonth()]
-  } ${dateTime.getDate()}, ${dateTime.getFullYear()}`;
-  const fullTime = dateTime.toLocaleString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-  const ampm = fullTime.slice(fullTime.length - 2);
-  const time = `${dateTime.getHours()}:${dateTime.getMinutes()} ${ampm}`;
-
-  const [hour, minutes] = appointmentData.hours.split('.');
-  const updatedMinutes = (minutes * 60) / 100;
-  const updatedDuration =
-    hour === '0'
-      ? `${updatedMinutes} minutes`
-      : `${hour} hours and ${updatedMinutes} minutes`;
-  const startTime = `${time} on ${date}`;
+  const initialValues = {
+    title: appointment.title,
+    startTime: new Date(appointment.start_time),
+    endTime: appointment.end_time ? new Date(appointment.end_time) : '',
+    price: appointment.price ? appointment.price : '',
+    vetname: '',
+    vetlocation: '',
+    vetphone: '',
+    vetemail: '',
+    description: appointment.description,
+    nextsteps: appointment.next_steps,
+  };
 
   const form = useForm({
     mode: 'uncontrolled',
-    initialValues: {
-      start: dateTime,
-      price: appointmentData.price,
-      vetname: appointmentData.vetname,
-      vetlocation: appointmentData.vetlocation,
-      vetphone: appointmentData.vetphone.split('-').join('.'),
-      vetemail: appointmentData.vetemail,
-      description: appointmentData.description,
-      nextsteps: appointmentData.nextsteps,
-    },
+    initialValues: initialValues,
 
     validate: {
-      vetemail: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      title: (value) => (value.length > 0 ? null : 'Title Required!'),
+      startTime: (value) =>
+        value.toString().length > 0 ? null : 'Start Time Required!',
     },
+    // validate: {
+    //   vetemail: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+    // },
   });
 
-  const handleSubmit = async (values) => {
-    await fetch(`/api/${userID}/appointmentData/${appointment}/put`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
   };
 
+  const udpatedStartTime = form.getValues().startTime
+    ? form.getValues().startTime.toLocaleDateString('en-US', options)
+    : '';
+
+  const udpatedEndTime = form.getValues().endTime
+    ? form.getValues().endTime.toLocaleDateString('en-US', options)
+    : '';
+
+  let updatedStatus = '';
+  let color = '';
+  let icon = '';
+
+  const hds = (te) => {
+    console.log('dfasda', te);
+  };
+
+  if (parseInt(status) === 0) {
+    updatedStatus = 'Canceled';
+    color = 'red';
+    icon = <IconCircleX size={12} />;
+  } else if (parseInt(status) === 1) {
+    updatedStatus = 'Completed';
+    color = 'green';
+    icon = <IconCircleCheck size={12} />;
+  } else if (parseInt(status) === 2) {
+    updatedStatus = 'Upcoming';
+    color = 'blue';
+    icon = <IconCircle size={12} />;
+  }
+
+  const handleSubmit = async (values) => {
+    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+      let startTimeStr = null;
+      if (values.startTime) {
+        startTimeStr = values.startTime.toISOString();
+      }
+      let endTimeStr = null;
+      if (values.endTime) {
+        endTimeStr = values.endTime.toISOString();
+      }
+      const updatedPrice = values.price ? values.price : null;
+      console.log(status);
+      const { error } = await supabase
+        .from('appointments')
+        .update({
+          title: values.title,
+          start_time: startTimeStr,
+          end_time: endTimeStr,
+          status: status,
+          price: updatedPrice,
+          description: values.description,
+          next_steps: values.nextsteps,
+        })
+        .eq('id', appointment.id);
+
+      if (!error) {
+        router.replace('/appointments');
+      } else {
+        console.log(error);
+      }
+    } else {
+      router.replace('/appointments');
+    }
+  };
   return (
     <Container size='md'>
       <Paper shadow='xs' withBorder p='md' radius='md' bg={color}>
@@ -90,13 +136,32 @@ export const Appointments = (props) => {
               {icon}
             </Grid.Col>
             <Grid.Col span={2} ps={2} pt={14} fz={'h4'}>
-              {appointmentStatusConversion[status]}
+              {editButton ? (
+                appointmentStatusConversion[status]
+              ) : (
+                <NativeSelect
+                  value={status}
+                  onChange={(event) => setStatus(event.currentTarget.value)}
+                  data={[
+                    { label: 'Upcoming', value: 2 },
+                    { label: 'Completed', value: 1 },
+                    { label: 'Canceled', value: 0 },
+                  ]}
+                />
+              )}
             </Grid.Col>
             <Grid.Col span={6}>
-              <Center
-                fz={'h2'}
-                fw={700}
-              >{`${appointmentData.title} Appointment`}</Center>
+              <Center fz={'h2'} fw={700}>
+                {editButton ? (
+                  form.getValues().title
+                ) : (
+                  <TextInput
+                    key={form.key('title')}
+                    {...form.getInputProps('title')}
+                    placeholder='Enter title'
+                  />
+                )}
+              </Center>
             </Grid.Col>
             <Grid.Col span={3} pt={12}>
               <Center>
@@ -107,7 +172,6 @@ export const Appointments = (props) => {
                     bg='white'
                     size='compact-xs'
                     radius='xl'
-                    type='submit'
                     onClick={() => setEditButton(false)}
                   >
                     Edit
@@ -121,9 +185,19 @@ export const Appointments = (props) => {
                     radius='xl'
                     onClick={() => setEditButton(true)}
                   >
-                    Save
+                    View
                   </Button>
                 )}
+                <Button
+                  variant='outline'
+                  color='grey'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  type='submit'
+                >
+                  Save and Exit
+                </Button>
               </Center>
             </Grid.Col>
           </Grid>
@@ -138,37 +212,41 @@ export const Appointments = (props) => {
                   {editButton ? (
                     <Text fw={550}>{'Start'}</Text>
                   ) : (
-                    <Text fw={550} pt={'sm'}>
+                    <Text fw={550} pt={'sm'} pb={'lg'}>
                       {'Start'}
                     </Text>
                   )}
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    startTime
+                    udpatedStartTime
                   ) : (
                     <DateTimePicker
-                      key={form.key('start')}
-                      {...form.getInputProps('start')}
+                      key={form.key('startTime')}
+                      {...form.getInputProps('startTime')}
+                      valueFormat='ddd MMM DD, h:mm A'
+                      placeholder='Enter appointment start time'
                     />
                   )}
                 </Grid.Col>
                 <Grid.Col span={2} p={2} fw={550}>
                   {editButton ? (
-                    <Text fw={550}>{'Duration'}</Text>
+                    <Text fw={550}>{'Pick Up'}</Text>
                   ) : (
                     <Text fw={550} pt={'sm'}>
-                      {'Duration'}
+                      {'Pick Up'}
                     </Text>
                   )}
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    updatedDuration
+                    udpatedEndTime
                   ) : (
-                    <TextInput
-                      key={form.key('start')}
-                      {...form.getInputProps('start')}
+                    <DateTimePicker
+                      key={form.key('endTime')}
+                      {...form.getInputProps('endTime')}
+                      valueFormat='ddd MMM DD, h:mm A'
+                      placeholder='Enter appointment end time'
                     />
                   )}
                 </Grid.Col>
@@ -183,13 +261,14 @@ export const Appointments = (props) => {
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    `$${appointmentData.price}`
+                    `$${form.getValues().price}`
                   ) : (
                     <NumberInput
                       prefix='$'
                       step={0.01}
                       key={form.key('price')}
                       {...form.getInputProps('price')}
+                      placeholder='Enter price'
                     />
                   )}
                 </Grid.Col>
@@ -208,11 +287,12 @@ export const Appointments = (props) => {
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    appointmentData.vetname
+                    form.getValues().vetname
                   ) : (
                     <TextInput
                       key={form.key('vetname')}
                       {...form.getInputProps('vetname')}
+                      placeholder="Enter vet's name"
                     />
                   )}
                 </Grid.Col>
@@ -227,11 +307,12 @@ export const Appointments = (props) => {
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    appointmentData.vetlocation
+                    form.getValues().vetlocation
                   ) : (
                     <TextInput
                       key={form.key('vetlocation')}
                       {...form.getInputProps('vetlocation')}
+                      placeholder="Enter vet's address"
                     />
                   )}
                 </Grid.Col>
@@ -246,12 +327,13 @@ export const Appointments = (props) => {
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    appointmentData.vetphone
+                    form.getValues().vetphone
                   ) : (
                     <NumberInput
                       decimalSeparator='-'
                       key={form.key('vetphone')}
                       {...form.getInputProps('vetphone')}
+                      placeholder="Enter vet's phone number"
                     />
                   )}
                 </Grid.Col>
@@ -266,11 +348,12 @@ export const Appointments = (props) => {
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
                   {editButton ? (
-                    appointmentData.vetemail
+                    form.getValues().vetemail
                   ) : (
                     <TextInput
                       key={form.key('vetemail')}
                       {...form.getInputProps('vetemail')}
+                      placeholder="Enter vet's email address"
                     />
                   )}
                 </Grid.Col>
@@ -283,12 +366,13 @@ export const Appointments = (props) => {
           </Text>
           {editButton ? (
             <Text size='lg' ms={6} mb={'sm'}>
-              {appointmentData.description}
+              {form.getValues().description}
             </Text>
           ) : (
             <TextInput
               key={form.key('description')}
               {...form.getInputProps('description')}
+              placeholder='Enter a description'
             />
           )}
 
@@ -297,12 +381,13 @@ export const Appointments = (props) => {
           </Text>
           {editButton ? (
             <Text size='lg' ms={6} mb={'xl'}>
-              {appointmentData.nextsteps}
+              {form.getValues().nextsteps}
             </Text>
           ) : (
             <TextInput
               key={form.key('nextsteps')}
               {...form.getInputProps('nextsteps')}
+              placeholder='Enter next steps'
             />
           )}
         </form>

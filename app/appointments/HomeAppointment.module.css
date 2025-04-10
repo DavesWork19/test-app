@@ -8,8 +8,6 @@
   }
 }
 
-.appointmentBorder {
-  border: solid;
-  border-color: blue;
-  border-width: 5px;
+.space {
+  width: 100%;
 }

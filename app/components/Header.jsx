@@ -7,7 +7,7 @@ import {
   IconTrash,
   IconArrowsLeftRight,
   IconDog,
-  IconUserCircle,
+  IconCalendarClock,
   IconNotes,
   IconAmbulance,
   IconPencil,
@@ -24,7 +24,7 @@ export const Header = () => {
 
   const handleOnClick = (route) => {
     setActiveTab(route);
-    router.push(`/${userID}/${route}`);
+    router.replace(`/${route}`);
   };
 
   return (
@@ -38,17 +38,17 @@ export const Header = () => {
             onClick={() => handleOnClick('home')}
           >
             <Text size={'lg'} fw={500}>
-              HealthyDawgs
+              PetPosts
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
-            value='account'
+            value='appointments'
             className={classes.headerTab}
-            leftSection={<IconUserCircle stroke={1} />}
-            onClick={() => handleOnClick('account')}
+            leftSection={<IconCalendarClock stroke={1} />}
+            onClick={() => handleOnClick('appointments')}
           >
             <Text size={'lg'} fw={500}>
-              Account Info
+              Appointments
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
@@ -109,11 +109,11 @@ export const Header = () => {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Item
-                leftSection={<IconUserCircle stroke={2} />}
-                onClick={() => handleOnClick('account')}
+                leftSection={<IconCalendarClock stroke={2} />}
+                onClick={() => handleOnClick('appointments')}
               >
                 <Text size={'lg'} fw={500}>
-                  Account Info
+                  Appointments
                 </Text>
               </Menu.Item>
               <Menu.Item

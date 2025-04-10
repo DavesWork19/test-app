@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
     <html lang='en' {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
+        <script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
