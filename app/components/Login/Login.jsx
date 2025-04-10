@@ -36,6 +36,7 @@ export function Login() {
         val.length <= 6
           ? 'Password should include at least 6 characters'
           : null,
+      terms: (val) => (val === true ? null : 'Required!'),
     },
   });
 
@@ -53,7 +54,7 @@ export function Login() {
     if (status === 'Register') {
       const supabase = createClient();
 
-      const data = {
+      const formData = {
         email: values.email,
         password: values.password,
         options: {
@@ -67,10 +68,13 @@ export function Login() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (user.role !== 'authenticated') {
-        const signUpData = await supabase.auth.signUp(data);
 
-        if (signUpData.error) {
+      console.log('testing user', user, !user);
+
+      if (!user) {
+        const { error } = await supabase.auth.signUp(formData);
+
+        if (error) {
           router.push('/error');
         }
         setStatus('submitted');
