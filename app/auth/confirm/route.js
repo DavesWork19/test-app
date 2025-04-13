@@ -5,7 +5,6 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get('token_hash');
   const type = searchParams.get('type');
-  const next = searchParams.get('next') ?? '/home';
 
   if (token_hash && type) {
     const supabase = await createClient();
@@ -25,11 +24,11 @@ export async function GET(request) {
       });
       // redirect user to specified redirect URL or root of app
       if (!error) {
-        redirect(next);
+        redirect('https://www.integralinformation.com/home');
       }
     }
   }
 
   // redirect the user to an error page with some instructions
-  redirect('/auth/auth-code-error');
+  redirect('/auth/auth-error');
 }
