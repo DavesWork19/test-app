@@ -29,6 +29,7 @@ export const UpdateAppointment = (props) => {
   const supabase = createClient();
 
   const appointment = props.appointment;
+  const vet = props.vet;
   const [status, setStatus] = useState(appointment.status);
 
   const initialValues = {
@@ -37,10 +38,10 @@ export const UpdateAppointment = (props) => {
     endTime: appointment.end_time ? new Date(appointment.end_time) : '',
     status: parseInt(status),
     price: appointment.price ? appointment.price : '',
-    vetname: '',
-    vetlocation: '',
-    vetphone: '',
-    vetemail: '',
+    vetname: vet.name,
+    vetlocation: vet.location,
+    vetphone: vet.phone_number,
+    vetemail: vet.email,
     description: appointment.description,
     nextsteps: appointment.next_steps,
   };
@@ -54,9 +55,6 @@ export const UpdateAppointment = (props) => {
       startTime: (value) =>
         value.toString().length > 0 ? null : 'Start Time Required!',
     },
-    // validate: {
-    //   vetemail: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    // },
   });
 
   const options = {
@@ -95,7 +93,6 @@ export const UpdateAppointment = (props) => {
   };
 
   const handleSubmit = async (values) => {
-    console.log('in sukbint');
     if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
       let startTimeStr = null;
       if (values.startTime) {
@@ -107,31 +104,71 @@ export const UpdateAppointment = (props) => {
       }
       const updatedPrice = values.price ? values.price : null;
 
-      const { error } = await supabase
-        .from('appointments')
-        .update({
-          title: values.title,
-          start_time: startTimeStr,
-          end_time: endTimeStr,
-          status: status,
-          price: updatedPrice,
-          description: values.description,
-          next_steps: values.nextsteps,
-        })
-        .eq('id', appointment.id);
+      if (
+        initialValues.vetname === values.vetname &&
+        initialValues.vetphone === values.vetphone &&
+        initialValues.vetemail === values.vetemail &&
+        initialValues.vetlocation === values.vetlocation
+      ) {
+        const { error } = await supabase
+          .from('appointments')
+          .update({
+            title: values.title,
+            start_time: startTimeStr,
+            end_time: endTimeStr,
+            status: status,
+            price: updatedPrice,
+            description: values.description,
+            next_steps: values.nextsteps,
+          })
+          .eq('id', appointment.id);
 
-      console.log(error, 'testint');
-
-      if (!error) {
-        successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
+        if (!error) {
+          successModalObj.open();
+          setTimeout(() => {
+            successModalObj.close();
+          }, 1500);
+        } else {
+          failModalObj.open();
+          setTimeout(() => {
+            failModalObj.close();
+          }, 1500);
+        }
       } else {
-        failModalObj.open();
-        setTimeout(() => {
-          failModalObj.close();
-        }, 1500);
+        const vetInsertObj = await supabase
+          .from('vets')
+          .update({
+            name: values.vetname,
+            phone_number: values.vetphone ? values.vetphone : null,
+            email: values.vetemail,
+            location: values.vetlocation,
+          })
+          .eq('id', vet.id);
+
+        const appointmentInsertObj = await supabase
+          .from('appointments')
+          .update({
+            title: values.title,
+            start_time: startTimeStr,
+            end_time: endTimeStr,
+            status: status,
+            price: updatedPrice,
+            description: values.description,
+            next_steps: values.nextsteps,
+          })
+          .eq('id', appointment.id);
+
+        if (vetInsertObj.error || appointmentInsertObj.error) {
+          failModalObj.open();
+          setTimeout(() => {
+            failModalObj.close();
+          }, 1500);
+        } else {
+          successModalObj.open();
+          setTimeout(() => {
+            successModalObj.close();
+          }, 1500);
+        }
       }
     }
   };

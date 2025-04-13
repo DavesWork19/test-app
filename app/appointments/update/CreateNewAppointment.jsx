@@ -23,7 +23,7 @@ import { IconCircleCheck, IconCircleX, IconCircle } from '@tabler/icons-react';
 export const CreateNewAppointment = (props) => {
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
-  const [status, setStatus] = useState();
+  const [status, setStatus] = useState(2);
   const router = useRouter();
   const supabase = createClient();
 
@@ -38,16 +38,13 @@ export const CreateNewAppointment = (props) => {
   } else if (parseInt(status) === 1) {
     color = 'green';
     icon = <IconCircleCheck size={12} />;
-  } else if (parseInt(status) === 2) {
-    color = 'blue';
-    icon = <IconCircle size={12} />;
   }
 
   const initialValues = {
     title: '',
     startTime: '',
     endTime: '',
-    status: 'Upcoming',
+    status: status,
     price: '',
     vetname: '',
     vetlocation: '',
@@ -66,9 +63,6 @@ export const CreateNewAppointment = (props) => {
       startTime: (value) =>
         value.toString().length > 0 ? null : 'Start Time Required!',
     },
-    // validate: {
-    //   vetemail: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    // },
   });
 
   const handleExit = () => {
@@ -98,26 +92,73 @@ export const CreateNewAppointment = (props) => {
 
       const updatedPrice = values.price ? values.price : null;
 
-      const { error } = await supabase.from('appointments').insert({
-        title: values.title,
-        start_time: startTimeStr,
-        end_time: endTimeStr,
-        status: status,
-        price: updatedPrice,
-        description: values.description,
-        next_steps: values.nextsteps,
-        user_id: userID,
-      });
-      if (error) {
-        failModalObj.open();
-        setTimeout(() => {
-          failModalObj.close();
-        }, 1500);
+      if (
+        initialValues.vetname === values.vetname &&
+        initialValues.vetphone === values.vetphone &&
+        initialValues.vetemail === values.vetemail &&
+        initialValues.vetlocation === values.vetlocation
+      ) {
+        const appointmentInsertObj = await supabase
+          .from('appointments')
+          .insert({
+            title: values.title,
+            start_time: startTimeStr,
+            end_time: endTimeStr,
+            status: parseInt(status),
+            price: updatedPrice,
+            description: values.description,
+            next_steps: values.nextsteps,
+            user_id: userID,
+          });
+
+        if (appointmentInsertObj.error) {
+          failModalObj.open();
+          setTimeout(() => {
+            failModalObj.close();
+          }, 1500);
+        } else {
+          successModalObj.open();
+          setTimeout(() => {
+            successModalObj.close();
+          }, 1500);
+        }
       } else {
-        successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
+        const vetInsertObj = await supabase
+          .from('vets')
+          .upsert({
+            name: values.vetname,
+            phone_number: values.vetphone ? values.vetphone : null,
+            email: values.vetemail,
+            location: values.vetlocation,
+            user_id: userID,
+          })
+          .select();
+
+        const appointmentInsertObj = await supabase
+          .from('appointments')
+          .insert({
+            title: values.title,
+            start_time: startTimeStr,
+            end_time: endTimeStr,
+            status: parseInt(status),
+            price: updatedPrice,
+            description: values.description,
+            next_steps: values.nextsteps,
+            vet: vetInsertObj.data[0].id,
+            user_id: userID,
+          });
+
+        if (vetInsertObj.error || appointmentInsertObj.error) {
+          failModalObj.open();
+          setTimeout(() => {
+            failModalObj.close();
+          }, 1500);
+        } else {
+          successModalObj.open();
+          setTimeout(() => {
+            successModalObj.close();
+          }, 1500);
+        }
       }
     }
   };
