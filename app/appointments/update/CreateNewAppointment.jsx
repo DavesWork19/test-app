@@ -10,20 +10,38 @@ import {
   TextInput,
   NumberInput,
   NativeSelect,
+  Modal,
 } from '@mantine/core';
-import { DateTimePicker, TimeInput } from '@mantine/dates';
+import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '../../utils/supabase/client';
-import { IconPlus } from '@tabler/icons-react';
+import { IconCircleCheck, IconCircleX, IconCircle } from '@tabler/icons-react';
 
 export const CreateNewAppointment = (props) => {
-  const [editButton, setEditButton] = useState(false);
+  const [successModalopened, successModalObj] = useDisclosure(false);
+  const [failModalopened, failModalObj] = useDisclosure(false);
+  const [status, setStatus] = useState();
   const router = useRouter();
   const supabase = createClient();
 
   const userID = props.userID;
+
+  let color = 'blue';
+  let icon = <IconCircle size={12} />;
+
+  if (parseInt(status) === 0) {
+    color = 'red';
+    icon = <IconCircleX size={12} />;
+  } else if (parseInt(status) === 1) {
+    color = 'green';
+    icon = <IconCircleCheck size={12} />;
+  } else if (parseInt(status) === 2) {
+    color = 'blue';
+    icon = <IconCircle size={12} />;
+  }
 
   const initialValues = {
     title: '',
@@ -53,21 +71,9 @@ export const CreateNewAppointment = (props) => {
     // },
   });
 
-  const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
+  const handleExit = () => {
+    router.replace('/appointments');
   };
-  const udpatedStartTime = form.getValues().startTime
-    ? form.getValues().startTime.toLocaleDateString('en-US', options)
-    : '';
-
-  const udpatedEndTime = form.getValues().endTime
-    ? form.getValues().endTime.toLocaleDateString('en-US', options)
-    : '';
 
   const handleSubmit = async (values) => {
     if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
@@ -89,16 +95,6 @@ export const CreateNewAppointment = (props) => {
         );
         endTimeStr = adjustedDate.toISOString();
       }
-      let updatedStatus = null;
-      if (values.status) {
-        if (values.status === 'Canceled') {
-          updatedStatus = 0;
-        } else if (values.status === 'Completed') {
-          updatedStatus = 1;
-        } else if (values.status === 'Upcoming') {
-          updatedStatus = 2;
-        }
-      }
 
       const updatedPrice = values.price ? values.price : null;
 
@@ -106,79 +102,85 @@ export const CreateNewAppointment = (props) => {
         title: values.title,
         start_time: startTimeStr,
         end_time: endTimeStr,
-        status: updatedStatus,
+        status: status,
         price: updatedPrice,
         description: values.description,
         next_steps: values.nextsteps,
         user_id: userID,
       });
-
-      if (!error) {
-        router.replace('/appointments');
+      if (error) {
+        failModalObj.open();
+        setTimeout(() => {
+          failModalObj.close();
+        }, 1500);
       } else {
-        console.log(error);
+        successModalObj.open();
+        setTimeout(() => {
+          successModalObj.close();
+        }, 1500);
       }
-    } else {
-      router.replace('/appointments');
     }
   };
+
   return (
     <Container size='md'>
-      <Paper shadow='xs' withBorder p='md' radius='md' bg={'blue'}>
+      <Modal
+        opened={successModalopened}
+        onClose={successModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
+          Successfully Saved!
+        </Text>
+        <Text size='xs' fw={500} c={'green'} ta='center'>
+          Continue editing or exit and return to the Appointments page
+        </Text>
+      </Modal>
+      <Modal
+        opened={failModalopened}
+        onClose={failModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'red'} ta='center' pb={12}>
+          Error!
+        </Text>
+        <Text size='xs' fw={500} c={'red'} ta='center'>
+          Something went wrong!
+        </Text>
+      </Modal>
+
+      <Paper shadow='xs' withBorder p='md' radius='md' bg={color}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Grid pb={24}>
             <Grid.Col span='content' ps={40} pe={0} pb={0} pt={18} fz={'h4'}>
-              <IconPlus size={12} />
+              {icon}
             </Grid.Col>
             <Grid.Col span={2} ps={2} pt={14} fz={'h4'}>
-              {editButton ? (
-                form.getValues().status
-              ) : (
-                <NativeSelect
-                  key={form.key('status')}
-                  {...form.getInputProps('status')}
-                  data={['Upcoming', 'Completed', 'Canceled']}
-                />
-              )}
+              <NativeSelect
+                value={status}
+                onChange={(event) => setStatus(event.currentTarget.value)}
+                data={[
+                  { label: 'Upcoming', value: 2 },
+                  { label: 'Completed', value: 1 },
+                  { label: 'Canceled', value: 0 },
+                ]}
+              />
             </Grid.Col>
             <Grid.Col span={6}>
               <Center fz={'h2'} fw={700}>
-                {editButton ? (
-                  form.getValues().title
-                ) : (
-                  <TextInput
-                    key={form.key('title')}
-                    {...form.getInputProps('title')}
-                    placeholder='Enter title'
-                  />
-                )}
+                <TextInput
+                  key={form.key('title')}
+                  {...form.getInputProps('title')}
+                  placeholder='Enter title'
+                />
               </Center>
             </Grid.Col>
             <Grid.Col span={3} pt={12}>
               <Center>
-                {editButton ? (
-                  <Button
-                    variant='outline'
-                    color='black'
-                    bg='white'
-                    size='compact-xs'
-                    radius='xl'
-                    onClick={() => setEditButton(false)}
-                  >
-                    Edit
-                  </Button>
-                ) : (
-                  <Button
-                    variant='outline'
-                    color='grey'
-                    bg='white'
-                    size='compact-xs'
-                    radius='xl'
-                    onClick={() => setEditButton(true)}
-                  >
-                    View
-                  </Button>
-                )}
                 <Button
                   variant='outline'
                   color='grey'
@@ -187,7 +189,17 @@ export const CreateNewAppointment = (props) => {
                   radius='xl'
                   type='submit'
                 >
-                  Save and Exit
+                  Save
+                </Button>
+                <Button
+                  variant='outline'
+                  color='grey'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  onClick={handleExit}
+                >
+                  Exit
                 </Button>
               </Center>
             </Grid.Col>
@@ -200,153 +212,97 @@ export const CreateNewAppointment = (props) => {
             <Grid.Col span={5}>
               <Grid ms={60} mt={12}>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Start'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'} pb={'lg'}>
-                      {'Start'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'} pb={'lg'}>
+                    {'Start'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    udpatedStartTime
-                  ) : (
-                    <DateTimePicker
-                      key={form.key('startTime')}
-                      {...form.getInputProps('startTime')}
-                      valueFormat='ddd MMM DD, h:mm A'
-                      placeholder='Enter appointment start time'
-                    />
-                  )}
+                  <DateTimePicker
+                    key={form.key('startTime')}
+                    {...form.getInputProps('startTime')}
+                    valueFormat='ddd MMM DD, h:mm A'
+                    placeholder='Enter appointment start time'
+                  />
                 </Grid.Col>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Pick Up'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Pick Up'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'}>
+                    {'Pick Up'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    udpatedEndTime
-                  ) : (
-                    <DateTimePicker
-                      key={form.key('endTime')}
-                      {...form.getInputProps('endTime')}
-                      valueFormat='ddd MMM DD, h:mm A'
-                      placeholder='Enter appointment end time'
-                    />
-                  )}
+                  <DateTimePicker
+                    key={form.key('endTime')}
+                    {...form.getInputProps('endTime')}
+                    valueFormat='ddd MMM DD, h:mm A'
+                    placeholder='Enter appointment end time'
+                  />
                 </Grid.Col>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Price'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Price'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'}>
+                    {'Price'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    `$${form.getValues().price}`
-                  ) : (
-                    <NumberInput
-                      prefix='$'
-                      step={0.01}
-                      key={form.key('price')}
-                      {...form.getInputProps('price')}
-                      placeholder='Enter price'
-                    />
-                  )}
+                  <NumberInput
+                    prefix='$'
+                    step={0.01}
+                    key={form.key('price')}
+                    {...form.getInputProps('price')}
+                    placeholder='Enter price'
+                  />
                 </Grid.Col>
               </Grid>
             </Grid.Col>
             <Grid.Col span={7}>
               <Grid ps={60}>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Vet'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Vet'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'}>
+                    {'Vet'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetname
-                  ) : (
-                    <TextInput
-                      key={form.key('vetname')}
-                      {...form.getInputProps('vetname')}
-                      placeholder="Enter vet's name"
-                    />
-                  )}
+                  <TextInput
+                    key={form.key('vetname')}
+                    {...form.getInputProps('vetname')}
+                    placeholder="Enter vet's name"
+                  />
                 </Grid.Col>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Location'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Location'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'}>
+                    {'Location'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetlocation
-                  ) : (
-                    <TextInput
-                      key={form.key('vetlocation')}
-                      {...form.getInputProps('vetlocation')}
-                      placeholder="Enter vet's address"
-                    />
-                  )}
+                  <TextInput
+                    key={form.key('vetlocation')}
+                    {...form.getInputProps('vetlocation')}
+                    placeholder="Enter vet's address"
+                  />
                 </Grid.Col>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Phone'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Phone'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'}>
+                    {'Phone'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetphone
-                  ) : (
-                    <NumberInput
-                      decimalSeparator='-'
-                      key={form.key('vetphone')}
-                      {...form.getInputProps('vetphone')}
-                      placeholder="Enter vet's phone number"
-                    />
-                  )}
+                  <NumberInput
+                    decimalSeparator='-'
+                    key={form.key('vetphone')}
+                    {...form.getInputProps('vetphone')}
+                    placeholder="Enter vet's phone number"
+                  />
                 </Grid.Col>
                 <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Email'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Email'}
-                    </Text>
-                  )}
+                  <Text fw={550} pt={'sm'}>
+                    {'Email'}
+                  </Text>
                 </Grid.Col>
                 <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetemail
-                  ) : (
-                    <TextInput
-                      key={form.key('vetemail')}
-                      {...form.getInputProps('vetemail')}
-                      placeholder="Enter vet's email address"
-                    />
-                  )}
+                  <TextInput
+                    key={form.key('vetemail')}
+                    {...form.getInputProps('vetemail')}
+                    placeholder="Enter vet's email address"
+                  />
                 </Grid.Col>
               </Grid>
             </Grid.Col>
@@ -355,32 +311,20 @@ export const CreateNewAppointment = (props) => {
           <Text size='lg' fw={700}>
             {'Review'}
           </Text>
-          {editButton ? (
-            <Text size='lg' ms={6} mb={'sm'}>
-              {form.getValues().description}
-            </Text>
-          ) : (
-            <TextInput
-              key={form.key('description')}
-              {...form.getInputProps('description')}
-              placeholder='Enter a description'
-            />
-          )}
+          <TextInput
+            key={form.key('description')}
+            {...form.getInputProps('description')}
+            placeholder='Enter a description'
+          />
 
           <Text size='lg' fw={700}>
             {'Next Steps'}
           </Text>
-          {editButton ? (
-            <Text size='lg' ms={6} mb={'xl'}>
-              {form.getValues().nextsteps}
-            </Text>
-          ) : (
-            <TextInput
-              key={form.key('nextsteps')}
-              {...form.getInputProps('nextsteps')}
-              placeholder='Enter next steps'
-            />
-          )}
+          <TextInput
+            key={form.key('nextsteps')}
+            {...form.getInputProps('nextsteps')}
+            placeholder='Enter next steps'
+          />
         </form>
       </Paper>
     </Container>

@@ -18,9 +18,13 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '../../../utils/supabase/client';
 import { IconCircleCheck, IconCircleX, IconCircle } from '@tabler/icons-react';
 import { appointmentStatusConversion } from '../../../components/constants';
+import { useDisclosure } from '@mantine/hooks';
+import { Modal } from '@mantine/core';
 
 export const UpdateAppointment = (props) => {
   const [editButton, setEditButton] = useState(true);
+  const [successModalopened, successModalObj] = useDisclosure(false);
+  const [failModalopened, failModalObj] = useDisclosure(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -31,6 +35,7 @@ export const UpdateAppointment = (props) => {
     title: appointment.title,
     startTime: new Date(appointment.start_time),
     endTime: appointment.end_time ? new Date(appointment.end_time) : '',
+    status: parseInt(status),
     price: appointment.price ? appointment.price : '',
     vetname: '',
     vetlocation: '',
@@ -71,25 +76,26 @@ export const UpdateAppointment = (props) => {
     ? form.getValues().endTime.toLocaleDateString('en-US', options)
     : '';
 
-  let updatedStatus = '';
   let color = '';
   let icon = '';
 
   if (parseInt(status) === 0) {
-    updatedStatus = 'Canceled';
     color = 'red';
     icon = <IconCircleX size={12} />;
   } else if (parseInt(status) === 1) {
-    updatedStatus = 'Completed';
     color = 'green';
     icon = <IconCircleCheck size={12} />;
   } else if (parseInt(status) === 2) {
-    updatedStatus = 'Upcoming';
     color = 'blue';
     icon = <IconCircle size={12} />;
   }
 
+  const handleExit = () => {
+    router.replace('/appointments');
+  };
+
   const handleSubmit = async (values) => {
+    console.log('in sukbint');
     if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
       let startTimeStr = null;
       if (values.startTime) {
@@ -114,17 +120,52 @@ export const UpdateAppointment = (props) => {
         })
         .eq('id', appointment.id);
 
+      console.log(error, 'testint');
+
       if (!error) {
-        router.replace('/appointments');
+        successModalObj.open();
+        setTimeout(() => {
+          successModalObj.close();
+        }, 1500);
       } else {
-        console.log(error);
+        failModalObj.open();
+        setTimeout(() => {
+          failModalObj.close();
+        }, 1500);
       }
-    } else {
-      router.replace('/appointments');
     }
   };
   return (
     <Container size='md'>
+      <Modal
+        opened={successModalopened}
+        onClose={successModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
+          Successfully Saved!
+        </Text>
+        <Text size='xs' fw={500} c={'green'} ta='center'>
+          Continue editing or exit and return to the Appointments page
+        </Text>
+      </Modal>
+      <Modal
+        opened={failModalopened}
+        onClose={failModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'red'} ta='center' pb={12}>
+          Error!
+        </Text>
+        <Text size='xs' fw={500} c={'red'} ta='center'>
+          Something went wrong!
+        </Text>
+      </Modal>
+
       <Paper shadow='xs' withBorder p='md' radius='md' bg={color}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Grid pb={24}>
@@ -192,7 +233,17 @@ export const UpdateAppointment = (props) => {
                   radius='xl'
                   type='submit'
                 >
-                  Save and Exit
+                  Save
+                </Button>
+                <Button
+                  variant='outline'
+                  color='grey'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  onClick={handleExit}
+                >
+                  Exit
                 </Button>
               </Center>
             </Grid.Col>
