@@ -11,8 +11,6 @@ export const DocInput = () => {
   const pathname = usePathname();
   const pdfUrl = new URLSearchParams(pathname).get('pdfUrl');
 
-  console.log('test', pdfUrl);
-
   return (
     <>
       <Group justify='center'>

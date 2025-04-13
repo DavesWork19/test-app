@@ -18,8 +18,6 @@ export async function PUT(req, res) {
 
     return NextResponse.json(results);
   } catch (err) {
-    console.log('ERROR: ', err.message);
-
     const response = {
       error: err.message,
       returnedStatus: 500,

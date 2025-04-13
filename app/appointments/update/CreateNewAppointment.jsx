@@ -53,11 +53,6 @@ export const CreateNewAppointment = (props) => {
     // },
   });
 
-  console.log(
-    form.getValues().startTime,
-    form.getValues().startTime.toString()
-  );
-
   const options = {
     weekday: 'long',
     year: 'numeric',

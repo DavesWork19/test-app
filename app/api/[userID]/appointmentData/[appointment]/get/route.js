@@ -12,8 +12,6 @@ export async function GET(req, res) {
 
     return NextResponse.json(results?.rows);
   } catch (err) {
-    console.log('ERROR: ', err.message);
-
     const response = {
       error: err.message,
       returnedStatus: 500,

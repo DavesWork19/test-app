@@ -75,10 +75,6 @@ export const UpdateAppointment = (props) => {
   let color = '';
   let icon = '';
 
-  const hds = (te) => {
-    console.log('dfasda', te);
-  };
-
   if (parseInt(status) === 0) {
     updatedStatus = 'Canceled';
     color = 'red';
@@ -104,7 +100,7 @@ export const UpdateAppointment = (props) => {
         endTimeStr = values.endTime.toISOString();
       }
       const updatedPrice = values.price ? values.price : null;
-      console.log(status);
+
       const { error } = await supabase
         .from('appointments')
         .update({

@@ -9,8 +9,6 @@ export default async function Account({ params }) {
   const data = await response.json();
   const updatedDOB = data.dob.split('T')[0];
 
-  console.log('t', data);
-
   return (
     <main>
       <div className='ps-8'>

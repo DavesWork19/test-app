@@ -3,7 +3,6 @@ import { UpdateAppointment } from './UpdateAppointment';
 
 export default async function UpdateAppointmentPage({ params }) {
   const { appointmentID } = await params;
-  console.log('these are params', appointmentID);
   const supabase = await createClient();
 
   const { data: appointment } = await supabase

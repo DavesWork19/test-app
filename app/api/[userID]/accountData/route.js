@@ -21,8 +21,6 @@ export async function GET(req, res) {
       ...billingAddressResults?.rows[0],
     });
   } catch (err) {
-    console.log('ERROR: ', err.message);
-
     const response = {
       error: err.message,
       returnedStatus: 500,
@@ -55,8 +53,6 @@ export async function PUT(req, res) {
 
     return NextResponse.json(results);
   } catch (err) {
-    console.log('ERROR: ', err.message);
-
     const response = {
       error: err.message,
       returnedStatus: 500,
