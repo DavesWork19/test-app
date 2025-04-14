@@ -91,6 +91,19 @@ export const UpdateAppointment = (props) => {
     router.replace('/appointments');
   };
 
+  const handleDelete = async () => {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from('appointments')
+      .delete()
+      .eq('id', appointment.id);
+    if (error) {
+      console.log('errorereoreoore');
+    } else {
+      router.replace('/appointments');
+    }
+  };
+
   const handleSubmit = async (values) => {
     if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
       let startTimeStr = null;
@@ -281,6 +294,16 @@ export const UpdateAppointment = (props) => {
                   onClick={handleExit}
                 >
                   Exit
+                </Button>
+                <Button
+                  variant='outline'
+                  color='red'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  onClick={handleDelete}
+                >
+                  Delete
                 </Button>
               </Center>
             </Grid.Col>
