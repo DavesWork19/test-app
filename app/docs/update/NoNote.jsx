@@ -4,7 +4,6 @@ import {
   TextInput,
   Textarea,
   Card,
-  FileInput,
   Group,
   Center,
   FileButton,
@@ -15,12 +14,12 @@ import { useForm } from '@mantine/form';
 import { createClient } from '../../utils/supabase/client';
 import { uploadFile } from '../../utils/supabase/storageClient';
 import { useState } from 'react';
-import { IconCircleX } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 
 export const NoNote = (props) => {
   const userID = props.userID;
   const today = new Date();
-
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState();
 
   const imageChange = (data) => {
@@ -50,6 +49,10 @@ export const NoNote = (props) => {
     },
   });
 
+  const handleExit = () => {
+    router.replace('/docs');
+  };
+
   const handleSubmit = async (values) => {
     const supabase = createClient();
     const { data, error } = await supabase
@@ -77,6 +80,28 @@ export const NoNote = (props) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} className='mt-8 mb-2'>
       <Card shadow='sm' padding='lg' radius='md' withBorder>
+        <Group justify='flex-end'>
+          <Button
+            variant='outline'
+            color='grey'
+            bg='white'
+            size='compact-xs'
+            radius='xl'
+            type='submit'
+          >
+            Save
+          </Button>
+          <Button
+            variant='outline'
+            color='grey'
+            bg='white'
+            size='compact-xs'
+            radius='xl'
+            onClick={handleExit}
+          >
+            Exit
+          </Button>
+        </Group>
         <Group justify='space-between' grow mt='md' mb='xs'>
           <TextInput
             variant={'filled'}
@@ -125,68 +150,6 @@ export const NoNote = (props) => {
           )}
         </Card.Section>
       </Card>
-      <button type='submit'>Save Note</button>
     </form>
-    // <form onSubmit={form.onSubmit(handleSubmit)} className='mt-8 mb-2'>
-
-    //   <div>
-    //     <Grid>
-    //       <Grid.Col span={6}>
-    //         <TextInput
-    //           variant={'filled'}
-    //           key={form.key('title')}
-    //           {...form.getInputProps('title')}
-    //           placeholder='Title'
-    //         />
-    //       </Grid.Col>
-    //       <Grid.Col span={6}>
-    //         <DateInput
-    //           clearable
-    //           variant={'filled'}
-    //           placeholder='Date'
-    //           key={form.key('date')}
-    //           {...form.getInputProps('date')}
-    //           valueFormat='ddd MMM DD'
-    //         />
-    //       </Grid.Col>
-
-    //       <Grid.Col span={12}>
-    //         <Textarea
-    //           variant={'filled'}
-    //           placeholder={'What Happened???'}
-    //           autosize
-    //           minRows={2}
-    //           cols={24}
-    //           key={form.key('description')}
-    //           {...form.getInputProps('description')}
-    //         />
-    //       </Grid.Col>
-
-    //       <Grid.Col span={6}></Grid.Col>
-    //       <Grid.Col span={6}>
-    //         <div>
-    //           <input type='file' onChange={imageChange} />
-    //           {/* <FileButton onChange={imageChange} type='file' multiple>
-    //             {(props) => <Button {...props}>Upload image</Button>}
-    //           </FileButton> */}
-
-    //           {selectedImage && (
-    //             <div>
-    //               <img src={URL.createObjectURL(selectedImage)} alt='Thumb' />
-    //               <button onClick={removeSelectedImage}>
-    //                 Remove This Image
-    //               </button>
-    //             </div>
-    //           )}
-    //         </div>
-    //       </Grid.Col>
-    //       <Grid.Col span={10}></Grid.Col>
-
-    //       <Grid.Col span={2}>
-    //         <button type='submit'>Save Note</button>
-    //       </Grid.Col>
-    //     </Grid>
-    //   </div>
-    // </form>
   );
 };

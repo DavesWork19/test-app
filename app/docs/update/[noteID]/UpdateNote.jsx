@@ -50,7 +50,17 @@ export const UpdateNote = (props) => {
   });
 
   const handleExit = () => {
-    router.replace('/notes');
+    router.replace('/docs');
+  };
+
+  const handleDelete = async () => {
+    const supabase = createClient();
+    const { error } = await supabase.from('notes').delete().eq('id', note.id);
+    if (error) {
+      console.log('errorereoreoore');
+    } else {
+      router.replace('/docs');
+    }
   };
 
   const handleSubmit = async (values) => {
@@ -99,6 +109,16 @@ export const UpdateNote = (props) => {
             onClick={handleExit}
           >
             Exit
+          </Button>
+          <Button
+            variant='outline'
+            color='red'
+            bg='white'
+            size='compact-xs'
+            radius='xl'
+            onClick={handleDelete}
+          >
+            Delete
           </Button>
         </Group>
         <Group justify='space-between' grow mt='md' mb='xs'>

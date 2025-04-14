@@ -18,11 +18,11 @@ export const AllNotes = (props) => {
   const icon = <IconCircleCheck size={12} />;
 
   const handleOnClick = (id) => {
-    router.replace(`/notes/update/${id}`);
+    router.replace(`/docs/update/${id}`);
   };
 
   const handleAddNote = () => {
-    router.replace('/notes/update');
+    router.replace('/docs/update');
   };
 
   return (

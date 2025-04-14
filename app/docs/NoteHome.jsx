@@ -7,7 +7,7 @@ export const NoteHome = () => {
   const router = useRouter();
 
   const handleOnClick = () => {
-    router.replace('/notes/update');
+    router.replace('/docs/update');
   };
 
   return (
