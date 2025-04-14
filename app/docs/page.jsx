@@ -1,16 +1,25 @@
-import { DocInput } from './DocInput';
+import { Container, Paper } from '@mantine/core';
+import { createClient } from '../utils/supabase/server';
+import { NoNote } from './update/NoNote';
+import { NoteHome } from './NoteHome';
+import { AllNotes } from './AllNotes';
 
-export default function Docs() {
+export default async function NotesPage() {
+  const supabase = await createClient();
+
+  const { data: notes } = await supabase
+    .from('notes')
+    .select()
+    .order('date', { ascending: false });
+
   return (
     <main>
-      <div className='grid grid-cols-1 gap-4'>
-        <button className='p-8 border border-black'>
-          {'Send Generic Docs????'}
-        </button>
-        <DocInput />
-      </div>
-      <div className='p-8'></div>
-      <div className='p-8'></div>
+      <Container size='md'>
+        <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
+          {!notes && <NoteHome />}
+          {notes && <AllNotes notes={notes} />}
+        </Paper>
+      </Container>
     </main>
   );
 }

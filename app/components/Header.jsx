@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Tabs, Grid, Menu, Text } from '@mantine/core';
 import {
   IconSettings,
@@ -19,8 +19,6 @@ import { useState } from 'react';
 export const Header = () => {
   const [activeTab, setActiveTab] = useState('home');
   const router = useRouter();
-  const pathname = usePathname();
-  const userID = pathname.split('/')[1];
 
   const handleOnClick = (route) => {
     setActiveTab(route);
@@ -52,16 +50,6 @@ export const Header = () => {
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
-            value='notes'
-            className={classes.headerTab}
-            leftSection={<IconPencil stroke={1} />}
-            onClick={() => handleOnClick('notes')}
-          >
-            <Text size={'lg'} fw={500}>
-              Notes
-            </Text>
-          </Tabs.Tab>
-          <Tabs.Tab
             value='docs'
             className={classes.headerTab}
             leftSection={<IconNotes stroke={1} />}
@@ -79,6 +67,16 @@ export const Header = () => {
           >
             <Text size={'lg'} fw={500}>
               Insurance
+            </Text>
+          </Tabs.Tab>
+          <Tabs.Tab
+            value='account'
+            className={classes.headerTab}
+            leftSection={<IconAmbulance stroke={1} />}
+            onClick={() => handleOnClick('account')}
+          >
+            <Text size={'lg'} fw={500}>
+              Account
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
@@ -117,14 +115,6 @@ export const Header = () => {
                 </Text>
               </Menu.Item>
               <Menu.Item
-                leftSection={<IconPencil stroke={2} />}
-                onClick={() => handleOnClick('notes')}
-              >
-                <Text size={'lg'} fw={500}>
-                  Notes
-                </Text>
-              </Menu.Item>
-              <Menu.Item
                 leftSection={<IconNotes stroke={2} />}
                 onClick={() => handleOnClick('docs')}
               >
@@ -138,6 +128,14 @@ export const Header = () => {
               >
                 <Text size={'lg'} fw={500}>
                   Insurance
+                </Text>
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconAmbulance stroke={2} />}
+                onClick={() => handleOnClick('account')}
+              >
+                <Text size={'lg'} fw={500}>
+                  Account
                 </Text>
               </Menu.Item>
               <Menu.Item
