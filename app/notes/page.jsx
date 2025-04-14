@@ -1,14 +1,23 @@
 import { Container, Paper } from '@mantine/core';
-import { SingleNote } from './SingleNote';
+import { createClient } from '../utils/supabase/server';
+import { NoNote } from './update/NoNote';
+import { NoteHome } from './NoteHome';
+import { AllNotes } from './AllNotes';
 
-export default async function Notes({ params }) {
-  const { userID } = await params;
+export default async function NotesPage() {
+  const supabase = await createClient();
+
+  const { data: notes } = await supabase
+    .from('notes')
+    .select()
+    .order('date', { ascending: false });
 
   return (
     <main>
       <Container size='md'>
         <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
-          <SingleNote userID={userID} />
+          {!notes && <NoteHome />}
+          {notes && <AllNotes notes={notes} />}
         </Paper>
       </Container>
     </main>

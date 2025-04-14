@@ -25,7 +25,6 @@ export const CreateNewAppointment = (props) => {
   const [failModalopened, failModalObj] = useDisclosure(false);
   const [status, setStatus] = useState(2);
   const router = useRouter();
-  const supabase = createClient();
 
   const userID = props.userID;
 
@@ -91,6 +90,8 @@ export const CreateNewAppointment = (props) => {
       }
 
       const updatedPrice = values.price ? values.price : null;
+
+      const supabase = createClient();
 
       if (
         initialValues.vetname === values.vetname &&

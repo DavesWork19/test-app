@@ -26,7 +26,6 @@ export const UpdateAppointment = (props) => {
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
   const router = useRouter();
-  const supabase = createClient();
 
   const appointment = props.appointment;
   const vet = props.vet;
@@ -103,6 +102,7 @@ export const UpdateAppointment = (props) => {
         endTimeStr = values.endTime.toISOString();
       }
       const updatedPrice = values.price ? values.price : null;
+      const supabase = createClient();
 
       if (
         initialValues.vetname === values.vetname &&
