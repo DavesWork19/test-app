@@ -6,9 +6,7 @@ export default async function InsurancePage() {
   const { data: vets } = await supabase
     .from('vets')
     .select()
-    .order('last_updated', { ascending: true });
-
-  console.log('fdasfasd', vets);
+    .order('last_updated', { ascending: false });
 
   return (
     <main>

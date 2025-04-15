@@ -9,61 +9,26 @@ export const Test = (props) => {
   const data = props.data;
   const router = useRouter();
 
-  console.log('testda', data, props);
-  // const data = [
-  //   {
-  //     image:
-  //       'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-  //     title: 'Best forests to visit in North America',
-  //     category: 'nature',
-  //   },
-  //   {
-  //     image:
-  //       'https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-  //     title: 'Hawaii beaches review: better than you think',
-  //     category: 'beach',
-  //   },
-  //   {
-  //     image:
-  //       'https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-  //     title: 'Mountains at night: 12 best locations to enjoy the view',
-  //     category: 'nature',
-  //   },
-  //   {
-  //     image:
-  //       'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-  //     title: 'Aurora in Norway: when to visit for best experience',
-  //     category: 'nature',
-  //   },
-  //   {
-  //     image:
-  //       'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-  //     title: 'Best places to visit this winter',
-  //     category: 'tourism',
-  //   },
-  //   {
-  //     image:
-  //       'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-  //     title: 'Active volcanos reviews: travel at your own risk',
-  //     category: 'nature',
-  //   },
-  // ];
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const slides = data?.map((item) => (
-    <Carousel.Slide key={item.id}>
+  const slides = data?.map((vet) => (
+    <Carousel.Slide key={vet.id}>
       <Paper
         shadow='md'
         p='xl'
         radius='md'
         bg={'green'}
-        // style={{ backgroundImage: `url(${item.image})` }}
+        // style={{ backgroundImage: `url(${vet.image})` }}
       >
         <div>
-          {/* <Text size='xs'>{item.category}</Text> */}
-          <Title order={3}>{item.name}</Title>
+          {/* <Text size='xs'>{vet.category}</Text> */}
+          <Title order={3}>{vet.name}</Title>
         </div>
-        <Button variant='white' color='dark'>
+        <Button
+          variant='white'
+          color='dark'
+          onClick={() => router.replace(`/insurance/update/${vet.id}`)}
+        >
           Edit
         </Button>
       </Paper>
@@ -84,10 +49,10 @@ export const Test = (props) => {
           p='xl'
           radius='md'
           bg={'green'}
-          // style={{ backgroundImage: `url(${item.image})` }}
+          // style={{ backgroundImage: `url(${vet.image})` }}
         >
           <div>
-            {/* <Text size='xs'>{item.category}</Text> */}
+            {/* <Text size='xs'>{vet.category}</Text> */}
             <Title order={3}>{'Create New Vet'}</Title>
           </div>
           <Button

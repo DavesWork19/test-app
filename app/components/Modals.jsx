@@ -1,10 +1,12 @@
+import { Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 export const successModal = () => {
-  const [successModalopened, successModalObj] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <Modal
-      opened={successModalopened}
-      onClose={successModalObj.close}
+      opened={opened}
+      onClose={close}
       centered
       withCloseButton={false}
       size={'xs'}

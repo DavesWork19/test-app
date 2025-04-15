@@ -5,25 +5,25 @@ import {
   Title,
   Card,
   Group,
+  Center,
   Button,
+  Grid,
   Container,
   Paper,
-  Grid,
-  Center,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../../utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
-export const CreateNewVet = (props) => {
+export const UpdateVet = (props) => {
+  const vet = props.vet;
   const router = useRouter();
-  const userID = props.userID;
 
   const initialValues = {
-    name: '',
-    phone_number: '',
-    email: '',
-    location: '',
+    name: vet.name,
+    phone_number: vet.phone_number,
+    email: vet.email,
+    location: vet.location,
   };
 
   const form = useForm({
@@ -39,16 +39,28 @@ export const CreateNewVet = (props) => {
     router.replace('/insurance');
   };
 
+  const handleDelete = async () => {
+    const supabase = createClient();
+    const { error } = await supabase.from('vets').delete().eq('id', vet.id);
+    if (error) {
+      console.log('errorereoreoore');
+    } else {
+      router.replace('/insurance');
+    }
+  };
+
   const handleSubmit = async (values) => {
     const supabase = createClient();
-    const { error } = await supabase.from('vets').insert({
-      name: values.name,
-      phone_number: values.phone_number,
-      email: values.email,
-      location: values.location,
-      last_updated: new Date(),
-      user_id: userID,
-    });
+    const { error } = await supabase
+      .from('vets')
+      .update({
+        name: values.name,
+        phone_number: values.phone_number,
+        email: values.email,
+        location: values.location,
+        last_updated: new Date(),
+      })
+      .eq('id', vet.id);
 
     if (error) {
       console.log('errorereoreoore');
@@ -65,7 +77,7 @@ export const CreateNewVet = (props) => {
             <Grid.Col span={4}></Grid.Col>
             <Grid.Col span={4}>
               <Center>
-                <Title>Add New Vet</Title>
+                <Title>Update Vet</Title>
               </Center>
             </Grid.Col>
             <Grid.Col span={4} mt={4}>
@@ -87,14 +99,24 @@ export const CreateNewVet = (props) => {
                   bg='white'
                   size='compact-xs'
                   radius='xl'
+                  me={6}
                   onClick={handleExit}
                 >
                   Exit
                 </Button>
+                <Button
+                  variant='outline'
+                  color='red'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
               </Center>
             </Grid.Col>
           </Grid>
-
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Group justify='space-between' grow mt='md' mb='xs'>
               <TextInput
@@ -125,7 +147,7 @@ export const CreateNewVet = (props) => {
                 variant={'filled'}
                 key={form.key('phone_number')}
                 {...form.getInputProps('phone_number')}
-                placeholder="Vet's Phone Number"
+                placeholder="Vet' Phone Number"
               />
             </Group>
           </Card>
