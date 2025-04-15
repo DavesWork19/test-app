@@ -42,8 +42,8 @@ export default function RootLayout({ children }) {
         <MantineProvider>
           <Header />
           {children}
-          <Analytics />
           <SpeedInsights />
+          <Analytics />
         </MantineProvider>
       </body>
     </html>

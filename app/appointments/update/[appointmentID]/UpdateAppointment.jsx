@@ -10,6 +10,7 @@ import {
   TextInput,
   NumberInput,
   NativeSelect,
+  Modal,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -19,7 +20,6 @@ import { createClient } from '../../../utils/supabase/client';
 import { IconCircleCheck, IconCircleX, IconCircle } from '@tabler/icons-react';
 import { appointmentStatusConversion } from '../../../components/constants';
 import { useDisclosure } from '@mantine/hooks';
-import { Modal } from '@mantine/core';
 
 export const UpdateAppointment = (props) => {
   const [editButton, setEditButton] = useState(true);
