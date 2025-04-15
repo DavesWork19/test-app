@@ -131,6 +131,7 @@ export const CreateNewAppointment = (props) => {
             phone_number: values.vetphone ? values.vetphone : null,
             email: values.vetemail,
             location: values.vetlocation,
+            last_updated: new Date(),
             user_id: userID,
           })
           .select();

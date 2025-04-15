@@ -1,6 +1,5 @@
 import { Container, Paper } from '@mantine/core';
 import { createClient } from '../utils/supabase/server';
-import { NoNote } from './update/NoNote';
 import { NoteHome } from './NoteHome';
 import { AllNotes } from './AllNotes';
 

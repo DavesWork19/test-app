@@ -155,6 +155,7 @@ export const UpdateAppointment = (props) => {
             phone_number: values.vetphone ? values.vetphone : null,
             email: values.vetemail,
             location: values.vetlocation,
+            last_updated: new Date(),
           })
           .eq('id', vet.id);
 

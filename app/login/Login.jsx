@@ -91,6 +91,7 @@ export function Login() {
       };
 
       const { error } = await supabase.auth.signInWithPassword(datas);
+      console.log(error, 'tes');
       if (error) {
         setStatus('loginError');
       }

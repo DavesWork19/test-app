@@ -3,12 +3,14 @@
 import {
   TextInput,
   Textarea,
+  Title,
   Card,
   FileInput,
   Group,
   Center,
   FileButton,
   Button,
+  Grid,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -87,40 +89,52 @@ export const UpdateNote = (props) => {
   const imgText = selectedImage ? 'Upload New File' : 'Upload File';
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)} className='mt-8 mb-2'>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Grid pb={12}>
+        <Grid.Col span={4}></Grid.Col>
+        <Grid.Col span={4}>
+          <Center>
+            <Title>Update Note</Title>
+          </Center>
+        </Grid.Col>
+        <Grid.Col span={4} mt={4}>
+          <Center>
+            <Button
+              variant='outline'
+              color='grey'
+              bg='white'
+              size='compact-xs'
+              radius='xl'
+              type='submit'
+              me={6}
+            >
+              Save
+            </Button>
+            <Button
+              variant='outline'
+              color='grey'
+              bg='white'
+              size='compact-xs'
+              radius='xl'
+              me={6}
+              onClick={handleExit}
+            >
+              Exit
+            </Button>
+            <Button
+              variant='outline'
+              color='red'
+              bg='white'
+              size='compact-xs'
+              radius='xl'
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </Center>
+        </Grid.Col>
+      </Grid>
       <Card shadow='sm' padding='lg' radius='md' withBorder>
-        <Group justify='flex-end'>
-          <Button
-            variant='outline'
-            color='grey'
-            bg='white'
-            size='compact-xs'
-            radius='xl'
-            type='submit'
-          >
-            Save
-          </Button>
-          <Button
-            variant='outline'
-            color='grey'
-            bg='white'
-            size='compact-xs'
-            radius='xl'
-            onClick={handleExit}
-          >
-            Exit
-          </Button>
-          <Button
-            variant='outline'
-            color='red'
-            bg='white'
-            size='compact-xs'
-            radius='xl'
-            onClick={handleDelete}
-          >
-            Delete
-          </Button>
-        </Group>
         <Group justify='space-between' grow mt='md' mb='xs'>
           <TextInput
             variant={'filled'}

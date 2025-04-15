@@ -1,6 +1,6 @@
 import { Container, Paper } from '@mantine/core';
 import { createClient } from '../../utils/supabase/server';
-import { NoNote } from './NoNote';
+import { CreateNewNote } from './CreateNewNote';
 
 export default async function UpdateNotesPage() {
   const supabase = await createClient();
@@ -17,7 +17,7 @@ export default async function UpdateNotesPage() {
     <main>
       <Container size='md'>
         <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
-          <NoNote userID={user.id} />
+          <CreateNewNote userID={user.id} />
         </Paper>
       </Container>
     </main>

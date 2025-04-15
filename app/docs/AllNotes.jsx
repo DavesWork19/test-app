@@ -6,7 +6,7 @@ import {
   IconCircleX,
   IconPlus,
 } from '@tabler/icons-react';
-import { Center, Timeline, Text, Paper, Container } from '@mantine/core';
+import { Center, Timeline, Text, Paper, List } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 
 export const AllNotes = (props) => {
@@ -66,12 +66,14 @@ export const AllNotes = (props) => {
               >
                 {note.description && (
                   <div>
-                    <Text size='md' mr={200} fw={500}>
+                    <Text size='md' fw={600} ta={'start'}>
                       {'Description'}
                     </Text>
-                    <Text size='sm' mb={'sm'} pr={150}>
-                      {note.description}
-                    </Text>
+                    <List icon='•'>
+                      <List.Item ta={'start'}>
+                        <Text lineClamp={1}>{note.description}</Text>
+                      </List.Item>
+                    </List>
                   </div>
                 )}
               </Paper>

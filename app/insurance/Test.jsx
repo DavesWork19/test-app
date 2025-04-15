@@ -1,64 +1,70 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Button, Paper, Text, Title, useMantineTheme } from '@mantine/core';
+import { Button, Paper, Title, useMantineTheme } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { useRouter } from 'next/navigation';
 
-export default function Test() {
-  const data = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best forests to visit in North America',
-      category: 'nature',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Hawaii beaches review: better than you think',
-      category: 'beach',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Mountains at night: 12 best locations to enjoy the view',
-      category: 'nature',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Aurora in Norway: when to visit for best experience',
-      category: 'nature',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Best places to visit this winter',
-      category: 'tourism',
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
-      title: 'Active volcanos reviews: travel at your own risk',
-      category: 'nature',
-    },
-  ];
+export const Test = (props) => {
+  const data = props.data;
+  const router = useRouter();
+
+  console.log('testda', data, props);
+  // const data = [
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
+  //     title: 'Best forests to visit in North America',
+  //     category: 'nature',
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1559494007-9f5847c49d94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
+  //     title: 'Hawaii beaches review: better than you think',
+  //     category: 'beach',
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
+  //     title: 'Mountains at night: 12 best locations to enjoy the view',
+  //     category: 'nature',
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1507272931001-fc06c17e4f43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
+  //     title: 'Aurora in Norway: when to visit for best experience',
+  //     category: 'nature',
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
+  //     title: 'Best places to visit this winter',
+  //     category: 'tourism',
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80',
+  //     title: 'Active volcanos reviews: travel at your own risk',
+  //     category: 'nature',
+  //   },
+  // ];
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const slides = data.map((item) => (
-    <Carousel.Slide key={item.title}>
+  const slides = data?.map((item) => (
+    <Carousel.Slide key={item.id}>
       <Paper
         shadow='md'
         p='xl'
         radius='md'
-        style={{ backgroundImage: `url(${item.image})` }}
+        bg={'green'}
+        // style={{ backgroundImage: `url(${item.image})` }}
       >
         <div>
-          <Text size='xs'>{item.category}</Text>
-          <Title order={3}>{item.title}</Title>
+          {/* <Text size='xs'>{item.category}</Text> */}
+          <Title order={3}>{item.name}</Title>
         </div>
         <Button variant='white' color='dark'>
-          Read article
+          Edit
         </Button>
       </Paper>
     </Carousel.Slide>
@@ -68,10 +74,32 @@ export default function Test() {
     <Carousel
       slideSize={{ base: '100%', sm: '50%' }}
       slideGap={{ base: 2, sm: 'xl' }}
-      align='start'
-      slidesToScroll={mobile ? 1 : 2}
+      align='center'
+      slidesToScroll={1}
+      // slidesToScroll={mobile ? 1 : 2}
     >
+      <Carousel.Slide key={'createNewVet'}>
+        <Paper
+          shadow='md'
+          p='xl'
+          radius='md'
+          bg={'green'}
+          // style={{ backgroundImage: `url(${item.image})` }}
+        >
+          <div>
+            {/* <Text size='xs'>{item.category}</Text> */}
+            <Title order={3}>{'Create New Vet'}</Title>
+          </div>
+          <Button
+            variant='white'
+            color='dark'
+            onClick={() => router.replace('/insurance/update')}
+          >
+            Create
+          </Button>
+        </Paper>
+      </Carousel.Slide>
       {slides}
     </Carousel>
   );
-}
+};

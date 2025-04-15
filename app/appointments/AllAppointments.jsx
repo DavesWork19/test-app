@@ -6,7 +6,7 @@ import {
   IconCircleX,
   IconPlus,
 } from '@tabler/icons-react';
-import { Center, Timeline, Text, Paper, Container } from '@mantine/core';
+import { Center, Timeline, Text, Paper, List } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import classes from './HomeAppointment.module.css';
 
@@ -84,22 +84,26 @@ export const AllAppointments = (props) => {
               >
                 {appointment.description && (
                   <div>
-                    <Text size='md' mr={200} fw={500}>
+                    <Text size='md' fw={600} ta={'start'}>
                       {'Description'}
                     </Text>
-                    <Text size='sm' mb={'sm'} pr={150}>
-                      {appointment.description}
-                    </Text>
+                    <List icon='•' pb={12}>
+                      <List.Item ta={'start'}>
+                        <Text lineClamp={1}>{appointment.description}</Text>
+                      </List.Item>
+                    </List>
                   </div>
                 )}
                 {appointment.next_steps && (
                   <div>
-                    <Text size='md' mr={150} fw={500}>
+                    <Text size='md' fw={600} ta={'start'}>
                       {'Next Steps'}
                     </Text>
-                    <Text size='sm' mb={'sm'} pr={150}>
-                      {appointment.next_steps}
-                    </Text>
+                    <List icon='•'>
+                      <List.Item ta={'start'}>
+                        <Text lineClamp={1}>{appointment.next_steps}</Text>
+                      </List.Item>
+                    </List>
                   </div>
                 )}
               </Paper>
