@@ -24,7 +24,7 @@ export async function GET(request) {
       });
       // redirect user to specified redirect URL or root of app
       if (!error) {
-        redirect('https://www.integralinformation.com/home');
+        redirect('/home');
       }
     }
   }
