@@ -9,7 +9,9 @@ import {
   Center,
   FileButton,
   Button,
+  Modal,
   Grid,
+  Text,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -17,12 +19,15 @@ import { createClient } from '../../utils/supabase/client';
 import { uploadFile } from '../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDisclosure } from '@mantine/hooks';
 
 export const CreateNewNote = (props) => {
   const userID = props.userID;
   const today = new Date();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState();
+  const [successModalopened, successModalObj] = useDisclosure(false);
+  const [failModalopened, failModalObj] = useDisclosure(false);
 
   const imageChange = (data) => {
     if (data) {
@@ -69,13 +74,17 @@ export const CreateNewNote = (props) => {
 
     const imgObj =
       selectedImage && (await uploadFile(selectedImage, userID, data[0].id));
-    console.log('selecte imagae', selectedImage);
-    console.log('img ob', imgObj);
 
-    if (error) {
-      console.log('errorereoreoore');
+    if (!error & !imgObj) {
+      successModalObj.open();
+      setTimeout(() => {
+        successModalObj.close();
+      }, 1500);
     } else {
-      console.log('nooo erore??????');
+      failModalObj.open();
+      setTimeout(() => {
+        failModalObj.close();
+      }, 1500);
     }
   };
 
@@ -83,6 +92,34 @@ export const CreateNewNote = (props) => {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Modal
+        opened={successModalopened}
+        onClose={successModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
+          Successfully Saved!
+        </Text>
+        <Text size='xs' fw={500} c={'green'} ta='center'>
+          Continue editing or exit and return to the Appointments page
+        </Text>
+      </Modal>
+      <Modal
+        opened={failModalopened}
+        onClose={failModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'red'} ta='center' pb={12}>
+          Error!
+        </Text>
+        <Text size='xs' fw={500} c={'red'} ta='center'>
+          Something went wrong!
+        </Text>
+      </Modal>
       <Grid pb={12}>
         <Grid.Col span={4}></Grid.Col>
         <Grid.Col span={4}>

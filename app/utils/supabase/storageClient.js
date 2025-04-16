@@ -7,26 +7,47 @@ const supabase = createClient(
 );
 
 export async function uploadFile(file, userID, noteID) {
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('docs')
     .upload(`/private/privateier/${userID}/${noteID}/${file.name}`, file);
 
   if (error) {
-    console.log('storage error', error);
-  } else {
-    console.log('storage success (:', data);
+    return 'error';
+  }
+}
+
+export async function replaceFile(file, userID, noteID) {
+  const { error } = await supabase.storage
+    .from('docs')
+    .update(`/private/privateier/${userID}/${noteID}/${file.name}`, file, {
+      cacheControl: '3600',
+      upsert: true,
+    });
+  if (error) {
+    return 'error';
   }
 }
 
 export async function uploadPetFile(file, userID, petID) {
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('docs')
     .upload(`/private/privateier/pets/${userID}/${petID}/${file.name}`, file);
 
   if (error) {
-    console.log('storage error', error);
-  } else {
-    console.log('storage success (:', data);
+    return 'error';
+  }
+}
+
+export async function replacePetFile(file, userID, petID) {
+  const { error } = await supabase.storage
+    .from('docs')
+    .update(`/private/privateier/pets/${userID}/${petID}/${file.name}`, file, {
+      cacheControl: '3600',
+      upsert: true,
+    });
+
+  if (error) {
+    return 'error';
   }
 }
 

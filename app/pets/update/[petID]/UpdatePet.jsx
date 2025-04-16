@@ -2,6 +2,7 @@
 
 import {
   TextInput,
+  Text,
   Title,
   Card,
   FileInput,
@@ -10,18 +11,22 @@ import {
   FileButton,
   Button,
   Grid,
+  Modal,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { createClient } from '../../../utils/supabase/client';
-import { uploadPetFile } from '../../../utils/supabase/storageClient';
+import { replacePetFile } from '../../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDisclosure } from '@mantine/hooks';
 
 export const UpdatePet = (props) => {
   const pet = props.pet;
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState();
+  const [successModalopened, successModalObj] = useDisclosure(false);
+  const [failModalopened, failModalObj] = useDisclosure(false);
 
   const imageChange = (data) => {
     if (data) {
@@ -58,9 +63,7 @@ export const UpdatePet = (props) => {
   const handleDelete = async () => {
     const supabase = createClient();
     const { error } = await supabase.from('pets').delete().eq('id', pet.id);
-    if (error) {
-      console.log('errorereoreoore');
-    } else {
+    if (!error) {
       router.replace('/pets');
     }
   };
@@ -81,14 +84,18 @@ export const UpdatePet = (props) => {
       .eq('id', pet.id);
     const imgObj =
       selectedImage &&
-      (await uploadPetFile(selectedImage, pet.user_id, pet.id));
-    console.log('selecte imagae', selectedImage);
-    console.log('img ob', imgObj);
+      (await replacePetFile(selectedImage, pet.user_id, pet.id));
 
-    if (error) {
-      console.log('errorereoreoore');
+    if (!error & !imgObj) {
+      successModalObj.open();
+      setTimeout(() => {
+        successModalObj.close();
+      }, 1500);
     } else {
-      console.log('nooo erore??????');
+      failModalObj.open();
+      setTimeout(() => {
+        failModalObj.close();
+      }, 1500);
     }
   };
 
@@ -96,6 +103,34 @@ export const UpdatePet = (props) => {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Modal
+        opened={successModalopened}
+        onClose={successModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
+          Successfully Saved!
+        </Text>
+        <Text size='xs' fw={500} c={'green'} ta='center'>
+          Continue editing or exit and return to the Appointments page
+        </Text>
+      </Modal>
+      <Modal
+        opened={failModalopened}
+        onClose={failModalObj.close}
+        centered
+        withCloseButton={false}
+        size={'xs'}
+      >
+        <Text size='md' fw={600} c={'red'} ta='center' pb={12}>
+          Error!
+        </Text>
+        <Text size='xs' fw={500} c={'red'} ta='center'>
+          Something went wrong!
+        </Text>
+      </Modal>
       <Grid pb={12}>
         <Grid.Col span={4}></Grid.Col>
         <Grid.Col span={4}>
