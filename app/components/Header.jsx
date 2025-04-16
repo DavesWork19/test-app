@@ -10,7 +10,7 @@ import {
   IconCalendarClock,
   IconNotes,
   IconAmbulance,
-  IconPencil,
+  IconPaw,
 } from '@tabler/icons-react';
 import classes from './Header.module.css';
 import { Burger } from '@mantine/core';
@@ -60,23 +60,23 @@ export const Header = () => {
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
-            value='insurance'
+            value='vets'
             className={classes.headerTab}
             leftSection={<IconAmbulance stroke={1} />}
-            onClick={() => handleOnClick('insurance')}
+            onClick={() => handleOnClick('vets')}
           >
             <Text size={'lg'} fw={500}>
-              Insurance
+              Vets
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
-            value='account'
+            value='pets'
             className={classes.headerTab}
-            leftSection={<IconAmbulance stroke={1} />}
-            onClick={() => handleOnClick('account')}
+            leftSection={<IconPaw stroke={1} />}
+            onClick={() => handleOnClick('pets')}
           >
             <Text size={'lg'} fw={500}>
-              Account
+              Pets
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
@@ -124,18 +124,18 @@ export const Header = () => {
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconAmbulance stroke={2} />}
-                onClick={() => handleOnClick('insurance')}
+                onClick={() => handleOnClick('vets')}
               >
                 <Text size={'lg'} fw={500}>
-                  Insurance
+                  Vets
                 </Text>
               </Menu.Item>
               <Menu.Item
-                leftSection={<IconAmbulance stroke={2} />}
-                onClick={() => handleOnClick('account')}
+                leftSection={<IconPaw stroke={2} />}
+                onClick={() => handleOnClick('pets')}
               >
                 <Text size={'lg'} fw={500}>
-                  Account
+                  Pets
                 </Text>
               </Menu.Item>
               <Menu.Item

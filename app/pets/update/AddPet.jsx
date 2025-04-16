@@ -14,11 +14,11 @@ import {
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { createClient } from '../../utils/supabase/client';
-import { uploadFile } from '../../utils/supabase/storageClient';
+import { uploadPetFile } from '../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export const CreateNewNote = (props) => {
+export const AddPet = (props) => {
   const userID = props.userID;
   const today = new Date();
   const router = useRouter();
@@ -36,9 +36,11 @@ export const CreateNewNote = (props) => {
   };
 
   const initialValues = {
-    title: '',
-    date: today,
-    description: '',
+    name: null,
+    weight: null,
+    breed: null,
+    birthday: null,
+    color: null,
   };
 
   const form = useForm({
@@ -46,29 +48,34 @@ export const CreateNewNote = (props) => {
     initialValues: initialValues,
 
     validate: {
-      title: (value) => (value.length > 0 ? null : 'Title Needed!'),
-      date: (value) => (value.toString().length > 0 ? null : 'Date Needed!'),
+      name: (value) => (value.length > 0 ? null : 'Name Needed!'),
     },
   });
 
   const handleExit = () => {
-    router.replace('/docs');
+    router.replace('/pets');
   };
 
   const handleSubmit = async (values) => {
     const supabase = createClient();
     const { data, error } = await supabase
-      .from('notes')
+      .from('pets')
       .upsert({
-        title: values.title,
-        date: values.date,
-        description: values.description,
+        name: values.name,
+        weight: values.weight,
+        breed: values.breed,
+        birthday: values.birthday,
+        color: values.color,
+        last_updated: new Date(),
         user_id: userID,
       })
       .select();
 
+    console.log(data);
+    console.log(error);
+
     const imgObj =
-      selectedImage && (await uploadFile(selectedImage, userID, data[0].id));
+      selectedImage && (await uploadPetFile(selectedImage, userID, data[0].id));
     console.log('selecte imagae', selectedImage);
     console.log('img ob', imgObj);
 
@@ -87,7 +94,7 @@ export const CreateNewNote = (props) => {
         <Grid.Col span={4}></Grid.Col>
         <Grid.Col span={4}>
           <Center>
-            <Title>Add Note</Title>
+            <Title>Add Pet</Title>
           </Center>
         </Grid.Col>
         <Grid.Col span={4} mt={4}>
@@ -120,28 +127,40 @@ export const CreateNewNote = (props) => {
         <Group justify='space-between' grow mt='md' mb='xs'>
           <TextInput
             variant={'filled'}
-            key={form.key('title')}
-            {...form.getInputProps('title')}
-            placeholder='Title'
+            key={form.key('name')}
+            {...form.getInputProps('name')}
+            placeholder="Pet's Name"
           />
           <DateInput
             clearable
             variant={'filled'}
-            placeholder='Date'
-            key={form.key('date')}
-            {...form.getInputProps('date')}
-            valueFormat='ddd MMM DD'
+            key={form.key('birthday')}
+            {...form.getInputProps('birthday')}
+            valueFormat='MMMM D, YYYY'
+            placeholder="Pet's Birthday"
           />
         </Group>
-        <Textarea
-          variant={'filled'}
-          placeholder={'What Happened???'}
-          autosize
-          minRows={7}
-          cols={24}
-          key={form.key('description')}
-          {...form.getInputProps('description')}
-        />
+        <Group justify='space-between' grow mt='md' mb='xs'>
+          <TextInput
+            variant={'filled'}
+            key={form.key('weight')}
+            {...form.getInputProps('weight')}
+            placeholder="Pet's Weight"
+          />
+          <TextInput
+            variant={'filled'}
+            key={form.key('breed')}
+            {...form.getInputProps('breed')}
+            placeholder="Pet's Breed"
+          />
+          <TextInput
+            variant={'filled'}
+            key={form.key('color')}
+            {...form.getInputProps('color')}
+            placeholder="Pet's Color(s)"
+          />
+        </Group>
+
         <Card.Section py={36} px={24}>
           <Group justify='space-between' grow mt='md' mb='xs'>
             <FileButton onChange={imageChange}>

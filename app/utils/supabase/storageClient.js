@@ -17,3 +17,28 @@ export async function uploadFile(file, userID, noteID) {
     console.log('storage success (:', data);
   }
 }
+
+export async function uploadPetFile(file, userID, petID) {
+  const { data, error } = await supabase.storage
+    .from('docs')
+    .upload(`/private/privateier/pets/${userID}/${petID}/${file.name}`, file);
+
+  if (error) {
+    console.log('storage error', error);
+  } else {
+    console.log('storage success (:', data);
+  }
+}
+
+export async function getPetFile() {
+  const { data, error } = await supabase.storage
+    .from('docs')
+    .list(`private/privateier/pets`);
+
+  console.log('tesitng fetch get call', data, error);
+  if (error) {
+    console.log('storage error', error);
+  } else {
+    return data;
+  }
+}

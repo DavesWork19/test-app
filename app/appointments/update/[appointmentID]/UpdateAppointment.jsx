@@ -261,38 +261,42 @@ export const UpdateAppointment = (props) => {
                     size='compact-xs'
                     radius='xl'
                     onClick={() => setEditButton(false)}
+                    me={6}
                   >
                     Edit
                   </Button>
                 ) : (
                   <Button
                     variant='outline'
-                    color='grey'
+                    color='black'
                     bg='white'
                     size='compact-xs'
                     radius='xl'
                     onClick={() => setEditButton(true)}
+                    me={6}
                   >
                     View
                   </Button>
                 )}
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'
                   type='submit'
+                  me={6}
                 >
                   Save
                 </Button>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'
                   onClick={handleExit}
+                  me={6}
                 >
                   Exit
                 </Button>

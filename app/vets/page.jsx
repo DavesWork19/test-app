@@ -1,7 +1,7 @@
 import { Test } from './Test';
 import { createClient } from '../utils/supabase/server';
 
-export default async function InsurancePage() {
+export default async function VetPage() {
   const supabase = await createClient();
   const { data: vets } = await supabase
     .from('vets')

@@ -226,17 +226,18 @@ export const CreateNewAppointment = (props) => {
               <Center>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'
                   type='submit'
+                  me={6}
                 >
                   Save
                 </Button>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'

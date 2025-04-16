@@ -20,7 +20,6 @@ import { createClient } from '../utils/supabase/client';
 export function Login() {
   const [status, setStatus] = useState('Login');
   const router = useRouter();
-  const registerSize = status === 'loginError' ? 'sm' : 'xs';
 
   const form = useForm({
     initialValues: {
@@ -34,9 +33,7 @@ export function Login() {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) =>
-        val.length <= 6
-          ? 'Password should include at least 6 characters'
-          : null,
+        val.length < 6 ? 'Password should include at least 6 characters' : null,
       terms: (val) => (val !== true ? 'Required!' : null),
     },
   });
@@ -215,15 +212,38 @@ export function Login() {
               type='button'
               c='dimmed'
               onClick={handleOnClick}
-              size={registerSize}
+              size={'xs'}
             >
-              {status === 'Register'
-                ? 'Already have an account? Login'
-                : "Don't have an account? Register"}
+              {status === 'Register' ? (
+                <Group gap={1}>
+                  <Text size={'xs'} c='dimmed'>
+                    {'Already have an account?'}
+                  </Text>
+                  <Text size={'sm'} mb={1}>
+                    {'Login'}
+                  </Text>
+                </Group>
+              ) : (
+                <Group gap={1}>
+                  <Text size={'xs'} c='dimmed'>
+                    {"Don't have an account?"}
+                  </Text>
+                  <Text size={'sm'} mb={1}>
+                    {'Register'}
+                  </Text>
+                </Group>
+              )}
             </Anchor>
-            <Button type='submit' radius='xl'>
-              {status}
-            </Button>
+            {(status === 'Login' || status === 'loginError') && (
+              <Button type='submit' radius='xl'>
+                {'Login'}
+              </Button>
+            )}
+            {status === 'Register' && (
+              <Button type='submit' radius='xl'>
+                {'Register'}
+              </Button>
+            )}
           </Group>
         </form>
       )}

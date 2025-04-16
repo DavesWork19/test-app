@@ -36,7 +36,7 @@ export const UpdateVet = (props) => {
   });
 
   const handleExit = () => {
-    router.replace('/insurance');
+    router.replace('/vets');
   };
 
   const handleDelete = async () => {
@@ -45,7 +45,7 @@ export const UpdateVet = (props) => {
     if (error) {
       console.log('errorereoreoore');
     } else {
-      router.replace('/insurance');
+      router.replace('/vets');
     }
   };
 
@@ -84,7 +84,7 @@ export const UpdateVet = (props) => {
               <Center>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'
@@ -95,7 +95,7 @@ export const UpdateVet = (props) => {
                 </Button>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'

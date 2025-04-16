@@ -1,6 +1,6 @@
 'use client';
 
-import { Center } from '@mantine/core';
+import { Center, Button, Container } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import { createClient } from '../utils/supabase/client';
 
@@ -14,8 +14,10 @@ export const SignOut = () => {
   };
 
   return (
-    <button onClick={handleOnClick}>
-      <Center>Sign Out</Center>
-    </button>
+    <Container>
+      <Button onClick={handleOnClick}>
+        <Center>Sign Out</Center>
+      </Button>
+    </Container>
   );
 };

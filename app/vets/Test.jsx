@@ -27,7 +27,7 @@ export const Test = (props) => {
         <Button
           variant='white'
           color='dark'
-          onClick={() => router.replace(`/insurance/update/${vet.id}`)}
+          onClick={() => router.replace(`/vets/update/${vet.id}`)}
         >
           Edit
         </Button>
@@ -58,7 +58,7 @@ export const Test = (props) => {
           <Button
             variant='white'
             color='dark'
-            onClick={() => router.replace('/insurance/update')}
+            onClick={() => router.replace('/vets/update')}
           >
             Create
           </Button>

@@ -20,10 +20,10 @@ export const CreateNewVet = (props) => {
   const userID = props.userID;
 
   const initialValues = {
-    name: '',
-    phone_number: '',
-    email: '',
-    location: '',
+    name: null,
+    phone_number: null,
+    email: null,
+    location: null,
   };
 
   const form = useForm({
@@ -36,7 +36,7 @@ export const CreateNewVet = (props) => {
   });
 
   const handleExit = () => {
-    router.replace('/insurance');
+    router.replace('/vets');
   };
 
   const handleSubmit = async (values) => {
@@ -49,7 +49,7 @@ export const CreateNewVet = (props) => {
       last_updated: new Date(),
       user_id: userID,
     });
-
+    console.log(error);
     if (error) {
       console.log('errorereoreoore');
     } else {
@@ -72,7 +72,7 @@ export const CreateNewVet = (props) => {
               <Center>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'
@@ -83,7 +83,7 @@ export const CreateNewVet = (props) => {
                 </Button>
                 <Button
                   variant='outline'
-                  color='grey'
+                  color='black'
                   bg='white'
                   size='compact-xs'
                   radius='xl'
