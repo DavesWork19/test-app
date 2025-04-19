@@ -1,6 +1,5 @@
 import { Container, Paper } from '@mantine/core';
 import { createClient } from '../utils/supabase/server';
-import { NoteHome } from './NoteHome';
 import { AllNotes } from './AllNotes';
 
 export default async function NotesPage() {
@@ -15,8 +14,7 @@ export default async function NotesPage() {
     <main>
       <Container size='md'>
         <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
-          {!notes && <NoteHome />}
-          {notes && <AllNotes notes={notes} />}
+          <AllNotes notes={notes} />
         </Paper>
       </Container>
     </main>

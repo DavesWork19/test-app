@@ -10,6 +10,23 @@ export default async function UpdateNotePage({ params }) {
     data: [note],
   } = await supabase.from('notes').select().eq('id', noteID);
 
+  const { data } = await supabase.storage
+    .from('docs')
+    .list(`private/privateier/docs/${note.user_id}/${note.id}`);
+  if (data[0]) {
+    const petImg = await supabase.storage
+      .from('docs')
+      .createSignedUrl(
+        `private/privateier/docs/${note.user_id}/${note.id}/${data[0].name}`,
+        600
+      );
+    note.img_name = data[0].name;
+    note.image = petImg.data;
+  } else {
+    note.img_name = null;
+    note.image = null;
+  }
+
   return (
     <main>
       <Container size='md'>

@@ -1,6 +1,6 @@
+import { Container, Paper } from '@mantine/core';
 import { createClient } from '../utils/supabase/server';
 import { AllAppointments } from './AllAppointments';
-import { NoAppointments } from './NoAppointments';
 
 export default async function AppointmentPage() {
   const supabase = await createClient();
@@ -15,10 +15,11 @@ export default async function AppointmentPage() {
 
   return (
     <main>
-      {appointments.length === 0 && <NoAppointments />}
-      {appointments.length > 0 && (
-        <AllAppointments appointments={appointments} />
-      )}
+      <Container size='md'>
+        <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
+          <AllAppointments appointments={appointments} />
+        </Paper>
+      </Container>
     </main>
   );
 }

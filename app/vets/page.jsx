@@ -1,5 +1,6 @@
 import { Test } from './Test';
 import { createClient } from '../utils/supabase/server';
+import { Container } from '@mantine/core';
 
 export default async function VetPage() {
   const supabase = await createClient();
@@ -10,8 +11,9 @@ export default async function VetPage() {
 
   return (
     <main>
-      {'Vets?'}
-      <Test data={vets} />
+      <Container size={'md'}>
+        <Test data={vets} />
+      </Container>
       {/* {'Insurances '}
       <Test /> */}
     </main>

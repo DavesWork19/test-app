@@ -16,7 +16,7 @@ import {
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { createClient } from '../../../utils/supabase/client';
-import { replaceFile } from '../../../utils/supabase/storageClient';
+import { replaceDocFile } from '../../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDisclosure } from '@mantine/hooks';
@@ -24,20 +24,24 @@ import { useDisclosure } from '@mantine/hooks';
 export const UpdateNote = (props) => {
   const note = props.note;
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState();
+  const [selectedImage, setSelectedImage] = useState({
+    img_name: note.img_name,
+    url: note.image.signedUrl,
+  });
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
 
   const imageChange = (data) => {
     if (data) {
+      data.url = URL.createObjectURL(data);
       setSelectedImage(data);
     }
   };
 
   // This function will be triggered when the "Remove This Image" button is clicked
-  const removeSelectedImage = () => {
-    setSelectedImage();
-  };
+  // const removeSelectedImage = () => {
+  //   setSelectedImage();
+  // };
 
   const initialValues = {
     title: note.title,
@@ -78,7 +82,12 @@ export const UpdateNote = (props) => {
       })
       .eq('id', note.id);
 
-    const imgObj = await replaceFile(selectedImage, userID, note.id);
+    const imgObj = await replaceDocFile(
+      selectedImage,
+      note.user_id,
+      note.id,
+      note.img_name
+    );
 
     if (!error & !imgObj) {
       successModalObj.open();
@@ -136,7 +145,7 @@ export const UpdateNote = (props) => {
           <Center>
             <Button
               variant='outline'
-              color='grey'
+              color='black'
               bg='white'
               size='compact-xs'
               radius='xl'
@@ -147,7 +156,7 @@ export const UpdateNote = (props) => {
             </Button>
             <Button
               variant='outline'
-              color='grey'
+              color='black'
               bg='white'
               size='compact-xs'
               radius='xl'
@@ -207,12 +216,13 @@ export const UpdateNote = (props) => {
             {/* <button onClick={removeSelectedImage}>Remove This Image</button> */}
           </Group>
           {selectedImage && (
-            <Center>
+            <Center pt={12}>
               <img
-                src={URL.createObjectURL(selectedImage)}
+                src={selectedImage.url}
                 alt='Thumb'
-                width={'100%'}
-                height={'100%'}
+                width={'75%'}
+                height={'75%'}
+                style={{ 'border-radius': '5%' }}
               />
             </Center>
           )}

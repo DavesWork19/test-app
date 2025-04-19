@@ -16,7 +16,7 @@ import {
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { createClient } from '../../utils/supabase/client';
-import { uploadFile } from '../../utils/supabase/storageClient';
+import { uploadDocFile } from '../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDisclosure } from '@mantine/hooks';
@@ -73,7 +73,7 @@ export const CreateNewNote = (props) => {
       .select();
 
     const imgObj =
-      selectedImage && (await uploadFile(selectedImage, userID, data[0].id));
+      selectedImage && (await uploadDocFile(selectedImage, userID, data[0].id));
 
     if (!error & !imgObj) {
       successModalObj.open();

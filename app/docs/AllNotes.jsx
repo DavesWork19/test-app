@@ -85,6 +85,7 @@ export const AllNotes = (props) => {
           <Paper
             shadow='xs'
             withBorder
+            bd={'black'}
             p='md'
             w={250}
             radius='md'

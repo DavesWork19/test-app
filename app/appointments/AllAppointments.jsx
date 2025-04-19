@@ -75,6 +75,7 @@ export const AllAppointments = (props) => {
               <Paper
                 shadow='xs'
                 withBorder
+                bd={color}
                 p='md'
                 w={250}
                 radius='md'

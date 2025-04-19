@@ -5,7 +5,6 @@ import {
   Text,
   Title,
   Card,
-  FileInput,
   Group,
   Center,
   FileButton,
@@ -24,20 +23,24 @@ import { useDisclosure } from '@mantine/hooks';
 export const UpdatePet = (props) => {
   const pet = props.pet;
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState();
+  const [selectedImage, setSelectedImage] = useState({
+    img_name: pet.img_name,
+    url: pet.image.signedUrl,
+  });
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
 
   const imageChange = (data) => {
     if (data) {
+      data.url = URL.createObjectURL(data);
       setSelectedImage(data);
     }
   };
 
   // This function will be triggered when the "Remove This Image" button is clicked
-  const removeSelectedImage = () => {
-    setSelectedImage();
-  };
+  // const removeSelectedImage = () => {
+  //   setSelectedImage();
+  // };
 
   const initialValues = {
     name: pet.name,
@@ -82,9 +85,10 @@ export const UpdatePet = (props) => {
         last_updated: new Date(),
       })
       .eq('id', pet.id);
+
     const imgObj =
       selectedImage &&
-      (await replacePetFile(selectedImage, pet.user_id, pet.id));
+      (await replacePetFile(selectedImage, pet.user_id, pet.id, pet.img_name));
 
     if (!error & !imgObj) {
       successModalObj.open();
@@ -98,8 +102,6 @@ export const UpdatePet = (props) => {
       }, 1500);
     }
   };
-
-  const imgText = selectedImage ? 'Upload New File' : 'Upload File';
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -218,19 +220,19 @@ export const UpdatePet = (props) => {
             <FileButton onChange={imageChange}>
               {(props) => (
                 <Button {...props} bg={'cyan'}>
-                  {imgText}
+                  {'Upload New File'}
                 </Button>
               )}
             </FileButton>
-            {/* <button onClick={removeSelectedImage}>Remove This Image</button> */}
           </Group>
           {selectedImage && (
             <Center>
               <img
-                src={URL.createObjectURL(selectedImage)}
+                src={selectedImage.url}
                 alt='Thumb'
-                width={'100%'}
-                height={'100%'}
+                width={'75%'}
+                height={'75%'}
+                style={{ 'border-radius': '5%' }}
               />
             </Center>
           )}
