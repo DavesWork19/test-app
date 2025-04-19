@@ -138,7 +138,7 @@ export const UpdateNote = (props) => {
         <Grid.Col span={4}></Grid.Col>
         <Grid.Col span={4}>
           <Center>
-            <Title>Update Note</Title>
+            <Title>Update Doc</Title>
           </Center>
         </Grid.Col>
         <Grid.Col span={4} mt={4}>
@@ -222,7 +222,7 @@ export const UpdateNote = (props) => {
                 alt='Thumb'
                 width={'75%'}
                 height={'75%'}
-                style={{ 'border-radius': '5%' }}
+                style={{ borderRadius: '5%' }}
               />
             </Center>
           )}

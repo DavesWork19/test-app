@@ -9,16 +9,21 @@ export default async function UpdateAppointmentPage({ params }) {
     data: [appointment],
   } = await supabase.from('appointments').select().eq('id', appointmentID);
 
-  const { data: vet } = await supabase
+  const { data: vets } = await supabase
     .from('vets')
     .select()
-    .eq('id', appointment.vet);
+    .eq('user_id', appointment.user_id);
 
-  const updatedVet = vet ? vet[0] : {};
+  const vetNames = vets.map((vet) => {
+    return {
+      label: vet.name,
+      value: vet.id,
+    };
+  });
 
   return (
     <main>
-      <UpdateAppointment appointment={appointment} vet={updatedVet} />
+      <UpdateAppointment appointment={appointment} vetNames={vetNames} />
     </main>
   );
 }

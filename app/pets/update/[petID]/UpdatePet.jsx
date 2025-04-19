@@ -25,7 +25,7 @@ export const UpdatePet = (props) => {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState({
     img_name: pet.img_name,
-    url: pet.image.signedUrl,
+    url: pet.image?.signedUrl,
   });
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
@@ -232,7 +232,7 @@ export const UpdatePet = (props) => {
                 alt='Thumb'
                 width={'75%'}
                 height={'75%'}
-                style={{ 'border-radius': '5%' }}
+                style={{ borderRadius: '5%' }}
               />
             </Center>
           )}

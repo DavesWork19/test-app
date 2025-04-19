@@ -71,7 +71,7 @@ export const UpdateVet = (props) => {
 
   return (
     <Container size='md'>
-      <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
+      <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Grid pb={12}>
             <Grid.Col span={4}></Grid.Col>

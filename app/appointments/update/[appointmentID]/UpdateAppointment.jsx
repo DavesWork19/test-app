@@ -7,10 +7,11 @@ import {
   Grid,
   Center,
   Text,
+  Title,
   TextInput,
   NumberInput,
-  NativeSelect,
   Modal,
+  Select,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -28,19 +29,22 @@ export const UpdateAppointment = (props) => {
   const router = useRouter();
 
   const appointment = props.appointment;
-  const vet = props.vet;
-  const [status, setStatus] = useState(appointment.status);
+  const vetNames = props.vetNames;
+
+  const [status, setStatus] = useState(String(appointment.status));
+  const [vetSelected, setVetSelected] = useState(appointment.vet);
+  const [insuranceSelected, setInsuranceSelected] = useState();
+  const [categorySelected, setCategorySelected] = useState();
+
+  const vetName = vetNames.filter((vet) => vet.value === vetSelected);
 
   const initialValues = {
     title: appointment.title,
     startTime: new Date(appointment.start_time),
     endTime: appointment.end_time ? new Date(appointment.end_time) : '',
-    status: parseInt(status),
     price: appointment.price ? appointment.price : '',
-    vetname: vet.name,
-    vetlocation: vet.location,
-    vetphone: vet.phone_number,
-    vetemail: vet.email,
+    status: status,
+    vet: vetSelected,
     description: appointment.description,
     nextsteps: appointment.next_steps,
   };
@@ -76,15 +80,15 @@ export const UpdateAppointment = (props) => {
   let color = '';
   let icon = '';
 
-  if (parseInt(status) === 0) {
+  if (status === '0') {
     color = 'red';
-    icon = <IconCircleX size={12} />;
-  } else if (parseInt(status) === 1) {
+    icon = <IconCircleX size={24} />;
+  } else if (status === '1') {
     color = 'green';
-    icon = <IconCircleCheck size={12} />;
-  } else if (parseInt(status) === 2) {
+    icon = <IconCircleCheck size={24} />;
+  } else if (status === '2') {
     color = 'blue';
-    icon = <IconCircle size={12} />;
+    icon = <IconCircle size={24} />;
   }
 
   const handleExit = () => {
@@ -98,7 +102,10 @@ export const UpdateAppointment = (props) => {
       .delete()
       .eq('id', appointment.id);
     if (error) {
-      console.log('errorereoreoore');
+      failModalObj.open();
+      setTimeout(() => {
+        failModalObj.close();
+      }, 1500);
     } else {
       router.replace('/appointments');
     }
@@ -117,72 +124,30 @@ export const UpdateAppointment = (props) => {
       const updatedPrice = values.price ? values.price : null;
       const supabase = createClient();
 
-      if (
-        initialValues.vetname === values.vetname &&
-        initialValues.vetphone === values.vetphone &&
-        initialValues.vetemail === values.vetemail &&
-        initialValues.vetlocation === values.vetlocation
-      ) {
-        const { error } = await supabase
-          .from('appointments')
-          .update({
-            title: values.title,
-            start_time: startTimeStr,
-            end_time: endTimeStr,
-            status: status,
-            price: updatedPrice,
-            description: values.description,
-            next_steps: values.nextsteps,
-          })
-          .eq('id', appointment.id);
+      const { error } = await supabase
+        .from('appointments')
+        .update({
+          title: values.title,
+          start_time: startTimeStr,
+          end_time: endTimeStr,
+          status: parseInt(status),
+          price: updatedPrice,
+          vet: vetSelected,
+          description: values.description,
+          next_steps: values.nextsteps,
+        })
+        .eq('id', appointment.id);
 
-        if (!error) {
-          successModalObj.open();
-          setTimeout(() => {
-            successModalObj.close();
-          }, 1500);
-        } else {
-          failModalObj.open();
-          setTimeout(() => {
-            failModalObj.close();
-          }, 1500);
-        }
+      if (error) {
+        failModalObj.open();
+        setTimeout(() => {
+          failModalObj.close();
+        }, 1500);
       } else {
-        const vetInsertObj = await supabase
-          .from('vets')
-          .update({
-            name: values.vetname,
-            phone_number: values.vetphone ? values.vetphone : null,
-            email: values.vetemail,
-            location: values.vetlocation,
-            last_updated: new Date(),
-          })
-          .eq('id', vet.id);
-
-        const appointmentInsertObj = await supabase
-          .from('appointments')
-          .update({
-            title: values.title,
-            start_time: startTimeStr,
-            end_time: endTimeStr,
-            status: status,
-            price: updatedPrice,
-            description: values.description,
-            next_steps: values.nextsteps,
-          })
-          .eq('id', appointment.id);
-
-        if (vetInsertObj.error || appointmentInsertObj.error) {
-          failModalObj.open();
-          setTimeout(() => {
-            failModalObj.close();
-          }, 1500);
-        } else {
-          successModalObj.open();
-          setTimeout(() => {
-            successModalObj.close();
-          }, 1500);
-        }
+        successModalObj.open();
+        setTimeout(() => {
+          successModalObj.close();
+        }, 1500);
       }
     }
   };
@@ -213,27 +178,29 @@ export const UpdateAppointment = (props) => {
           Error!
         </Text>
         <Text size='xs' fw={500} c={'red'} ta='center'>
-          Something went wrong!
+          Something went wrong! Please try again
         </Text>
       </Modal>
 
-      <Paper shadow='xs' withBorder p='md' radius='md' bg={color}>
+      <Paper shadow='xs' withBorder p='md' bg={color}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Grid pb={24}>
-            <Grid.Col span='content' ps={40} pe={0} pb={0} pt={18} fz={'h4'}>
+            <Grid.Col span='content' ps={40} pe={0} pb={0} pt={12} fz={'h4'}>
               {icon}
             </Grid.Col>
-            <Grid.Col span={2} ps={2} pt={14} fz={'h4'}>
+            <Grid.Col span={2} ps={2} pt={8} fz={'h4'}>
               {editButton ? (
-                appointmentStatusConversion[status]
+                <Text size={'xl'} fw={600} pt={4} ps={8}>
+                  {appointmentStatusConversion[parseInt(status)]}
+                </Text>
               ) : (
-                <NativeSelect
+                <Select
                   value={status}
-                  onChange={(event) => setStatus(event.currentTarget.value)}
+                  onChange={setStatus}
                   data={[
-                    { label: 'Upcoming', value: 2 },
-                    { label: 'Completed', value: 1 },
-                    { label: 'Canceled', value: 0 },
+                    { label: 'Upcoming', value: '2' },
+                    { label: 'Completed', value: '1' },
+                    { label: 'Canceled', value: '0' },
                   ]}
                 />
               )}
@@ -241,7 +208,9 @@ export const UpdateAppointment = (props) => {
             <Grid.Col span={6}>
               <Center fz={'h2'} fw={700}>
                 {editButton ? (
-                  form.getValues().title
+                  <Title order={2} size='h1'>
+                    {form.getValues().title}
+                  </Title>
                 ) : (
                   <TextInput
                     key={form.key('title')}
@@ -314,172 +283,167 @@ export const UpdateAppointment = (props) => {
             </Grid.Col>
           </Grid>
 
-          <Text size='lg' fw={700} mt={'md'}>
-            {'Details'}
-          </Text>
-          <Grid ms={6} mb={'xl'}>
-            <Grid.Col span={5}>
-              <Grid ms={60} mt={12}>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Start'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'} pb={'lg'}>
-                      {'Start'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    udpatedStartTime
-                  ) : (
-                    <DateTimePicker
-                      key={form.key('startTime')}
-                      {...form.getInputProps('startTime')}
-                      valueFormat='ddd MMM DD, h:mm A'
-                      placeholder='Enter appointment start time'
-                    />
-                  )}
-                </Grid.Col>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Pick Up'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Pick Up'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    udpatedEndTime
-                  ) : (
-                    <DateTimePicker
-                      key={form.key('endTime')}
-                      {...form.getInputProps('endTime')}
-                      valueFormat='ddd MMM DD, h:mm A'
-                      placeholder='Enter appointment end time'
-                    />
-                  )}
-                </Grid.Col>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Price'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Price'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    `$${form.getValues().price}`
-                  ) : (
-                    <NumberInput
-                      prefix='$'
-                      step={0.01}
-                      key={form.key('price')}
-                      {...form.getInputProps('price')}
-                      placeholder='Enter price'
-                    />
-                  )}
-                </Grid.Col>
-              </Grid>
+          <Grid>
+            <Grid.Col span={12}>
+              <Title order={3} size='h3' mt={'xl'}>
+                {'Details'}
+              </Title>
             </Grid.Col>
-            <Grid.Col span={7}>
-              <Grid ps={60}>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Vet'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Vet'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetname
-                  ) : (
-                    <TextInput
-                      key={form.key('vetname')}
-                      {...form.getInputProps('vetname')}
-                      placeholder="Enter vet's name"
-                    />
-                  )}
-                </Grid.Col>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Location'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Location'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetlocation
-                  ) : (
-                    <TextInput
-                      key={form.key('vetlocation')}
-                      {...form.getInputProps('vetlocation')}
-                      placeholder="Enter vet's address"
-                    />
-                  )}
-                </Grid.Col>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Phone'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Phone'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetphone
-                  ) : (
-                    <NumberInput
-                      decimalSeparator='-'
-                      key={form.key('vetphone')}
-                      {...form.getInputProps('vetphone')}
-                      placeholder="Enter vet's phone number"
-                    />
-                  )}
-                </Grid.Col>
-                <Grid.Col span={2} p={2} fw={550}>
-                  {editButton ? (
-                    <Text fw={550}>{'Email'}</Text>
-                  ) : (
-                    <Text fw={550} pt={'sm'}>
-                      {'Email'}
-                    </Text>
-                  )}
-                </Grid.Col>
-                <Grid.Col span={10} p={2} h={40}>
-                  {editButton ? (
-                    form.getValues().vetemail
-                  ) : (
-                    <TextInput
-                      key={form.key('vetemail')}
-                      {...form.getInputProps('vetemail')}
-                      placeholder="Enter vet's email address"
-                    />
-                  )}
-                </Grid.Col>
-              </Grid>
+            <Grid.Col span={6}>
+              <Text size={'lg'} fw={700}>
+                {'Start'}
+              </Text>
+              {editButton ? (
+                <DateTimePicker
+                  disabled
+                  key={form.key('startTime')}
+                  {...form.getInputProps('startTime')}
+                  valueFormat='ddd MMM DD, h:mm A'
+                  placeholder='Enter appointment start time'
+                />
+              ) : (
+                <DateTimePicker
+                  key={form.key('startTime')}
+                  {...form.getInputProps('startTime')}
+                  valueFormat='ddd MMM DD, h:mm A'
+                  placeholder='Enter appointment start time'
+                />
+              )}
+              <Text size={'lg'} fw={700} mt={'xs'}>
+                {'Pick Up'}
+              </Text>
+              {editButton ? (
+                <DateTimePicker
+                  disabled
+                  key={form.key('endTime')}
+                  {...form.getInputProps('endTime')}
+                  valueFormat='ddd MMM DD, h:mm A'
+                  placeholder='Enter appointment end time'
+                />
+              ) : (
+                <DateTimePicker
+                  key={form.key('endTime')}
+                  {...form.getInputProps('endTime')}
+                  valueFormat='ddd MMM DD, h:mm A'
+                  placeholder='Enter appointment end time'
+                />
+              )}
+              <Text size={'lg'} fw={700} mt={'xs'}>
+                {'Price'}
+              </Text>
+              {editButton ? (
+                <NumberInput
+                  disabled
+                  prefix='$'
+                  step={0.01}
+                  key={form.key('price')}
+                  {...form.getInputProps('price')}
+                  placeholder='Enter price'
+                />
+              ) : (
+                <NumberInput
+                  prefix='$'
+                  step={0.01}
+                  key={form.key('price')}
+                  {...form.getInputProps('price')}
+                  placeholder='Enter price'
+                />
+              )}
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Text size={'lg'} fw={700}>
+                {'Vet'}
+              </Text>
+              {editButton ? (
+                <Select
+                  disabled
+                  value={vetSelected}
+                  onChange={setVetSelected}
+                  data={vetNames}
+                  placeholder='Select Vet Used'
+                />
+              ) : (
+                <Select
+                  value={vetSelected}
+                  onChange={setVetSelected}
+                  data={vetNames}
+                  placeholder='Select Vet Used'
+                />
+              )}
+              <Text size={'lg'} fw={700} mt={'xs'}>
+                {'Insurance'}
+              </Text>
+              {editButton ? (
+                <Select
+                  disabled
+                  value={insuranceSelected}
+                  onChange={setInsuranceSelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Big Bitch', value: '1' },
+                    { label: 'alls tites 2', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  placeholder='Select Insurance Used'
+                />
+              ) : (
+                <Select
+                  value={insuranceSelected}
+                  onChange={setInsuranceSelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Big Bitch', value: '1' },
+                    { label: 'alls tites 2', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  placeholder='Select Insurance Used'
+                />
+              )}
+              <Text size={'lg'} fw={700} mt={'xs'}>
+                {'Category'}
+              </Text>
+              {editButton ? (
+                <Select
+                  disabled
+                  value={categorySelected}
+                  onChange={setCategorySelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Dental', value: '1' },
+                    { label: 'for fun', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  placeholder='Select Category'
+                />
+              ) : (
+                <Select
+                  // value={categorySelected}
+                  // onChange={setCategorySelected}
+                  searchable
+                  searchValue={categorySelected}
+                  onSearchChange={setCategorySelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Dental', value: '1' },
+                    { label: 'for fun', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  placeholder='Select Category'
+                />
+              )}
             </Grid.Col>
           </Grid>
 
-          <Text size='lg' fw={700}>
+          <Title order={3} size='h3' mt={'xl'}>
             {'Review'}
-          </Text>
+          </Title>
           {editButton ? (
-            <Text size='lg' ms={6} mb={'sm'}>
-              {form.getValues().description}
-            </Text>
+            <TextInput
+              disabled
+              key={form.key('description')}
+              {...form.getInputProps('description')}
+              placeholder='Enter a description'
+            />
           ) : (
             <TextInput
               key={form.key('description')}
@@ -488,13 +452,16 @@ export const UpdateAppointment = (props) => {
             />
           )}
 
-          <Text size='lg' fw={700}>
+          <Title order={3} size='h3' mt={'md'}>
             {'Next Steps'}
-          </Text>
+          </Title>
           {editButton ? (
-            <Text size='lg' ms={6} mb={'xl'}>
-              {form.getValues().nextsteps}
-            </Text>
+            <TextInput
+              disabled
+              key={form.key('nextsteps')}
+              {...form.getInputProps('nextsteps')}
+              placeholder='Enter next steps'
+            />
           ) : (
             <TextInput
               key={form.key('nextsteps')}

@@ -81,7 +81,7 @@ export const AllNotes = (props) => {
           );
         })}
 
-        <Timeline.Item title='Add Note' bullet={<IconPlus size={12} />}>
+        <Timeline.Item title='Add Doc' bullet={<IconPlus size={12} />}>
           <Paper
             shadow='xs'
             withBorder

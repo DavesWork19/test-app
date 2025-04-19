@@ -30,7 +30,7 @@ export default async function UpdateNotePage({ params }) {
   return (
     <main>
       <Container size='md'>
-        <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
+        <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
           <UpdatePet pet={pet} />
         </Paper>
       </Container>

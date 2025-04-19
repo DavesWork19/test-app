@@ -124,7 +124,7 @@ export const CreateNewNote = (props) => {
         <Grid.Col span={4}></Grid.Col>
         <Grid.Col span={4}>
           <Center>
-            <Title>Add Note</Title>
+            <Title>Add Doc</Title>
           </Center>
         </Grid.Col>
         <Grid.Col span={4} mt={4}>

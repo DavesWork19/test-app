@@ -33,7 +33,7 @@ export default async function NotesPage() {
   return (
     <main>
       <Container size='md'>
-        <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
+        <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
           <AllPets pets={pets} />
         </Paper>
       </Container>

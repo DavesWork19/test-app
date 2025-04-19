@@ -16,7 +16,7 @@ export default async function UpdateNotesPage() {
   return (
     <main>
       <Container size='md'>
-        <Paper shadow='xs' withBorder p='md' radius='md' bg={'lightgray'}>
+        <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
           <AddPet userID={user.id} />
         </Paper>
       </Container>

@@ -21,7 +21,7 @@ export const Test = (props) => {
       // slidesToScroll={mobile ? 1 : 2}
     >
       <Carousel.Slide key={'addNewVet'}>
-        <Paper shadow='md' p='xl' radius='md' bg={'lightgray'}>
+        <Paper shadow='md' p='xl' radius='md' bg={'#fff0eb'}>
           <Button
             variant='white'
             color='dark'
@@ -33,7 +33,7 @@ export const Test = (props) => {
       </Carousel.Slide>
       {data?.map((vet) => (
         <Carousel.Slide key={vet.id}>
-          <Paper shadow='md' p='xl' radius='md' bg={'lightgray'}>
+          <Paper shadow='md' p='xl' radius='md' bg={'#fff0eb'}>
             <Group>
               <Title order={2}>{vet.name}</Title>
               <Button
