@@ -26,7 +26,7 @@ export const UpdateNote = (props) => {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState({
     img_name: note.img_name,
-    url: note.image.signedUrl,
+    url: note.image?.signedUrl,
   });
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
