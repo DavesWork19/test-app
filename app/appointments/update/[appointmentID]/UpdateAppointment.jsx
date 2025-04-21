@@ -215,7 +215,7 @@ export const UpdateAppointment = (props) => {
                   <TextInput
                     key={form.key('title')}
                     {...form.getInputProps('title')}
-                    placeholder='Enter title'
+                    placeholder='Enter Appointment Title'
                   />
                 )}
               </Center>
@@ -299,14 +299,14 @@ export const UpdateAppointment = (props) => {
                   key={form.key('startTime')}
                   {...form.getInputProps('startTime')}
                   valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter appointment start time'
+                  placeholder='Enter Appointment Start Time'
                 />
               ) : (
                 <DateTimePicker
                   key={form.key('startTime')}
                   {...form.getInputProps('startTime')}
                   valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter appointment start time'
+                  placeholder='Enter Appointment Start Time'
                 />
               )}
               <Text size={'lg'} fw={700} mt={'xs'}>
@@ -318,14 +318,14 @@ export const UpdateAppointment = (props) => {
                   key={form.key('endTime')}
                   {...form.getInputProps('endTime')}
                   valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter appointment end time'
+                  placeholder='Enter Appointment End Time'
                 />
               ) : (
                 <DateTimePicker
                   key={form.key('endTime')}
                   {...form.getInputProps('endTime')}
                   valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter appointment end time'
+                  placeholder='Enter Appointment End Time'
                 />
               )}
               <Text size={'lg'} fw={700} mt={'xs'}>
@@ -338,7 +338,7 @@ export const UpdateAppointment = (props) => {
                   step={0.01}
                   key={form.key('price')}
                   {...form.getInputProps('price')}
-                  placeholder='Enter price'
+                  placeholder='Enter Price'
                 />
               ) : (
                 <NumberInput
@@ -346,7 +346,7 @@ export const UpdateAppointment = (props) => {
                   step={0.01}
                   key={form.key('price')}
                   {...form.getInputProps('price')}
-                  placeholder='Enter price'
+                  placeholder='Enter Price'
                 />
               )}
             </Grid.Col>
@@ -442,13 +442,13 @@ export const UpdateAppointment = (props) => {
               disabled
               key={form.key('description')}
               {...form.getInputProps('description')}
-              placeholder='Enter a description'
+              placeholder='Enter Description'
             />
           ) : (
             <TextInput
               key={form.key('description')}
               {...form.getInputProps('description')}
-              placeholder='Enter a description'
+              placeholder='Enter Description'
             />
           )}
 
@@ -460,13 +460,13 @@ export const UpdateAppointment = (props) => {
               disabled
               key={form.key('nextsteps')}
               {...form.getInputProps('nextsteps')}
-              placeholder='Enter next steps'
+              placeholder='Enter Next Steps'
             />
           ) : (
             <TextInput
               key={form.key('nextsteps')}
               {...form.getInputProps('nextsteps')}
-              placeholder='Enter next steps'
+              placeholder='Enter Next Steps'
             />
           )}
         </form>

@@ -225,10 +225,10 @@ export const UpdatePet = (props) => {
               )}
             </FileButton>
           </Group>
-          {selectedImage && (
+          {selectedImage?.url && (
             <Center>
               <img
-                src={selectedImage.url}
+                src={selectedImage?.url}
                 alt='Thumb'
                 width={'75%'}
                 height={'75%'}
