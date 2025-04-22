@@ -26,8 +26,6 @@ export const CreateNewAppointment = (props) => {
   const [status, setStatus] = useState(2);
   const router = useRouter();
 
-  const userID = props.userID;
-
   let color = 'blue';
   let icon = <IconCircle size={12} />;
 
@@ -109,7 +107,6 @@ export const CreateNewAppointment = (props) => {
             price: updatedPrice,
             description: values.description,
             next_steps: values.nextsteps,
-            user_id: userID,
           });
 
         if (appointmentInsertObj.error) {
@@ -132,7 +129,6 @@ export const CreateNewAppointment = (props) => {
             email: values.vetemail,
             location: values.vetlocation,
             last_updated: new Date(),
-            user_id: userID,
           })
           .select();
 
@@ -147,7 +143,6 @@ export const CreateNewAppointment = (props) => {
             description: values.description,
             next_steps: values.nextsteps,
             vet: vetInsertObj.data[0].id,
-            user_id: userID,
           });
 
         if (vetInsertObj.error || appointmentInsertObj.error) {

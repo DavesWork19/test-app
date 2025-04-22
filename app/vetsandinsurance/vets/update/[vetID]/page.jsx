@@ -1,4 +1,4 @@
-import { createClient } from '../../../utils/supabase/server';
+import { createClient } from '../../../../utils/supabase/server';
 import { UpdateVet } from './UpdateVet';
 
 export default async function UpdateVetPage({ params }) {

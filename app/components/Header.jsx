@@ -60,13 +60,13 @@ export const Header = () => {
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
-            value='vets'
+            value='vetsandinsurance'
             className={classes.headerTab}
             leftSection={<IconAmbulance stroke={1} />}
-            onClick={() => handleOnClick('vets')}
+            onClick={() => handleOnClick('vetsandinsurance')}
           >
             <Text size={'lg'} fw={500}>
-              Vets
+              Vets & Insurances
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
@@ -124,10 +124,10 @@ export const Header = () => {
               </Menu.Item>
               <Menu.Item
                 leftSection={<IconAmbulance stroke={2} />}
-                onClick={() => handleOnClick('vets')}
+                onClick={() => handleOnClick('vetsandinsurance')}
               >
                 <Text size={'lg'} fw={500}>
-                  Vets
+                  Vets & Insurances
                 </Text>
               </Menu.Item>
               <Menu.Item

@@ -30,13 +30,12 @@ export const UpdateAppointment = (props) => {
 
   const appointment = props.appointment;
   const vetNames = props.vetNames;
+  const insuranceNames = props.insuranceNames;
 
   const [status, setStatus] = useState(String(appointment.status));
-  const [vetSelected, setVetSelected] = useState(appointment.vet);
-  const [insuranceSelected, setInsuranceSelected] = useState();
+  // const [vetSelected, setVetSelected] = useState(appointment.vet);
+  // const [insuranceSelected, setInsuranceSelected] = useState();
   const [categorySelected, setCategorySelected] = useState();
-
-  const vetName = vetNames.filter((vet) => vet.value === vetSelected);
 
   const initialValues = {
     title: appointment.title,
@@ -44,7 +43,8 @@ export const UpdateAppointment = (props) => {
     endTime: appointment.end_time ? new Date(appointment.end_time) : '',
     price: appointment.price ? appointment.price : '',
     status: status,
-    vet: vetSelected,
+    vet: appointment.vet,
+    insurance: appointment.insurance,
     description: appointment.description,
     nextsteps: appointment.next_steps,
   };
@@ -59,23 +59,6 @@ export const UpdateAppointment = (props) => {
         value.toString().length > 0 ? null : 'Start Time Required!',
     },
   });
-
-  const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-  };
-
-  const udpatedStartTime = form.getValues().startTime
-    ? form.getValues().startTime.toLocaleDateString('en-US', options)
-    : '';
-
-  const udpatedEndTime = form.getValues().endTime
-    ? form.getValues().endTime.toLocaleDateString('en-US', options)
-    : '';
 
   let color = '';
   let icon = '';
@@ -132,7 +115,8 @@ export const UpdateAppointment = (props) => {
           end_time: endTimeStr,
           status: parseInt(status),
           price: updatedPrice,
-          vet: vetSelected,
+          vet: values.vet,
+          insurance: values.insurance,
           description: values.description,
           next_steps: values.nextsteps,
         })
@@ -357,15 +341,15 @@ export const UpdateAppointment = (props) => {
               {editButton ? (
                 <Select
                   disabled
-                  value={vetSelected}
-                  onChange={setVetSelected}
+                  key={form.key('vet')}
+                  {...form.getInputProps('vet')}
                   data={vetNames}
                   placeholder='Select Vet Used'
                 />
               ) : (
                 <Select
-                  value={vetSelected}
-                  onChange={setVetSelected}
+                  key={form.key('vet')}
+                  {...form.getInputProps('vet')}
                   data={vetNames}
                   placeholder='Select Vet Used'
                 />
@@ -376,26 +360,16 @@ export const UpdateAppointment = (props) => {
               {editButton ? (
                 <Select
                   disabled
-                  value={insuranceSelected}
-                  onChange={setInsuranceSelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Big Bitch', value: '1' },
-                    { label: 'alls tites 2', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
+                  key={form.key('insurance')}
+                  {...form.getInputProps('insurance')}
+                  data={insuranceNames}
                   placeholder='Select Insurance Used'
                 />
               ) : (
                 <Select
-                  value={insuranceSelected}
-                  onChange={setInsuranceSelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Big Bitch', value: '1' },
-                    { label: 'alls tites 2', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
+                  key={form.key('insurance')}
+                  {...form.getInputProps('insurance')}
+                  data={insuranceNames}
                   placeholder='Select Insurance Used'
                 />
               )}

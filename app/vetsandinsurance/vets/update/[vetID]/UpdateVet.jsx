@@ -12,7 +12,7 @@ import {
   Paper,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { createClient } from '../../../utils/supabase/client';
+import { createClient } from '../../../../utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
 export const UpdateVet = (props) => {
@@ -36,7 +36,7 @@ export const UpdateVet = (props) => {
   });
 
   const handleExit = () => {
-    router.replace('/vets');
+    router.replace('/vetsandinsurance');
   };
 
   const handleDelete = async () => {
@@ -45,7 +45,7 @@ export const UpdateVet = (props) => {
     if (error) {
       console.log('errorereoreoore');
     } else {
-      router.replace('/vets');
+      router.replace('/vetsandinsurance');
     }
   };
 

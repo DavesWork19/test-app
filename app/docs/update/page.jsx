@@ -6,10 +6,6 @@ export default async function UpdateNotesPage() {
   const supabase = await createClient();
 
   const {
-    data: [notes],
-  } = await supabase.from('notes').select().order('date', { ascending: false });
-
-  const {
     data: { user },
   } = await supabase.auth.getUser();
 

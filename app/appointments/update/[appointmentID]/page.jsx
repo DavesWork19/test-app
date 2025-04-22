@@ -13,7 +13,6 @@ export default async function UpdateAppointmentPage({ params }) {
     .from('vets')
     .select()
     .eq('user_id', appointment.user_id);
-
   const vetNames = vets.map((vet) => {
     return {
       label: vet.name,
@@ -21,9 +20,25 @@ export default async function UpdateAppointmentPage({ params }) {
     };
   });
 
+  const { data: insurances } = await supabase
+    .from('insurances')
+    .select()
+    .eq('user_id', appointment.user_id);
+
+  const insuranceNames = insurances.map((insurance) => {
+    return {
+      label: insurance.company,
+      value: insurance.id,
+    };
+  });
+
   return (
     <main>
-      <UpdateAppointment appointment={appointment} vetNames={vetNames} />
+      <UpdateAppointment
+        appointment={appointment}
+        vetNames={vetNames}
+        insuranceNames={insuranceNames}
+      />
     </main>
   );
 }

@@ -68,7 +68,6 @@ export const CreateNewNote = (props) => {
         title: values.title,
         date: values.date,
         description: values.description,
-        user_id: userID,
       })
       .select();
 

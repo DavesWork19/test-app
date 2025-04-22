@@ -71,7 +71,6 @@ export const AddPet = (props) => {
         birthday: values.birthday,
         color: values.color,
         last_updated: new Date(),
-        user_id: userID,
       })
       .select();
 

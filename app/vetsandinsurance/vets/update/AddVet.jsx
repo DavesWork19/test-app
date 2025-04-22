@@ -12,12 +12,11 @@ import {
   Center,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { createClient } from '../../utils/supabase/client';
+import { createClient } from '../../../utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
-export const CreateNewVet = (props) => {
+export const AddVet = () => {
   const router = useRouter();
-  const userID = props.userID;
 
   const initialValues = {
     name: null,
@@ -36,7 +35,7 @@ export const CreateNewVet = (props) => {
   });
 
   const handleExit = () => {
-    router.replace('/vets');
+    router.replace('/vetsandinsurance');
   };
 
   const handleSubmit = async (values) => {
@@ -47,7 +46,6 @@ export const CreateNewVet = (props) => {
       email: values.email,
       location: values.location,
       last_updated: new Date(),
-      user_id: userID,
     });
     console.log(error);
     if (error) {
