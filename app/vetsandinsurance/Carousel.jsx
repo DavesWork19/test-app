@@ -1,7 +1,14 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Button, Group, Paper, Title, useMantineTheme } from '@mantine/core';
+import {
+  Button,
+  Group,
+  Paper,
+  Title,
+  Center,
+  useMantineTheme,
+} from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useRouter } from 'next/navigation';
 
@@ -31,26 +38,29 @@ export const CarouselData = (props) => {
       mt={carouselMarginTop}
     >
       <Carousel.Slide key={carouselKey}>
-        <Paper shadow='md' p='xl' radius='md' bg={'blue'}>
-          <Button
-            variant='white'
-            color='dark'
-            onClick={() => router.replace(carouselUpdateRoute)}
-          >
-            <Title order={3}>{carouselTitle}</Title>
-          </Button>
+        <Paper shadow='md' p='xl' radius='md'>
+          <Center>
+            <Button
+              bg={'lightgrey'}
+              onClick={() => router.replace(carouselUpdateRoute)}
+            >
+              <Title order={3} c='dark'>
+                {carouselTitle}
+              </Title>
+            </Button>
+          </Center>
         </Paper>
       </Carousel.Slide>
       {allData?.map((data) => (
         <Carousel.Slide key={data.id}>
-          <Paper shadow='md' p='xl' radius='md' bg={'blue'}>
-            <Group>
+          <Paper shadow='md' p='xl' radius='md'>
+            <Group justify={'space-between'}>
               <Title order={2}>
                 {type === 'vet' ? data.name : data.company}
               </Title>
               <Button
-                variant='white'
-                color='dark'
+                bg={'lightgrey'}
+                c='dark'
                 onClick={() =>
                   router.replace(`${carouselUpdateRoute}/${data.id}`)
                 }

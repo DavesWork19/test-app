@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Tabs, Grid, Menu, Text } from '@mantine/core';
 import {
-  IconSettings,
+  IconUserCircle,
   IconTrash,
   IconArrowsLeftRight,
   IconDog,
@@ -17,8 +17,9 @@ import { Burger } from '@mantine/core';
 import { useState } from 'react';
 
 export const Header = () => {
-  const [activeTab, setActiveTab] = useState('home');
   const router = useRouter();
+  const pathname = usePathname();
+  const [activeTab, setActiveTab] = useState(pathname.split('/')[1]);
 
   const handleOnClick = (route) => {
     setActiveTab(route);
@@ -80,13 +81,13 @@ export const Header = () => {
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
-            value='settings'
+            value='account'
             className={classes.headerTab}
-            leftSection={<IconSettings stroke={1} />}
-            onClick={() => handleOnClick('settings')}
+            leftSection={<IconUserCircle stroke={1} />}
+            onClick={() => handleOnClick('account')}
           >
             <Text size={'lg'} fw={500}>
-              Settings
+              Account
             </Text>
           </Tabs.Tab>
         </Tabs.List>
@@ -139,11 +140,11 @@ export const Header = () => {
                 </Text>
               </Menu.Item>
               <Menu.Item
-                leftSection={<IconSettings stroke={2} />}
-                onClick={() => handleOnClick('settings')}
+                leftSection={<IconUserCircle stroke={2} />}
+                onClick={() => handleOnClick('account')}
               >
                 <Text size={'lg'} fw={500}>
-                  Settings
+                  Account
                 </Text>
               </Menu.Item>
 

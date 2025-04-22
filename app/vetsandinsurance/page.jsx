@@ -19,6 +19,15 @@ export default async function VetPage() {
       <Container size='md'>
         <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
           <CarouselData data={vets} type={'vet'} />
+        </Paper>
+        <Paper
+          shadow='xs'
+          withBorder
+          p='md'
+          mt={'xl'}
+          radius='md'
+          bg={'#fff0eb'}
+        >
           <CarouselData data={insurances} type={'insurance'} />
         </Paper>
       </Container>

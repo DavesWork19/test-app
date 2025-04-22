@@ -33,8 +33,6 @@ export const UpdateAppointment = (props) => {
   const insuranceNames = props.insuranceNames;
 
   const [status, setStatus] = useState(String(appointment.status));
-  // const [vetSelected, setVetSelected] = useState(appointment.vet);
-  // const [insuranceSelected, setInsuranceSelected] = useState();
   const [categorySelected, setCategorySelected] = useState();
 
   const initialValues = {
