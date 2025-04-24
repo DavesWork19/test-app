@@ -1,9 +1,9 @@
-import { CreateNewAppointment } from './CreateNewAppointment';
+import { AddAppointment } from './AddAppointment';
 
 export default async function CreateAppointmentPage() {
   return (
     <main>
-      <CreateNewAppointment />
+      <AddAppointment />
     </main>
   );
 }

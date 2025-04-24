@@ -26,7 +26,6 @@ export const CarouselData = (props) => {
       ? '/vetsandinsurance/vets/update'
       : '/vetsandinsurance/insurances/update';
   const carouselTitle = type === 'vet' ? 'Add New Vet' : 'Add New Insurance';
-  const carouselMarginTop = type === 'vet' ? null : 'md';
 
   return (
     <Carousel
@@ -35,7 +34,7 @@ export const CarouselData = (props) => {
       align='center'
       slidesToScroll={1}
       // slidesToScroll={mobile ? 1 : 2}
-      mt={carouselMarginTop}
+      my={'md'}
     >
       <Carousel.Slide key={carouselKey}>
         <Paper shadow='md' p='xl' radius='md'>
@@ -55,7 +54,7 @@ export const CarouselData = (props) => {
         <Carousel.Slide key={data.id}>
           <Paper shadow='md' p='xl' radius='md'>
             <Group justify={'space-between'}>
-              <Title order={2}>
+              <Title order={2} lineClamp={1}>
                 {type === 'vet' ? data.name : data.company}
               </Title>
               <Button

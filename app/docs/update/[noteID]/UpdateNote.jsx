@@ -12,6 +12,8 @@ import {
   FileButton,
   Button,
   Grid,
+  useMantineTheme,
+  Menu,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -20,6 +22,13 @@ import { replaceDocFile } from '../../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDisclosure } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
+import {
+  IconSettings,
+  IconArrowBack,
+  IconDownload,
+  IconTrash,
+} from '@tabler/icons-react';
 
 export const UpdateNote = (props) => {
   const note = props.note;
@@ -30,6 +39,8 @@ export const UpdateNote = (props) => {
   });
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
 
   const imageChange = (data) => {
     if (data) {
@@ -72,33 +83,38 @@ export const UpdateNote = (props) => {
   };
 
   const handleSubmit = async (values) => {
-    const supabase = createClient();
-    const { error } = await supabase
-      .from('notes')
-      .update({
-        title: values.title,
-        date: values.date,
-        description: values.description,
-      })
-      .eq('id', note.id);
+    if (values === 'mobile') {
+      values = form.getValues();
+    }
+    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('notes')
+        .update({
+          title: values.title,
+          date: values.date,
+          description: values.description,
+        })
+        .eq('id', note.id);
 
-    const imgObj = await replaceDocFile(
-      selectedImage,
-      note.user_id,
-      note.id,
-      note.img_name
-    );
+      const imgObj = await replaceDocFile(
+        selectedImage,
+        note.user_id,
+        note.id,
+        note.img_name
+      );
 
-    if (!error & !imgObj) {
-      successModalObj.open();
-      setTimeout(() => {
-        successModalObj.close();
-      }, 1500);
-    } else {
-      failModalObj.open();
-      setTimeout(() => {
-        failModalObj.close();
-      }, 1500);
+      if (!error & !imgObj) {
+        successModalObj.open();
+        setTimeout(() => {
+          successModalObj.close();
+        }, 1500);
+      } else {
+        failModalObj.open();
+        setTimeout(() => {
+          failModalObj.close();
+        }, 1500);
+      }
     }
   };
 
@@ -134,70 +150,116 @@ export const UpdateNote = (props) => {
           Something went wrong!
         </Text>
       </Modal>
-      <Grid pb={12}>
-        <Grid.Col span={4}></Grid.Col>
-        <Grid.Col span={4}>
-          <Center>
-            <Title>Update Doc</Title>
-          </Center>
-        </Grid.Col>
-        <Grid.Col span={4} mt={4}>
-          <Center>
-            <Button
-              variant='outline'
-              color='black'
-              bg='white'
-              size='compact-xs'
-              radius='xl'
-              type='submit'
-              me={6}
-            >
-              Save
-            </Button>
-            <Button
-              variant='outline'
-              color='black'
-              bg='white'
-              size='compact-xs'
-              radius='xl'
-              me={6}
-              onClick={handleExit}
-            >
-              Exit
-            </Button>
-            <Button
-              variant='outline'
-              color='red'
-              bg='white'
-              size='compact-xs'
-              radius='xl'
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </Center>
-        </Grid.Col>
-      </Grid>
+      {!isMobile && (
+        <Grid pb={12}>
+          <Grid.Col span={4}></Grid.Col>
+          <Grid.Col span={4}>
+            <Center>
+              <Title>Update Doc</Title>
+            </Center>
+          </Grid.Col>
+          <Grid.Col span={4} mt={4}>
+            <Center>
+              <Button
+                variant='outline'
+                color='black'
+                bg='white'
+                size='compact-xs'
+                radius='xl'
+                type='submit'
+                me={6}
+              >
+                Save
+              </Button>
+              <Button
+                variant='outline'
+                color='black'
+                bg='white'
+                size='compact-xs'
+                radius='xl'
+                me={6}
+                onClick={handleExit}
+              >
+                Exit
+              </Button>
+              <Button
+                variant='outline'
+                color='red'
+                bg='white'
+                size='compact-xs'
+                radius='xl'
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+            </Center>
+          </Grid.Col>
+        </Grid>
+      )}
+      {isMobile && (
+        <Group justify={'space-between'} pb={12} me={'xl'}>
+          <Text ms={'lg'}></Text>
+          <Title size={'h1'} ms={'xl'}>
+            Update Doc
+          </Title>
+          <Menu shadow='md' width={100}>
+            <Menu.Target>
+              <IconSettings stroke={2} />
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconDownload stroke={2} size={16} />}
+                type='submit'
+                onClick={() => handleSubmit('mobile')}
+              >
+                <Text size={'md'} fw={500}>
+                  Save
+                </Text>
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconArrowBack stroke={2} size={16} />}
+                onClick={handleExit}
+              >
+                <Text size={'md'} fw={500}>
+                  Back
+                </Text>
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item
+                leftSection={<IconTrash color='red' stroke={2} size={16} />}
+                onClick={handleDelete}
+              >
+                <Text size={'md'} fw={500} c='red'>
+                  Delete
+                </Text>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+      )}
       <Card shadow='sm' padding='lg' radius='md' withBorder>
         <Group justify='space-between' grow mt='md' mb='xs'>
           <TextInput
             variant={'filled'}
             key={form.key('title')}
             {...form.getInputProps('title')}
-            placeholder='Title'
+            label='Document Title'
+            placeholder='Enter Document Title'
           />
           <DateInput
             clearable
             variant={'filled'}
-            placeholder='Date'
             key={form.key('date')}
             {...form.getInputProps('date')}
+            label='Document Date'
+            placeholder='Enter Document Date'
             valueFormat='ddd MMM DD'
           />
         </Group>
         <Textarea
           variant={'filled'}
-          placeholder={'What Happened???'}
+          label='Document Description'
+          placeholder={'Enter Document Description'}
           autosize
           minRows={7}
           cols={24}

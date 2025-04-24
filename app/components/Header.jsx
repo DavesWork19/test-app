@@ -11,6 +11,7 @@ import {
   IconNotes,
   IconAmbulance,
   IconPaw,
+  IconMenu2,
 } from '@tabler/icons-react';
 import classes from './Header.module.css';
 import { Burger } from '@mantine/core';
@@ -104,7 +105,8 @@ export const Header = () => {
         <Grid.Col span={2}>
           <Menu shadow='md' width={200}>
             <Menu.Target>
-              <Burger size='sm' aria-label='Toggle navigation' />
+              {/* <Burger size='sm' aria-label='Toggle navigation' /> */}
+              <IconMenu2 stroke={1} />
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Item

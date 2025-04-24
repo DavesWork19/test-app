@@ -8,7 +8,6 @@ import {
 } from '@tabler/icons-react';
 import { Center, Timeline, Text, Paper, List } from '@mantine/core';
 import { useRouter } from 'next/navigation';
-import classes from './HomeAppointment.module.css';
 
 export const AllAppointments = (props) => {
   const router = useRouter();
@@ -26,7 +25,7 @@ export const AllAppointments = (props) => {
   };
 
   return (
-    <Center className={classes.appointmentContainer}>
+    <Center>
       <Timeline active={activeAppointments} bulletSize={24} lineWidth={2}>
         {appointments.map((appointment) => {
           let lineVariant = '';

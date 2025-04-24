@@ -11,6 +11,10 @@ import {
   Button,
   Grid,
   Modal,
+  useMantineTheme,
+  Menu,
+  Container,
+  Paper,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -19,6 +23,13 @@ import { replacePetFile } from '../../../utils/supabase/storageClient';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDisclosure } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
+import {
+  IconSettings,
+  IconArrowBack,
+  IconDownload,
+  IconTrash,
+} from '@tabler/icons-react';
 
 export const UpdatePet = (props) => {
   const pet = props.pet;
@@ -29,6 +40,8 @@ export const UpdatePet = (props) => {
   });
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
 
   const imageChange = (data) => {
     if (data) {
@@ -72,39 +85,49 @@ export const UpdatePet = (props) => {
   };
 
   const handleSubmit = async (values) => {
-    const supabase = createClient();
+    if (values === 'mobile') {
+      values = form.getValues();
+    }
+    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+      const supabase = createClient();
 
-    const { error } = await supabase
-      .from('pets')
-      .update({
-        name: values.name,
-        weight: values.weight,
-        breed: values.breed,
-        birthday: values.birthday,
-        color: values.color,
-        last_updated: new Date(),
-      })
-      .eq('id', pet.id);
+      const { error } = await supabase
+        .from('pets')
+        .update({
+          name: values.name,
+          weight: values.weight,
+          breed: values.breed,
+          birthday: values.birthday,
+          color: values.color,
+          last_updated: new Date(),
+        })
+        .eq('id', pet.id);
 
-    const imgObj =
-      selectedImage &&
-      (await replacePetFile(selectedImage, pet.user_id, pet.id, pet.img_name));
+      const imgObj =
+        selectedImage &&
+        (await replacePetFile(
+          selectedImage,
+          pet.user_id,
+          pet.id,
+          pet.img_name
+        ));
 
-    if (!error & !imgObj) {
-      successModalObj.open();
-      setTimeout(() => {
-        successModalObj.close();
-      }, 1500);
-    } else {
-      failModalObj.open();
-      setTimeout(() => {
-        failModalObj.close();
-      }, 1500);
+      if (!error & !imgObj) {
+        successModalObj.open();
+        setTimeout(() => {
+          successModalObj.close();
+        }, 1500);
+      } else {
+        failModalObj.open();
+        setTimeout(() => {
+          failModalObj.close();
+        }, 1500);
+      }
     }
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
+    <Container size='md'>
       <Modal
         opened={successModalopened}
         onClose={successModalObj.close}
@@ -116,7 +139,7 @@ export const UpdatePet = (props) => {
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Appointments page
+          Continue editing or exit and return to the Pet's page
         </Text>
       </Modal>
       <Modal
@@ -133,111 +156,238 @@ export const UpdatePet = (props) => {
           Something went wrong!
         </Text>
       </Modal>
-      <Grid pb={12}>
-        <Grid.Col span={4}></Grid.Col>
-        <Grid.Col span={4}>
-          <Center>
-            <Title>Update Pet</Title>
-          </Center>
-        </Grid.Col>
-        <Grid.Col span={4} mt={4}>
-          <Center>
-            <Button
-              variant='outline'
-              color='black'
-              bg='white'
-              size='compact-xs'
-              radius='xl'
-              type='submit'
-              me={6}
-            >
-              Save
-            </Button>
-            <Button
-              variant='outline'
-              color='black'
-              bg='white'
-              size='compact-xs'
-              radius='xl'
-              me={6}
-              onClick={handleExit}
-            >
-              Exit
-            </Button>
-            <Button
-              variant='outline'
-              color='red'
-              bg='white'
-              size='compact-xs'
-              radius='xl'
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </Center>
-        </Grid.Col>
-      </Grid>
-      <Card shadow='sm' padding='lg' radius='md' withBorder>
-        <Group justify='space-between' grow mt='md' mb='xs'>
-          <TextInput
-            variant={'filled'}
-            key={form.key('name')}
-            {...form.getInputProps('name')}
-            placeholder="Pet's Name"
-          />
-          <DateInput
-            clearable
-            variant={'filled'}
-            key={form.key('birthday')}
-            {...form.getInputProps('birthday')}
-            valueFormat='MMMM D, YYYY'
-            placeholder="Pet's Birthday"
-          />
-        </Group>
-        <Group justify='space-between' grow mt='md' mb='xs'>
-          <TextInput
-            variant={'filled'}
-            key={form.key('weight')}
-            {...form.getInputProps('weight')}
-            placeholder="Pet's Weight"
-          />
-          <TextInput
-            variant={'filled'}
-            key={form.key('breed')}
-            {...form.getInputProps('breed')}
-            placeholder="Pet's Breed"
-          />
-          <TextInput
-            variant={'filled'}
-            key={form.key('color')}
-            {...form.getInputProps('color')}
-            placeholder="Pet's Color(s)"
-          />
-        </Group>
 
-        <Card.Section py={36} px={24}>
-          <Group justify='space-between' grow mt='md' mb='xs'>
-            <FileButton onChange={imageChange}>
-              {(props) => (
-                <Button {...props} bg={'cyan'}>
-                  {'Upload New File'}
-                </Button>
-              )}
-            </FileButton>
-          </Group>
-          {selectedImage?.url && (
-            <Center>
-              <img
-                src={selectedImage?.url}
-                alt='Thumb'
-                width={'75%'}
-                height={'75%'}
-                style={{ borderRadius: '5%' }}
-              />
-            </Center>
-          )}
-        </Card.Section>
-      </Card>
-    </form>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        {!isMobile && (
+          <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
+            <Grid pb={12}>
+              <Grid.Col span={4}></Grid.Col>
+              <Grid.Col span={4}>
+                <Center>
+                  <Title>Update Pet</Title>
+                </Center>
+              </Grid.Col>
+              <Grid.Col span={4} mt={4}>
+                <Center>
+                  <Button
+                    variant='outline'
+                    color='black'
+                    bg='white'
+                    size='compact-xs'
+                    radius='xl'
+                    type='submit'
+                    me={6}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='black'
+                    bg='white'
+                    size='compact-xs'
+                    radius='xl'
+                    me={6}
+                    onClick={handleExit}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='red'
+                    bg='white'
+                    size='compact-xs'
+                    radius='xl'
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </Center>
+              </Grid.Col>
+            </Grid>
+            <Card shadow='sm' padding='lg' radius='md' withBorder>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('name')}
+                  {...form.getInputProps('name')}
+                  label={"Pet's Name"}
+                  placeholder={"Enter Pet's Name"}
+                />
+                <DateInput
+                  clearable
+                  variant={'filled'}
+                  key={form.key('birthday')}
+                  {...form.getInputProps('birthday')}
+                  valueFormat='MMMM D, YYYY'
+                  label={"Pet's Birthday"}
+                  placeholder={"Enter Pet's Birthday"}
+                />
+              </Group>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('color')}
+                  {...form.getInputProps('color')}
+                  label={"Pet's Color(s)"}
+                  placeholder={"Enter Pet's Color(s)"}
+                />
+              </Group>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('weight')}
+                  {...form.getInputProps('weight')}
+                  label={"Pet's Weight"}
+                  placeholder={"Enter Pet's Weight"}
+                />
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('breed')}
+                  {...form.getInputProps('breed')}
+                  label={"Pet's Breed"}
+                  placeholder={"Enter Pet's Breed"}
+                />
+              </Group>
+
+              <Card.Section py={36} px={24}>
+                <Group justify='space-between' grow mt='md' mb='xs'>
+                  <FileButton onChange={imageChange}>
+                    {(props) => (
+                      <Button {...props} bg={'cyan'}>
+                        {'Upload New File'}
+                      </Button>
+                    )}
+                  </FileButton>
+                </Group>
+                {selectedImage?.url && (
+                  <Center>
+                    <img
+                      src={selectedImage?.url}
+                      alt='Thumb'
+                      width={'75%'}
+                      height={'75%'}
+                      style={{ borderRadius: '5%' }}
+                    />
+                  </Center>
+                )}
+              </Card.Section>
+            </Card>
+          </Paper>
+        )}
+        {isMobile && (
+          <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
+            <Group justify={'space-between'} pb={12} me={'md'}>
+              <Text ms={'md'}></Text>
+              <Title size={'h1'}>Update Pet</Title>
+              <Menu shadow='md' width={100}>
+                <Menu.Target>
+                  <IconSettings stroke={2} />
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    leftSection={<IconDownload stroke={2} size={16} />}
+                    type='submit'
+                    onClick={() => handleSubmit('mobile')}
+                  >
+                    <Text size={'md'} fw={500}>
+                      Save
+                    </Text>
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconArrowBack stroke={2} size={16} />}
+                    onClick={handleExit}
+                  >
+                    <Text size={'md'} fw={500}>
+                      Back
+                    </Text>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={<IconTrash color='red' stroke={2} size={16} />}
+                    onClick={handleDelete}
+                  >
+                    <Text size={'md'} fw={500} c='red'>
+                      Delete
+                    </Text>
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
+            <Card shadow='sm' padding='lg' radius='md' withBorder>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('name')}
+                  {...form.getInputProps('name')}
+                  label={"Pet's Name"}
+                  placeholder={"Enter Pet's Name"}
+                />
+              </Group>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <DateInput
+                  clearable
+                  variant={'filled'}
+                  key={form.key('birthday')}
+                  {...form.getInputProps('birthday')}
+                  valueFormat='MMMM D, YYYY'
+                  label={"Pet's Birthday"}
+                  placeholder={"Enter Pet's Birthday"}
+                />
+              </Group>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('color')}
+                  {...form.getInputProps('color')}
+                  label={"Pet's Color(s)"}
+                  placeholder={"Enter Pet's Color(s)"}
+                />
+              </Group>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('weight')}
+                  {...form.getInputProps('weight')}
+                  label={"Pet's Weight"}
+                  placeholder={"Enter Pet's Weight"}
+                />
+              </Group>
+              <Group justify='space-between' grow mt='md' mb='xs'>
+                <TextInput
+                  variant={'filled'}
+                  key={form.key('breed')}
+                  {...form.getInputProps('breed')}
+                  label={"Pet's Breed"}
+                  placeholder={"Enter Pet's Breed"}
+                />
+              </Group>
+
+              <Card.Section py={36} px={24}>
+                <Group justify='space-between' grow mt='md' mb='xs'>
+                  <FileButton onChange={imageChange}>
+                    {(props) => (
+                      <Button {...props} bg={'cyan'}>
+                        {'Upload New File'}
+                      </Button>
+                    )}
+                  </FileButton>
+                </Group>
+                {selectedImage?.url && (
+                  <Center>
+                    <img
+                      src={selectedImage?.url}
+                      alt='Thumb'
+                      width={'75%'}
+                      height={'75%'}
+                      style={{ borderRadius: '5%' }}
+                    />
+                  </Center>
+                )}
+              </Card.Section>
+            </Card>
+          </Paper>
+        )}
+      </form>
+    </Container>
   );
 };

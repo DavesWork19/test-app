@@ -12,6 +12,10 @@ import {
   NumberInput,
   Modal,
   Select,
+  useMantineTheme,
+  Menu,
+  Group,
+  Textarea,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -21,12 +25,21 @@ import { createClient } from '../../../utils/supabase/client';
 import { IconCircleCheck, IconCircleX, IconCircle } from '@tabler/icons-react';
 import { appointmentStatusConversion } from '../../../components/constants';
 import { useDisclosure } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
+import {
+  IconSettings,
+  IconArrowBack,
+  IconDownload,
+  IconTrash,
+} from '@tabler/icons-react';
 
 export const UpdateAppointment = (props) => {
   const [editButton, setEditButton] = useState(true);
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
   const router = useRouter();
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
 
   const appointment = props.appointment;
   const vetNames = props.vetNames;
@@ -93,6 +106,9 @@ export const UpdateAppointment = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    if (values === 'mobile') {
+      values = form.getValues();
+    }
     if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
       let startTimeStr = null;
       if (values.startTime) {
@@ -164,285 +180,428 @@ export const UpdateAppointment = (props) => {
         </Text>
       </Modal>
 
-      <Paper shadow='xs' withBorder p='md' bg={color}>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Grid pb={24}>
-            <Grid.Col span='content' ps={40} pe={0} pb={0} pt={12} fz={'h4'}>
-              {icon}
-            </Grid.Col>
-            <Grid.Col span={2} ps={2} pt={8} fz={'h4'}>
-              {editButton ? (
-                <Text size={'xl'} fw={600} pt={4} ps={8}>
-                  {appointmentStatusConversion[parseInt(status)]}
-                </Text>
-              ) : (
-                <Select
-                  value={status}
-                  onChange={setStatus}
-                  data={[
-                    { label: 'Upcoming', value: '2' },
-                    { label: 'Completed', value: '1' },
-                    { label: 'Canceled', value: '0' },
-                  ]}
-                />
-              )}
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Center fz={'h2'} fw={700}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        {!isMobile && (
+          <Paper shadow='xs' withBorder p='md' bg={color}>
+            <Grid pb={24}>
+              <Grid.Col span='content' ps={40} pe={0} pb={0} pt={12} fz={'h4'}>
+                {icon}
+              </Grid.Col>
+              <Grid.Col span={2} ps={2} pt={8} fz={'h4'}>
                 {editButton ? (
-                  <Title order={2} size='h1'>
-                    {form.getValues().title}
-                  </Title>
+                  <Text size={'xl'} fw={600} pt={4} ps={8}>
+                    {appointmentStatusConversion[parseInt(status)]}
+                  </Text>
                 ) : (
-                  <TextInput
-                    key={form.key('title')}
-                    {...form.getInputProps('title')}
-                    placeholder='Enter Appointment Title'
+                  <Select
+                    value={status}
+                    onChange={setStatus}
+                    data={[
+                      { label: 'Upcoming', value: '2' },
+                      { label: 'Completed', value: '1' },
+                      { label: 'Canceled', value: '0' },
+                    ]}
                   />
                 )}
-              </Center>
-            </Grid.Col>
-            <Grid.Col span={3} pt={12}>
-              <Center>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Center fz={'h2'} fw={700}>
+                  {editButton ? (
+                    <Title order={2} size='h1'>
+                      {form.getValues().title}
+                    </Title>
+                  ) : (
+                    <TextInput
+                      key={form.key('title')}
+                      {...form.getInputProps('title')}
+                      placeholder='Enter Appointment Title'
+                    />
+                  )}
+                </Center>
+              </Grid.Col>
+              <Grid.Col span={3} pt={12}>
+                <Center>
+                  {editButton ? (
+                    <Button
+                      variant='outline'
+                      color='black'
+                      bg='white'
+                      size='compact-xs'
+                      radius='xl'
+                      onClick={() => setEditButton(false)}
+                      me={6}
+                    >
+                      Edit
+                    </Button>
+                  ) : (
+                    <Button
+                      variant='outline'
+                      color='black'
+                      bg='white'
+                      size='compact-xs'
+                      radius='xl'
+                      onClick={() => setEditButton(true)}
+                      me={6}
+                    >
+                      View
+                    </Button>
+                  )}
+                  <Button
+                    variant='outline'
+                    color='black'
+                    bg='white'
+                    size='compact-xs'
+                    radius='xl'
+                    type='submit'
+                    me={6}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='black'
+                    bg='white'
+                    size='compact-xs'
+                    radius='xl'
+                    onClick={handleExit}
+                    me={6}
+                  >
+                    Exit
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='red'
+                    bg='white'
+                    size='compact-xs'
+                    radius='xl'
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </Center>
+              </Grid.Col>
+            </Grid>
+
+            <Grid>
+              <Grid.Col span={12}>
+                <Title order={3} size='h3' mt={'xl'}>
+                  {'Details'}
+                </Title>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Text size={'lg'} fw={700}>
+                  {'Start'}
+                </Text>
                 {editButton ? (
-                  <Button
-                    variant='outline'
-                    color='black'
-                    bg='white'
-                    size='compact-xs'
-                    radius='xl'
-                    onClick={() => setEditButton(false)}
-                    me={6}
-                  >
-                    Edit
-                  </Button>
+                  <DateTimePicker
+                    disabled
+                    key={form.key('startTime')}
+                    {...form.getInputProps('startTime')}
+                    valueFormat='ddd MMM DD, h:mm A'
+                    placeholder='Enter Appointment Start Time'
+                  />
                 ) : (
-                  <Button
-                    variant='outline'
-                    color='black'
-                    bg='white'
-                    size='compact-xs'
-                    radius='xl'
-                    onClick={() => setEditButton(true)}
-                    me={6}
-                  >
-                    View
-                  </Button>
+                  <DateTimePicker
+                    key={form.key('startTime')}
+                    {...form.getInputProps('startTime')}
+                    valueFormat='ddd MMM DD, h:mm A'
+                    placeholder='Enter Appointment Start Time'
+                  />
                 )}
-                <Button
-                  variant='outline'
-                  color='black'
-                  bg='white'
-                  size='compact-xs'
-                  radius='xl'
-                  type='submit'
-                  me={6}
-                >
-                  Save
-                </Button>
-                <Button
-                  variant='outline'
-                  color='black'
-                  bg='white'
-                  size='compact-xs'
-                  radius='xl'
-                  onClick={handleExit}
-                  me={6}
-                >
-                  Exit
-                </Button>
-                <Button
-                  variant='outline'
-                  color='red'
-                  bg='white'
-                  size='compact-xs'
-                  radius='xl'
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Button>
-              </Center>
-            </Grid.Col>
-          </Grid>
+                <Text size={'lg'} fw={700} mt={'xs'}>
+                  {'Pick Up'}
+                </Text>
+                {editButton ? (
+                  <DateTimePicker
+                    disabled
+                    key={form.key('endTime')}
+                    {...form.getInputProps('endTime')}
+                    valueFormat='ddd MMM DD, h:mm A'
+                    placeholder='Enter Appointment End Time'
+                  />
+                ) : (
+                  <DateTimePicker
+                    key={form.key('endTime')}
+                    {...form.getInputProps('endTime')}
+                    valueFormat='ddd MMM DD, h:mm A'
+                    placeholder='Enter Appointment End Time'
+                  />
+                )}
+                <Text size={'lg'} fw={700} mt={'xs'}>
+                  {'Price'}
+                </Text>
+                {editButton ? (
+                  <NumberInput
+                    disabled
+                    prefix='$'
+                    step={0.01}
+                    key={form.key('price')}
+                    {...form.getInputProps('price')}
+                    placeholder='Enter Price'
+                  />
+                ) : (
+                  <NumberInput
+                    prefix='$'
+                    step={0.01}
+                    key={form.key('price')}
+                    {...form.getInputProps('price')}
+                    placeholder='Enter Price'
+                  />
+                )}
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Text size={'lg'} fw={700}>
+                  {'Vet'}
+                </Text>
+                {editButton ? (
+                  <Select
+                    disabled
+                    key={form.key('vet')}
+                    {...form.getInputProps('vet')}
+                    data={vetNames}
+                    placeholder='Select Vet Used'
+                  />
+                ) : (
+                  <Select
+                    key={form.key('vet')}
+                    {...form.getInputProps('vet')}
+                    data={vetNames}
+                    placeholder='Select Vet Used'
+                  />
+                )}
+                <Text size={'lg'} fw={700} mt={'xs'}>
+                  {'Insurance'}
+                </Text>
+                {editButton ? (
+                  <Select
+                    disabled
+                    key={form.key('insurance')}
+                    {...form.getInputProps('insurance')}
+                    data={insuranceNames}
+                    placeholder='Select Insurance Used'
+                  />
+                ) : (
+                  <Select
+                    key={form.key('insurance')}
+                    {...form.getInputProps('insurance')}
+                    data={insuranceNames}
+                    placeholder='Select Insurance Used'
+                  />
+                )}
+                <Text size={'lg'} fw={700} mt={'xs'}>
+                  {'Category'}
+                </Text>
+                {editButton ? (
+                  <Select
+                    disabled
+                    value={categorySelected}
+                    onChange={setCategorySelected}
+                    data={[
+                      { label: 'Add New Vet', value: '0' },
+                      { label: 'Dental', value: '1' },
+                      { label: 'for fun', value: '2' },
+                      { label: 'others', value: '3' },
+                    ]}
+                    placeholder='Select Category'
+                  />
+                ) : (
+                  <Select
+                    // value={categorySelected}
+                    // onChange={setCategorySelected}
+                    searchable
+                    searchValue={categorySelected}
+                    onSearchChange={setCategorySelected}
+                    data={[
+                      { label: 'Add New Vet', value: '0' },
+                      { label: 'Dental', value: '1' },
+                      { label: 'for fun', value: '2' },
+                      { label: 'others', value: '3' },
+                    ]}
+                    placeholder='Select Category'
+                  />
+                )}
+              </Grid.Col>
+            </Grid>
 
-          <Grid>
-            <Grid.Col span={12}>
-              <Title order={3} size='h3' mt={'xl'}>
-                {'Details'}
-              </Title>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Text size={'lg'} fw={700}>
-                {'Start'}
-              </Text>
-              {editButton ? (
-                <DateTimePicker
-                  disabled
-                  key={form.key('startTime')}
-                  {...form.getInputProps('startTime')}
-                  valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter Appointment Start Time'
-                />
-              ) : (
-                <DateTimePicker
-                  key={form.key('startTime')}
-                  {...form.getInputProps('startTime')}
-                  valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter Appointment Start Time'
-                />
-              )}
-              <Text size={'lg'} fw={700} mt={'xs'}>
-                {'Pick Up'}
-              </Text>
-              {editButton ? (
-                <DateTimePicker
-                  disabled
-                  key={form.key('endTime')}
-                  {...form.getInputProps('endTime')}
-                  valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter Appointment End Time'
-                />
-              ) : (
-                <DateTimePicker
-                  key={form.key('endTime')}
-                  {...form.getInputProps('endTime')}
-                  valueFormat='ddd MMM DD, h:mm A'
-                  placeholder='Enter Appointment End Time'
-                />
-              )}
-              <Text size={'lg'} fw={700} mt={'xs'}>
-                {'Price'}
-              </Text>
-              {editButton ? (
-                <NumberInput
-                  disabled
-                  prefix='$'
-                  step={0.01}
-                  key={form.key('price')}
-                  {...form.getInputProps('price')}
-                  placeholder='Enter Price'
-                />
-              ) : (
-                <NumberInput
-                  prefix='$'
-                  step={0.01}
-                  key={form.key('price')}
-                  {...form.getInputProps('price')}
-                  placeholder='Enter Price'
-                />
-              )}
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Text size={'lg'} fw={700}>
-                {'Vet'}
-              </Text>
-              {editButton ? (
-                <Select
-                  disabled
-                  key={form.key('vet')}
-                  {...form.getInputProps('vet')}
-                  data={vetNames}
-                  placeholder='Select Vet Used'
-                />
-              ) : (
-                <Select
-                  key={form.key('vet')}
-                  {...form.getInputProps('vet')}
-                  data={vetNames}
-                  placeholder='Select Vet Used'
-                />
-              )}
-              <Text size={'lg'} fw={700} mt={'xs'}>
-                {'Insurance'}
-              </Text>
-              {editButton ? (
-                <Select
-                  disabled
-                  key={form.key('insurance')}
-                  {...form.getInputProps('insurance')}
-                  data={insuranceNames}
-                  placeholder='Select Insurance Used'
-                />
-              ) : (
-                <Select
-                  key={form.key('insurance')}
-                  {...form.getInputProps('insurance')}
-                  data={insuranceNames}
-                  placeholder='Select Insurance Used'
-                />
-              )}
-              <Text size={'lg'} fw={700} mt={'xs'}>
-                {'Category'}
-              </Text>
-              {editButton ? (
-                <Select
-                  disabled
-                  value={categorySelected}
-                  onChange={setCategorySelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Dental', value: '1' },
-                    { label: 'for fun', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
-                  placeholder='Select Category'
-                />
-              ) : (
-                <Select
-                  // value={categorySelected}
-                  // onChange={setCategorySelected}
-                  searchable
-                  searchValue={categorySelected}
-                  onSearchChange={setCategorySelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Dental', value: '1' },
-                    { label: 'for fun', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
-                  placeholder='Select Category'
-                />
-              )}
-            </Grid.Col>
-          </Grid>
+            <Title order={3} size='h3' mt={'xl'}>
+              {'Review'}
+            </Title>
+            {editButton ? (
+              <TextInput
+                disabled
+                key={form.key('description')}
+                {...form.getInputProps('description')}
+                placeholder='Enter Description'
+              />
+            ) : (
+              <TextInput
+                key={form.key('description')}
+                {...form.getInputProps('description')}
+                placeholder='Enter Description'
+              />
+            )}
 
-          <Title order={3} size='h3' mt={'xl'}>
-            {'Review'}
-          </Title>
-          {editButton ? (
-            <TextInput
-              disabled
+            <Title order={3} size='h3' mt={'md'}>
+              {'Next Steps'}
+            </Title>
+            {editButton ? (
+              <TextInput
+                disabled
+                key={form.key('nextsteps')}
+                {...form.getInputProps('nextsteps')}
+                placeholder='Enter Next Steps'
+              />
+            ) : (
+              <TextInput
+                key={form.key('nextsteps')}
+                {...form.getInputProps('nextsteps')}
+                placeholder='Enter Next Steps'
+              />
+            )}
+          </Paper>
+        )}
+        {isMobile && (
+          <Paper shadow='xs' withBorder p='md' bg={color}>
+            <Group justify={'flex-end'}>
+              <TextInput
+                key={form.key('title')}
+                {...form.getInputProps('title')}
+                me={'md'}
+                placeholder='Enter Appointment Title'
+              />
+              <Menu shadow='md' width={100}>
+                <Menu.Target>
+                  <IconSettings stroke={2} />
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    leftSection={<IconDownload stroke={2} size={16} />}
+                    type='submit'
+                    onClick={() => handleSubmit('mobile')}
+                  >
+                    <Text size={'md'} fw={500}>
+                      Save
+                    </Text>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={<IconArrowBack stroke={2} size={16} />}
+                    onClick={handleExit}
+                  >
+                    <Text size={'md'} fw={500}>
+                      Back
+                    </Text>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={<IconTrash color='red' stroke={2} size={16} />}
+                    onClick={handleDelete}
+                  >
+                    <Text size={'md'} fw={500} c='red'>
+                      Delete
+                    </Text>
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
+            <Title order={3} size='h3' mt={'xl'}>
+              {'Details'}
+            </Title>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              <Select
+                value={status}
+                onChange={setStatus}
+                data={[
+                  { label: 'Upcoming', value: '2' },
+                  { label: 'Completed', value: '1' },
+                  { label: 'Canceled', value: '0' },
+                ]}
+                label='Appointment Status'
+              />
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              <DateTimePicker
+                key={form.key('startTime')}
+                {...form.getInputProps('startTime')}
+                valueFormat='dddd MMMM D @ h:mm A'
+                label='Appointment Start Time'
+                placeholder='Enter Appointment Start Time'
+              />
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              <DateTimePicker
+                key={form.key('endTime')}
+                {...form.getInputProps('endTime')}
+                valueFormat='dddd MMMM D @ h:mm A'
+                label='Appointment End Time'
+                placeholder='Enter Appointment End Time'
+              />
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              <NumberInput
+                prefix='$'
+                step={0.01}
+                key={form.key('price')}
+                {...form.getInputProps('price')}
+                label='Appointment Price'
+                placeholder='Enter Appointment Price'
+              />
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              <Select
+                key={form.key('vet')}
+                {...form.getInputProps('vet')}
+                data={vetNames}
+                label='Vet Used'
+                placeholder='Select Vet Used'
+              />
+              <Select
+                key={form.key('insurance')}
+                {...form.getInputProps('insurance')}
+                data={insuranceNames}
+                label='Insurance Used'
+                placeholder='Select Insurance Used'
+              />
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xl'>
+              <Select
+                searchable
+                searchValue={categorySelected}
+                onSearchChange={setCategorySelected}
+                data={[
+                  { label: 'Add New Vet', value: '0' },
+                  { label: 'Dental', value: '1' },
+                  { label: 'for fun', value: '2' },
+                  { label: 'others', value: '3' },
+                ]}
+                label='Category(ies?)'
+                placeholder='Select Category'
+              />
+            </Group>
+
+            <Title order={3} size='h3' mt={'xl'} mb={'sm'}>
+              {'Description'}
+            </Title>
+
+            <Textarea
               key={form.key('description')}
               {...form.getInputProps('description')}
+              autosize
               placeholder='Enter Description'
             />
-          ) : (
-            <TextInput
-              key={form.key('description')}
-              {...form.getInputProps('description')}
-              placeholder='Enter Description'
-            />
-          )}
 
-          <Title order={3} size='h3' mt={'md'}>
-            {'Next Steps'}
-          </Title>
-          {editButton ? (
-            <TextInput
-              disabled
+            <Title order={3} size='h3' mt={'xl'} mb={'sm'}>
+              {'Next Steps'}
+            </Title>
+            <Textarea
               key={form.key('nextsteps')}
               {...form.getInputProps('nextsteps')}
+              autosize
               placeholder='Enter Next Steps'
             />
-          ) : (
-            <TextInput
-              key={form.key('nextsteps')}
-              {...form.getInputProps('nextsteps')}
-              placeholder='Enter Next Steps'
-            />
-          )}
-        </form>
-      </Paper>
+          </Paper>
+        )}
+      </form>
     </Container>
   );
 };
