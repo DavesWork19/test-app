@@ -31,6 +31,8 @@ import {
   IconArrowBack,
   IconDownload,
   IconTrash,
+  IconEdit,
+  IconClipboardText,
 } from '@tabler/icons-react';
 
 export const UpdateAppointment = (props) => {
@@ -51,9 +53,8 @@ export const UpdateAppointment = (props) => {
   const initialValues = {
     title: appointment.title,
     startTime: new Date(appointment.start_time),
-    endTime: appointment.end_time ? new Date(appointment.end_time) : '',
-    price: appointment.price ? appointment.price : '',
-    status: status,
+    endTime: appointment.end_time ? new Date(appointment.end_time) : null,
+    price: appointment.price ? appointment.price : null,
     vet: appointment.vet,
     insurance: appointment.insurance,
     description: appointment.description,
@@ -106,29 +107,27 @@ export const UpdateAppointment = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
-      let startTimeStr = null;
-      if (values.startTime) {
-        startTimeStr = values.startTime.toISOString();
-      }
-      let endTimeStr = null;
-      if (values.endTime) {
-        endTimeStr = values.endTime.toISOString();
-      }
-      const updatedPrice = values.price ? values.price : null;
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      status !== appointment.status &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
-
       const { error } = await supabase
         .from('appointments')
         .update({
           title: values.title,
-          start_time: startTimeStr,
-          end_time: endTimeStr,
+          start_time: values.startTime && values.startTime.toISOString(),
+          end_time: values.endTime && values.endTime.toISOString(),
           status: parseInt(status),
-          price: updatedPrice,
+          price: values.price && values.price,
           vet: values.vet,
           insurance: values.insurance,
           description: values.description,
@@ -201,6 +200,8 @@ export const UpdateAppointment = (props) => {
                       { label: 'Completed', value: '1' },
                       { label: 'Canceled', value: '0' },
                     ]}
+                    allowDeselect={false}
+                    label='Appointment Status'
                   />
                 )}
               </Grid.Col>
@@ -266,7 +267,7 @@ export const UpdateAppointment = (props) => {
                     onClick={handleExit}
                     me={6}
                   >
-                    Exit
+                    Back
                   </Button>
                   <Button
                     variant='outline'
@@ -297,14 +298,14 @@ export const UpdateAppointment = (props) => {
                     disabled
                     key={form.key('startTime')}
                     {...form.getInputProps('startTime')}
-                    valueFormat='ddd MMM DD, h:mm A'
+                    valueFormat='dddd, MMMM D @ h:mm A'
                     placeholder='Enter Appointment Start Time'
                   />
                 ) : (
                   <DateTimePicker
                     key={form.key('startTime')}
                     {...form.getInputProps('startTime')}
-                    valueFormat='ddd MMM DD, h:mm A'
+                    valueFormat='dddd, MMMM D @ h:mm A'
                     placeholder='Enter Appointment Start Time'
                   />
                 )}
@@ -316,14 +317,14 @@ export const UpdateAppointment = (props) => {
                     disabled
                     key={form.key('endTime')}
                     {...form.getInputProps('endTime')}
-                    valueFormat='ddd MMM DD, h:mm A'
+                    valueFormat='dddd, MMMM D @ h:mm A'
                     placeholder='Enter Appointment End Time'
                   />
                 ) : (
                   <DateTimePicker
                     key={form.key('endTime')}
                     {...form.getInputProps('endTime')}
-                    valueFormat='ddd MMM DD, h:mm A'
+                    valueFormat='dddd, MMMM D @ h:mm A'
                     placeholder='Enter Appointment End Time'
                   />
                 )}
@@ -359,14 +360,14 @@ export const UpdateAppointment = (props) => {
                     key={form.key('vet')}
                     {...form.getInputProps('vet')}
                     data={vetNames}
-                    placeholder='Select Vet Used'
+                    placeholder='Add Vet'
                   />
                 ) : (
                   <Select
                     key={form.key('vet')}
                     {...form.getInputProps('vet')}
                     data={vetNames}
-                    placeholder='Select Vet Used'
+                    placeholder='Add Vet'
                   />
                 )}
                 <Text size={'lg'} fw={700} mt={'xs'}>
@@ -378,14 +379,14 @@ export const UpdateAppointment = (props) => {
                     key={form.key('insurance')}
                     {...form.getInputProps('insurance')}
                     data={insuranceNames}
-                    placeholder='Select Insurance Used'
+                    placeholder='Add Insurance'
                   />
                 ) : (
                   <Select
                     key={form.key('insurance')}
                     {...form.getInputProps('insurance')}
                     data={insuranceNames}
-                    placeholder='Select Insurance Used'
+                    placeholder='Add Insurance'
                   />
                 )}
                 <Text size={'lg'} fw={700} mt={'xs'}>
@@ -462,143 +463,288 @@ export const UpdateAppointment = (props) => {
         )}
         {isMobile && (
           <Paper shadow='xs' withBorder p='md' bg={color}>
-            <Group justify={'flex-end'}>
-              <TextInput
-                key={form.key('title')}
-                {...form.getInputProps('title')}
-                me={'md'}
-                placeholder='Enter Appointment Title'
-              />
-              <Menu shadow='md' width={100}>
-                <Menu.Target>
-                  <IconSettings stroke={2} />
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<IconDownload stroke={2} size={16} />}
-                    type='submit'
-                    onClick={() => handleSubmit('mobile')}
-                  >
-                    <Text size={'md'} fw={500}>
-                      Save
-                    </Text>
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item
-                    leftSection={<IconArrowBack stroke={2} size={16} />}
-                    onClick={handleExit}
-                  >
-                    <Text size={'md'} fw={500}>
-                      Back
-                    </Text>
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item
-                    leftSection={<IconTrash color='red' stroke={2} size={16} />}
-                    onClick={handleDelete}
-                  >
-                    <Text size={'md'} fw={500} c='red'>
-                      Delete
-                    </Text>
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+            <Group justify={'space-between'}>
+              <Center mt={'md'}>{icon}</Center>
+              {editButton ? (
+                <TextInput
+                  disabled
+                  key={form.key('title')}
+                  {...form.getInputProps('title')}
+                  withAsterisk
+                  label='Appointment Title'
+                  placeholder='Enter Appointment Title'
+                />
+              ) : (
+                <TextInput
+                  key={form.key('title')}
+                  {...form.getInputProps('title')}
+                  withAsterisk
+                  label='Appointment Title'
+                  placeholder='Enter Appointment Title'
+                />
+              )}
+              <Center mt={'md'}>
+                <Menu shadow='md' width={100}>
+                  <Menu.Target>
+                    <IconSettings stroke={2} />
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {editButton ? (
+                      <Menu.Item
+                        leftSection={<IconEdit stroke={2} size={16} />}
+                        onClick={() => setEditButton(false)}
+                      >
+                        <Text size={'md'} fw={500}>
+                          Edit
+                        </Text>
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item
+                        leftSection={<IconClipboardText stroke={2} size={16} />}
+                        onClick={() => setEditButton(true)}
+                      >
+                        <Text size={'md'} fw={500}>
+                          View
+                        </Text>
+                      </Menu.Item>
+                    )}
+                    <Menu.Item
+                      leftSection={<IconDownload stroke={2} size={16} />}
+                      type='submit'
+                      onClick={() => handleSubmit('mobile')}
+                    >
+                      <Text size={'md'} fw={500}>
+                        Save
+                      </Text>
+                    </Menu.Item>
+                    {/* <Menu.Divider /> */}
+                    <Menu.Item
+                      leftSection={<IconArrowBack stroke={2} size={16} />}
+                      onClick={handleExit}
+                    >
+                      <Text size={'md'} fw={500}>
+                        Back
+                      </Text>
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Item
+                      leftSection={
+                        <IconTrash color='red' stroke={2} size={16} />
+                      }
+                      onClick={handleDelete}
+                    >
+                      <Text size={'md'} fw={500} c='red'>
+                        Delete
+                      </Text>
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Center>
             </Group>
             <Title order={3} size='h3' mt={'xl'}>
               {'Details'}
             </Title>
             <Group justify='space-between' grow mt='md' mb='xs'>
-              <Select
-                value={status}
-                onChange={setStatus}
-                data={[
-                  { label: 'Upcoming', value: '2' },
-                  { label: 'Completed', value: '1' },
-                  { label: 'Canceled', value: '0' },
-                ]}
-                label='Appointment Status'
-              />
+              {editButton ? (
+                <Select
+                  disabled
+                  value={status}
+                  onChange={setStatus}
+                  data={[
+                    { label: 'Upcoming', value: '2' },
+                    { label: 'Completed', value: '1' },
+                    { label: 'Canceled', value: '0' },
+                  ]}
+                  allowDeselect={false}
+                  label='Appointment Status'
+                />
+              ) : (
+                <Select
+                  value={status}
+                  onChange={setStatus}
+                  data={[
+                    { label: 'Upcoming', value: '2' },
+                    { label: 'Completed', value: '1' },
+                    { label: 'Canceled', value: '0' },
+                  ]}
+                  allowDeselect={false}
+                  label='Appointment Status'
+                />
+              )}
             </Group>
             <Group justify='space-between' grow mt='md' mb='xs'>
-              <DateTimePicker
-                key={form.key('startTime')}
-                {...form.getInputProps('startTime')}
-                valueFormat='dddd MMMM D @ h:mm A'
-                label='Appointment Start Time'
-                placeholder='Enter Appointment Start Time'
-              />
+              {editButton ? (
+                <DateTimePicker
+                  disabled
+                  key={form.key('startTime')}
+                  {...form.getInputProps('startTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  label='Appointment Start Time'
+                  placeholder='Enter Appointment Start Time'
+                />
+              ) : (
+                <DateTimePicker
+                  key={form.key('startTime')}
+                  {...form.getInputProps('startTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  label='Appointment Start Time'
+                  placeholder='Enter Appointment Start Time'
+                />
+              )}
             </Group>
             <Group justify='space-between' grow mt='md' mb='xs'>
-              <DateTimePicker
-                key={form.key('endTime')}
-                {...form.getInputProps('endTime')}
-                valueFormat='dddd MMMM D @ h:mm A'
-                label='Appointment End Time'
-                placeholder='Enter Appointment End Time'
-              />
+              {editButton ? (
+                <DateTimePicker
+                  disabled
+                  key={form.key('endTime')}
+                  {...form.getInputProps('endTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  label='Appointment End Time'
+                  placeholder='Enter Appointment End Time'
+                />
+              ) : (
+                <DateTimePicker
+                  key={form.key('endTime')}
+                  {...form.getInputProps('endTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  label='Appointment End Time'
+                  placeholder='Enter Appointment End Time'
+                />
+              )}
             </Group>
             <Group justify='space-between' grow mt='md' mb='xs'>
-              <NumberInput
-                prefix='$'
-                step={0.01}
-                key={form.key('price')}
-                {...form.getInputProps('price')}
-                label='Appointment Price'
-                placeholder='Enter Appointment Price'
-              />
+              {editButton ? (
+                <NumberInput
+                  disabled
+                  prefix='$'
+                  step={0.01}
+                  key={form.key('price')}
+                  {...form.getInputProps('price')}
+                  label='Appointment Price'
+                  placeholder='Enter Appointment Price'
+                />
+              ) : (
+                <NumberInput
+                  prefix='$'
+                  step={0.01}
+                  key={form.key('price')}
+                  {...form.getInputProps('price')}
+                  label='Appointment Price'
+                  placeholder='Enter Appointment Price'
+                />
+              )}
             </Group>
             <Group justify='space-between' grow mt='md' mb='xs'>
-              <Select
-                key={form.key('vet')}
-                {...form.getInputProps('vet')}
-                data={vetNames}
-                label='Vet Used'
-                placeholder='Select Vet Used'
-              />
-              <Select
-                key={form.key('insurance')}
-                {...form.getInputProps('insurance')}
-                data={insuranceNames}
-                label='Insurance Used'
-                placeholder='Select Insurance Used'
-              />
+              {editButton ? (
+                <Select
+                  disabled
+                  key={form.key('vet')}
+                  {...form.getInputProps('vet')}
+                  data={vetNames}
+                  label='Vet Used'
+                  placeholder='Add Vet'
+                />
+              ) : (
+                <Select
+                  key={form.key('vet')}
+                  {...form.getInputProps('vet')}
+                  data={vetNames}
+                  label='Vet Used'
+                  placeholder='Add Vet'
+                />
+              )}
+              {editButton ? (
+                <Select
+                  disabled
+                  key={form.key('insurance')}
+                  {...form.getInputProps('insurance')}
+                  data={insuranceNames}
+                  label='Insurance Used'
+                  placeholder='Add Insurance'
+                />
+              ) : (
+                <Select
+                  key={form.key('insurance')}
+                  {...form.getInputProps('insurance')}
+                  data={insuranceNames}
+                  label='Insurance Used'
+                  placeholder='Add Insurance'
+                />
+              )}
             </Group>
             <Group justify='space-between' grow mt='md' mb='xl'>
-              <Select
-                searchable
-                searchValue={categorySelected}
-                onSearchChange={setCategorySelected}
-                data={[
-                  { label: 'Add New Vet', value: '0' },
-                  { label: 'Dental', value: '1' },
-                  { label: 'for fun', value: '2' },
-                  { label: 'others', value: '3' },
-                ]}
-                label='Category(ies?)'
-                placeholder='Select Category'
-              />
+              {editButton ? (
+                <Select
+                  disabled
+                  searchable
+                  searchValue={categorySelected}
+                  onSearchChange={setCategorySelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Dental', value: '1' },
+                    { label: 'for fun', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  label='Category(ies?)'
+                  placeholder='Select Category'
+                />
+              ) : (
+                <Select
+                  searchable
+                  searchValue={categorySelected}
+                  onSearchChange={setCategorySelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Dental', value: '1' },
+                    { label: 'for fun', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  label='Category(ies?)'
+                  placeholder='Select Category'
+                />
+              )}
             </Group>
 
             <Title order={3} size='h3' mt={'xl'} mb={'sm'}>
               {'Description'}
             </Title>
 
-            <Textarea
-              key={form.key('description')}
-              {...form.getInputProps('description')}
-              autosize
-              placeholder='Enter Description'
-            />
+            {editButton ? (
+              <Textarea
+                disabled
+                key={form.key('description')}
+                {...form.getInputProps('description')}
+                autosize
+                placeholder='Enter Description'
+              />
+            ) : (
+              <Textarea
+                key={form.key('description')}
+                {...form.getInputProps('description')}
+                autosize
+                placeholder='Enter Description'
+              />
+            )}
 
             <Title order={3} size='h3' mt={'xl'} mb={'sm'}>
               {'Next Steps'}
             </Title>
-            <Textarea
-              key={form.key('nextsteps')}
-              {...form.getInputProps('nextsteps')}
-              autosize
-              placeholder='Enter Next Steps'
-            />
+            {editButton ? (
+              <Textarea
+                disabled
+                key={form.key('nextsteps')}
+                {...form.getInputProps('nextsteps')}
+                autosize
+                placeholder='Enter Next Steps'
+              />
+            ) : (
+              <Textarea
+                key={form.key('nextsteps')}
+                {...form.getInputProps('nextsteps')}
+                autosize
+                placeholder='Enter Next Steps'
+              />
+            )}
           </Paper>
         )}
       </form>

@@ -4,7 +4,6 @@ import {
   Container,
   Button,
   Paper,
-  Grid,
   Group,
   Center,
   Text,
@@ -30,6 +29,7 @@ import { IconSettings, IconArrowBack, IconDownload } from '@tabler/icons-react';
 export const AddAppointment = (props) => {
   const [successModalopened, successModalObj] = useDisclosure(false);
   const [failModalopened, failModalObj] = useDisclosure(false);
+  const [status, setStatus] = useState('2');
   const router = useRouter();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
@@ -44,7 +44,6 @@ export const AddAppointment = (props) => {
     startTime: null,
     endTime: null,
     price: null,
-    status: '2',
     vet: null,
     insurance: null,
     description: null,
@@ -64,13 +63,13 @@ export const AddAppointment = (props) => {
   let color = '';
   let icon = '';
 
-  if (form.getValues().status === '0') {
+  if (status === '0') {
     color = 'red';
     icon = <IconCircleX size={24} />;
-  } else if (form.getValues().status === '1') {
+  } else if (status === '1') {
     color = 'green';
     icon = <IconCircleCheck size={24} />;
-  } else if (form.getValues().status === '2') {
+  } else if (status === '2') {
     color = 'blue';
     icon = <IconCircle size={24} />;
   }
@@ -89,6 +88,7 @@ export const AddAppointment = (props) => {
     }
     if (
       JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      status !== '2' &&
       !formValidation.hasErrors
     ) {
       const supabase = createClient();
@@ -96,7 +96,7 @@ export const AddAppointment = (props) => {
         title: values.title,
         start_time: values.startTime && values.startTime.toISOString(),
         end_time: values.endTime && values.endTime.toISOString(),
-        status: parseInt(values.status),
+        status: parseInt(status),
         price: values.price && values.price,
         vet: values.vet,
         insurance: values.insurance,
@@ -157,13 +157,14 @@ export const AddAppointment = (props) => {
                   {icon}
                 </Center>
                 <Select
-                  key={form.key('status')}
-                  {...form.getInputProps('status')}
+                  value={status}
+                  onChange={setStatus}
                   data={[
                     { label: 'Upcoming', value: '2' },
                     { label: 'Completed', value: '1' },
                     { label: 'Canceled', value: '0' },
                   ]}
+                  allowDeselect={false}
                   label='Appointment Status'
                 />
               </Center>
@@ -285,53 +286,56 @@ export const AddAppointment = (props) => {
         )}
         {isMobile && (
           <Paper shadow='xs' withBorder p='md' bg={color}>
-            <Group justify={'flex-end'}>
+            <Group justify={'space-between'}>
+              <Center mt={'md'}>{icon}</Center>
               <TextInput
                 key={form.key('title')}
                 {...form.getInputProps('title')}
-                me={'md'}
                 withAsterisk
                 label='Appointment Title'
                 placeholder='Enter Appointment Title'
               />
-              <Menu shadow='md' width={100} keepMounted>
-                <Menu.Target>
-                  <IconSettings stroke={2} />
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<IconDownload stroke={2} size={16} />}
-                    type='submit'
-                    onClick={() => handleSubmit('mobile')}
-                  >
-                    <Text size={'md'} fw={500}>
-                      Save
-                    </Text>
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item
-                    leftSection={<IconArrowBack stroke={2} size={16} />}
-                    onClick={handleExit}
-                  >
-                    <Text size={'md'} fw={500}>
-                      Back
-                    </Text>
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+              <Center mt={'md'}>
+                <Menu shadow='md' width={100}>
+                  <Menu.Target>
+                    <IconSettings stroke={2} />
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      leftSection={<IconDownload stroke={2} size={16} />}
+                      type='submit'
+                      onClick={() => handleSubmit('mobile')}
+                    >
+                      <Text size={'md'} fw={500}>
+                        Save
+                      </Text>
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Item
+                      leftSection={<IconArrowBack stroke={2} size={16} />}
+                      onClick={handleExit}
+                    >
+                      <Text size={'md'} fw={500}>
+                        Back
+                      </Text>
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Center>
             </Group>
             <Title order={3} size='h3' mt={'xl'}>
               {'Details'}
             </Title>
             <Group justify='space-between' grow mt='md' mb='xs'>
               <Select
-                key={form.key('status')}
-                {...form.getInputProps('status')}
+                value={status}
+                onChange={setStatus}
                 data={[
                   { label: 'Upcoming', value: '2' },
                   { label: 'Completed', value: '1' },
                   { label: 'Canceled', value: '0' },
                 ]}
+                allowDeselect={false}
                 label='Appointment Status'
               />
             </Group>
