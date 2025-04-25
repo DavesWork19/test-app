@@ -115,8 +115,8 @@ export const UpdateAppointment = (props) => {
       formValidation = { hasErrors: false };
     }
     if (
-      JSON.stringify(values) !== JSON.stringify(initialValues) &&
-      status !== appointment.status &&
+      (JSON.stringify(values) !== JSON.stringify(initialValues) ||
+        status !== String(appointment.status)) &&
       !formValidation.hasErrors
     ) {
       const supabase = createClient();
@@ -182,15 +182,24 @@ export const UpdateAppointment = (props) => {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {!isMobile && (
           <Paper shadow='xs' withBorder p='md' bg={color}>
-            <Grid pb={24}>
-              <Grid.Col span='content' ps={40} pe={0} pb={0} pt={12} fz={'h4'}>
-                {icon}
-              </Grid.Col>
-              <Grid.Col span={2} ps={2} pt={8} fz={'h4'}>
+            <Group justify={'space-between'}>
+              <Center>
+                <Center mt={'md'} me={'xs'}>
+                  {icon}
+                </Center>
                 {editButton ? (
-                  <Text size={'xl'} fw={600} pt={4} ps={8}>
-                    {appointmentStatusConversion[parseInt(status)]}
-                  </Text>
+                  <Select
+                    disabled
+                    value={status}
+                    onChange={setStatus}
+                    data={[
+                      { label: 'Upcoming', value: '2' },
+                      { label: 'Completed', value: '1' },
+                      { label: 'Canceled', value: '0' },
+                    ]}
+                    allowDeselect={false}
+                    label='Appointment Status'
+                  />
                 ) : (
                   <Select
                     value={status}
@@ -204,84 +213,87 @@ export const UpdateAppointment = (props) => {
                     label='Appointment Status'
                   />
                 )}
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Center fz={'h2'} fw={700}>
-                  {editButton ? (
-                    <Title order={2} size='h1'>
-                      {form.getValues().title}
-                    </Title>
-                  ) : (
-                    <TextInput
-                      key={form.key('title')}
-                      {...form.getInputProps('title')}
-                      placeholder='Enter Appointment Title'
-                    />
-                  )}
-                </Center>
-              </Grid.Col>
-              <Grid.Col span={3} pt={12}>
-                <Center>
-                  {editButton ? (
-                    <Button
-                      variant='outline'
-                      color='black'
-                      bg='white'
-                      size='compact-xs'
-                      radius='xl'
-                      onClick={() => setEditButton(false)}
-                      me={6}
-                    >
-                      Edit
-                    </Button>
-                  ) : (
-                    <Button
-                      variant='outline'
-                      color='black'
-                      bg='white'
-                      size='compact-xs'
-                      radius='xl'
-                      onClick={() => setEditButton(true)}
-                      me={6}
-                    >
-                      View
-                    </Button>
-                  )}
+              </Center>
+              {editButton ? (
+                <TextInput
+                  disabled
+                  key={form.key('title')}
+                  {...form.getInputProps('title')}
+                  w={250}
+                  withAsterisk
+                  label='Appointment Title'
+                  placeholder='Enter Appointment Title'
+                />
+              ) : (
+                <TextInput
+                  key={form.key('title')}
+                  {...form.getInputProps('title')}
+                  w={250}
+                  withAsterisk
+                  label='Appointment Title'
+                  placeholder='Enter Appointment Title'
+                />
+              )}
+              <Center mt={'md'}>
+                {editButton ? (
                   <Button
                     variant='outline'
                     color='black'
                     bg='white'
                     size='compact-xs'
                     radius='xl'
-                    type='submit'
+                    onClick={() => setEditButton(false)}
                     me={6}
                   >
-                    Save
+                    Edit
                   </Button>
+                ) : (
                   <Button
                     variant='outline'
                     color='black'
                     bg='white'
                     size='compact-xs'
                     radius='xl'
-                    onClick={handleExit}
+                    onClick={() => setEditButton(true)}
                     me={6}
                   >
-                    Back
+                    View
                   </Button>
-                  <Button
-                    variant='outline'
-                    color='red'
-                    bg='white'
-                    size='compact-xs'
-                    radius='xl'
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </Button>
-                </Center>
-              </Grid.Col>
-            </Grid>
+                )}
+                <Button
+                  variant='outline'
+                  color='black'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  type='submit'
+                  me={6}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant='outline'
+                  color='black'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  onClick={handleExit}
+                  me={6}
+                >
+                  Back
+                </Button>
+                <Button
+                  variant='outline'
+                  color='red'
+                  bg='white'
+                  size='compact-xs'
+                  radius='xl'
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </Center>
+            </Group>
 
             <Grid>
               <Grid.Col span={12}>

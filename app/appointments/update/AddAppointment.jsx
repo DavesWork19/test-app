@@ -87,8 +87,8 @@ export const AddAppointment = (props) => {
       formValidation = { hasErrors: false };
     }
     if (
-      JSON.stringify(values) !== JSON.stringify(initialValues) &&
-      status !== '2' &&
+      (JSON.stringify(values) !== JSON.stringify(initialValues) ||
+        status !== '2') &&
       !formValidation.hasErrors
     ) {
       const supabase = createClient();
@@ -209,7 +209,7 @@ export const AddAppointment = (props) => {
               <DateTimePicker
                 key={form.key('startTime')}
                 {...form.getInputProps('startTime')}
-                valueFormat='dddd MMMM D @ h:mm A'
+                valueFormat='dddd, MMMM D @ h:mm A'
                 withAsterisk
                 label='Appointment Start Time'
                 placeholder='Enter Appointment Start Time'
@@ -226,7 +226,7 @@ export const AddAppointment = (props) => {
               <DateTimePicker
                 key={form.key('endTime')}
                 {...form.getInputProps('endTime')}
-                valueFormat='dddd MMMM D @ h:mm A'
+                valueFormat='dddd, MMMM D @ h:mm A'
                 label='Appointment End Time'
                 placeholder='Enter Appointment End Time'
               />
@@ -343,7 +343,7 @@ export const AddAppointment = (props) => {
               <DateTimePicker
                 key={form.key('startTime')}
                 {...form.getInputProps('startTime')}
-                valueFormat='dddd MMMM D @ h:mm A'
+                valueFormat='dddd, MMMM D @ h:mm A'
                 withAsterisk
                 label='Appointment Start Time'
                 placeholder='Enter Appointment Start Time'
@@ -353,7 +353,7 @@ export const AddAppointment = (props) => {
               <DateTimePicker
                 key={form.key('endTime')}
                 {...form.getInputProps('endTime')}
-                valueFormat='dddd MMMM D @ h:mm A'
+                valueFormat='dddd, MMMM D @ h:mm A'
                 label='Appointment End Time'
                 placeholder='Enter Appointment End Time'
               />
