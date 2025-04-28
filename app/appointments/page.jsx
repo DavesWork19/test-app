@@ -10,14 +10,25 @@ export default async function AppointmentPage() {
     .select()
     .order('start_time', { ascending: false });
 
-  //need to add related parameter in - show as a side note or something
-  //put related appointments into a carasol or slide deck thing
+  const { data: category } = await supabase
+    .from('appointments')
+    .select('category');
+
+  const allCategories = [];
+  for (let i = 0; i < category.length; i++) {
+    if (category[i].category) {
+      allCategories.push(...category[i].category.split(','));
+    }
+  }
 
   return (
     <main>
       <Container size='md'>
         <Paper shadow='xs' withBorder p='md' radius='md' bg={'#fff0eb'}>
-          <AllAppointments appointments={appointments} />
+          <AllAppointments
+            appointments={appointments}
+            categories={[...new Set(allCategories)]}
+          />
         </Paper>
       </Container>
     </main>

@@ -198,7 +198,7 @@ export const AddAppointment = (props) => {
                   color='black'
                   bg='white'
                   size='compact-xs'
-                  radius='xl'
+                  radius='md'
                   onClick={handleExit}
                   me={6}
                 >

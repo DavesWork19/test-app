@@ -29,7 +29,7 @@ export const Header = () => {
 
   return (
     <header className='p-8'>
-      <Tabs variant='outline' visibleFrom='xs' value={activeTab}>
+      <Tabs variant='outline' visibleFrom='md' value={activeTab}>
         <Tabs.List justify='flex-end'>
           <Tabs.Tab
             value='home'
@@ -93,7 +93,7 @@ export const Header = () => {
           </Tabs.Tab>
         </Tabs.List>
       </Tabs>
-      <Grid hiddenFrom={'xs'} className={classes.xsHeader}>
+      <Grid hiddenFrom={'md'} className={classes.xsHeader}>
         <Grid.Col span={1} onClick={() => handleOnClick('home')}>
           {<IconDog stroke={2} />}
         </Grid.Col>
@@ -103,7 +103,7 @@ export const Header = () => {
           </Text>
         </Grid.Col>
         <Grid.Col span={2}>
-          <Menu shadow='md' width={200}>
+          <Menu shadow='md' width={225}>
             <Menu.Target>
               {/* <Burger size='sm' aria-label='Toggle navigation' /> */}
               <IconMenu2 stroke={1} />
