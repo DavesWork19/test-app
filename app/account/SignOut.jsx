@@ -152,34 +152,46 @@ export const SignOut = (props) => {
                   variant={'filled'}
                   key={form.key('first_name')}
                   {...form.getInputProps('first_name')}
-                  placeholder='First Name'
+                  withAsterisk
+                  label='First Name'
+                  placeholder='Enter First Name'
                 />
                 <TextInput
                   variant={'filled'}
                   key={form.key('last_name')}
                   {...form.getInputProps('last_name')}
-                  placeholder='Last Name'
+                  label='Last Name'
+                  placeholder='Enter Last Name'
                 />
                 <NumberInput
                   variant={'filled'}
                   key={form.key('phone_number')}
                   {...form.getInputProps('phone_number')}
-                  placeholder='Phone Number'
+                  label='Phone Number'
+                  placeholder='Enter Phone Number'
                 />
-                <TextInput disabled variant={'filled'} value={email} />
+                <TextInput
+                  disabled
+                  variant={'filled'}
+                  value={email}
+                  withAsterisk
+                  label='Email'
+                />
               </Group>
               <Group justify='space-between' grow mt='md' mb='xs'>
                 <TextInput
                   variant={'filled'}
                   key={form.key('address')}
                   {...form.getInputProps('address')}
-                  placeholder='Address'
+                  label='Address'
+                  placeholder='Enter Address'
                 />
                 <TextInput
                   variant={'filled'}
                   key={form.key('apartment')}
                   {...form.getInputProps('apartment')}
-                  placeholder='Unit Number'
+                  label='Unit Number'
+                  placeholder='Enter Unit Number'
                 />
               </Group>
               <Group justify='space-between' grow mt='md' mb='xs'>
@@ -187,7 +199,8 @@ export const SignOut = (props) => {
                   variant={'filled'}
                   key={form.key('city')}
                   {...form.getInputProps('city')}
-                  placeholder='City'
+                  label='City'
+                  placeholder='Enter City'
                 />
                 <Select
                   variant={'filled'}
@@ -246,13 +259,15 @@ export const SignOut = (props) => {
                     { label: 'Wisconsin', value: '49' },
                     { label: 'Wyoming', value: '50' },
                   ]}
-                  placeholder='State'
+                  label='State'
+                  placeholder='Select State'
                 />
                 <NumberInput
                   variant={'filled'}
                   key={form.key('zipcode')}
                   {...form.getInputProps('zipcode')}
-                  placeholder='ZipCode'
+                  label='Zip Code'
+                  placeholder='Enter Zip Code'
                 />
               </Group>
             </Card>
@@ -283,7 +298,7 @@ export const SignOut = (props) => {
                 type='submit'
                 leftSection={<IconDownload stroke={2} size={16} />}
               >
-                <Text size={'md'} fw={500}>
+                <Text size={'md'} fw={600}>
                   Save
                 </Text>
               </Button>
@@ -295,6 +310,7 @@ export const SignOut = (props) => {
                   variant={'filled'}
                   key={form.key('first_name')}
                   {...form.getInputProps('first_name')}
+                  withAsterisk
                   label='First Name'
                   placeholder='Enter First Name'
                 />
@@ -320,6 +336,7 @@ export const SignOut = (props) => {
                   disabled
                   variant={'filled'}
                   value={email}
+                  withAsterisk
                   label={'Email'}
                 />
               </Group>
