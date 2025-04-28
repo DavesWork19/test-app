@@ -49,11 +49,6 @@ export const UpdateNote = (props) => {
     }
   };
 
-  // This function will be triggered when the "Remove This Image" button is clicked
-  // const removeSelectedImage = () => {
-  //   setSelectedImage();
-  // };
-
   const initialValues = {
     title: note.title,
     date: new Date(note.date),
@@ -65,8 +60,8 @@ export const UpdateNote = (props) => {
     initialValues: initialValues,
 
     validate: {
-      title: (value) => (value.length > 0 ? null : 'Title Needed!'),
-      date: (value) => (value.toString().length > 0 ? null : 'Date Needed!'),
+      title: (value) => !value && 'Title Needed!',
+      date: (value) => !value && 'Date Needed!',
     },
   });
 
@@ -83,10 +78,18 @@ export const UpdateNote = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      (JSON.stringify(values) !== JSON.stringify(initialValues) ||
+        selectedImage.url !== note.image?.signedUrl) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
       const { error } = await supabase
         .from('notes')
@@ -97,18 +100,18 @@ export const UpdateNote = (props) => {
         })
         .eq('id', note.id);
 
-      const imgObj = await replaceDocFile(
-        selectedImage,
-        note.user_id,
-        note.id,
-        note.img_name
-      );
+      const imgObj =
+        selectedImage.url &&
+        selectedImage.url !== note.image?.signedUrl &&
+        (await replaceDocFile(
+          selectedImage,
+          note.user_id,
+          note.id,
+          note.img_name
+        ));
 
       if (!error & !imgObj) {
         successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
       } else {
         failModalObj.open();
         setTimeout(() => {
@@ -126,15 +129,26 @@ export const UpdateNote = (props) => {
         opened={successModalopened}
         onClose={successModalObj.close}
         centered
-        withCloseButton={false}
         size={'xs'}
       >
         <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Appointments page
+          Continue Editing Or Head Back To The Doc's page
         </Text>
+        <Center mt={'md'}>
+          <Button
+            leftSection={<IconArrowBack stroke={1} size={16} />}
+            size={'xs'}
+            variant={'outline'}
+            c={'green'}
+            color={'green'}
+            onClick={handleExit}
+          >
+            Back
+          </Button>
+        </Center>
       </Modal>
       <Modal
         opened={failModalopened}
@@ -180,7 +194,7 @@ export const UpdateNote = (props) => {
                 me={6}
                 onClick={handleExit}
               >
-                Exit
+                Back
               </Button>
               <Button
                 variant='outline'
@@ -243,6 +257,7 @@ export const UpdateNote = (props) => {
             variant={'filled'}
             key={form.key('title')}
             {...form.getInputProps('title')}
+            withAsterisk
             label='Document Title'
             placeholder='Enter Document Title'
           />
@@ -251,6 +266,7 @@ export const UpdateNote = (props) => {
             variant={'filled'}
             key={form.key('date')}
             {...form.getInputProps('date')}
+            withAsterisk
             label='Document Date'
             placeholder='Enter Document Date'
             valueFormat='ddd MMM DD'
@@ -277,11 +293,11 @@ export const UpdateNote = (props) => {
             </FileButton>
             {/* <button onClick={removeSelectedImage}>Remove This Image</button> */}
           </Group>
-          {selectedImage && (
-            <Center pt={12}>
+          {selectedImage.url && (
+            <Center>
               <img
                 src={selectedImage.url}
-                alt='Thumb'
+                alt='Document...'
                 width={'75%'}
                 height={'75%'}
                 style={{ borderRadius: '5%' }}

@@ -22,7 +22,7 @@ export async function replaceDocFile(file, userID, noteID, prevFileName) {
     .remove([`private/privateier/docs/${userID}/${noteID}/${prevFileName}`]);
 
   if (deleteFile.error) {
-    return 'error';
+    return deleteFile;
   } else {
     const { error } = await supabase.storage
       .from('docs')
@@ -32,7 +32,7 @@ export async function replaceDocFile(file, userID, noteID, prevFileName) {
       );
 
     if (error) {
-      return 'error';
+      return error;
     }
   }
 }

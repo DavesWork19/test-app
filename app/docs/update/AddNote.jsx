@@ -47,9 +47,9 @@ export const AddNote = (props) => {
   };
 
   const initialValues = {
-    title: '',
+    title: null,
     date: today,
-    description: '',
+    description: null,
   };
 
   const form = useForm({
@@ -57,8 +57,8 @@ export const AddNote = (props) => {
     initialValues: initialValues,
 
     validate: {
-      title: (value) => (value.length > 0 ? null : 'Title Needed!'),
-      date: (value) => (value.toString().length > 0 ? null : 'Date Needed!'),
+      title: (value) => !value && 'Title Needed!',
+      date: (value) => !value && 'Date Needed!',
     },
   });
 
@@ -67,10 +67,17 @@ export const AddNote = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('notes')
@@ -89,7 +96,8 @@ export const AddNote = (props) => {
         successModalObj.open();
         setTimeout(() => {
           successModalObj.close();
-        }, 1500);
+          router.replace('/docs');
+        }, 2000);
       } else {
         failModalObj.open();
         setTimeout(() => {
@@ -100,7 +108,6 @@ export const AddNote = (props) => {
   };
 
   const imgText = selectedImage ? 'Upload New File' : 'Upload File';
-  const ttt = isMobile ? 'D/M/YY' : 'ddd, MMM DD';
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -115,7 +122,7 @@ export const AddNote = (props) => {
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Documents page
+          This Doc Is Now Available In The Doc's page
         </Text>
       </Modal>
       <Modal
@@ -206,6 +213,7 @@ export const AddNote = (props) => {
             variant={'filled'}
             key={form.key('title')}
             {...form.getInputProps('title')}
+            withAsterisk
             label='Document Title'
             placeholder='Enter Document Title'
           />
@@ -214,9 +222,10 @@ export const AddNote = (props) => {
             variant={'filled'}
             key={form.key('date')}
             {...form.getInputProps('date')}
+            withAsterisk
             label='Document Date'
             placeholder='Enter Document Date'
-            valueFormat={ttt}
+            valueFormat={'dddd, MMMM D'}
           />
         </Group>
         <Textarea
@@ -244,9 +253,10 @@ export const AddNote = (props) => {
             <Center>
               <img
                 src={URL.createObjectURL(selectedImage)}
-                alt='Thumb'
-                width={'100%'}
-                height={'100%'}
+                alt='Document...'
+                width={'75%'}
+                height={'75%'}
+                style={{ borderRadius: '5%' }}
               />
             </Center>
           )}

@@ -45,9 +45,9 @@ export const AddInsurance = (props) => {
     initialValues: initialValues,
 
     validate: {
-      company: (value) => (value === null ? 'Company Needed!' : null),
+      company: (value) => !value && 'Company Needed!',
       policy_end: (value, values) =>
-        (value >= values.policy_start) | (value === null)
+        (value >= values.policy_start) | !value
           ? null
           : 'End Date Must Be Later Than Start Date or Empty!',
     },
@@ -58,10 +58,17 @@ export const AddInsurance = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
       const { error } = await supabase.from('insurances').insert({
         company: values.company,
@@ -81,7 +88,8 @@ export const AddInsurance = (props) => {
         successModalObj.open();
         setTimeout(() => {
           successModalObj.close();
-        }, 1500);
+          router.replace('/vetsandinsurance');
+        }, 2000);
       }
     }
   };
@@ -99,7 +107,7 @@ export const AddInsurance = (props) => {
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Vets & Insurances page
+          This Policy Is Now Available In The Insurance's Section
         </Text>
       </Modal>
       <Modal
@@ -159,6 +167,7 @@ export const AddInsurance = (props) => {
                   variant={'filled'}
                   key={form.key('company')}
                   {...form.getInputProps('company')}
+                  withAsterisk
                   label='Insurance Company'
                   placeholder='Enter Insurance Company'
                 />
@@ -242,6 +251,7 @@ export const AddInsurance = (props) => {
                   variant={'filled'}
                   key={form.key('company')}
                   {...form.getInputProps('company')}
+                  withAsterisk
                   label='Insurance Company'
                   placeholder='Enter Insurance Company'
                 />

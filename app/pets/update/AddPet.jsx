@@ -60,7 +60,8 @@ export const AddPet = (props) => {
     initialValues: initialValues,
 
     validate: {
-      name: (value) => (value.length > 0 ? null : 'Name Needed!'),
+      name: (value) => !value && 'Name Needed!',
+      birthday: (value) => !value && 'Birthday Needed!',
     },
   });
 
@@ -69,10 +70,17 @@ export const AddPet = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('pets')
@@ -94,7 +102,8 @@ export const AddPet = (props) => {
         successModalObj.open();
         setTimeout(() => {
           successModalObj.close();
-        }, 1500);
+          router.replace('/pets');
+        }, 2000);
       } else {
         failModalObj.open();
         setTimeout(() => {
@@ -119,7 +128,7 @@ export const AddPet = (props) => {
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Pet's page
+          This Pet Is Now Available In The Pets's page
         </Text>
       </Modal>
       <Modal
@@ -179,6 +188,7 @@ export const AddPet = (props) => {
                   variant={'filled'}
                   key={form.key('name')}
                   {...form.getInputProps('name')}
+                  withAsterisk
                   label={"Pet's Name"}
                   placeholder={"Enter Pet's Name"}
                 />
@@ -187,6 +197,7 @@ export const AddPet = (props) => {
                   variant={'filled'}
                   key={form.key('birthday')}
                   {...form.getInputProps('birthday')}
+                  withAsterisk
                   valueFormat='MMMM D, YYYY'
                   label={"Pet's Birthday"}
                   placeholder={"Enter Pet's Birthday"}
@@ -281,6 +292,7 @@ export const AddPet = (props) => {
                   variant={'filled'}
                   key={form.key('name')}
                   {...form.getInputProps('name')}
+                  withAsterisk
                   label={"Pet's Name"}
                   placeholder={"Enter Pet's Name"}
                 />
@@ -291,6 +303,7 @@ export const AddPet = (props) => {
                   variant={'filled'}
                   key={form.key('birthday')}
                   {...form.getInputProps('birthday')}
+                  withAsterisk
                   valueFormat='MMMM D, YYYY'
                   label={"Pet's Birthday"}
                   placeholder={"Enter Pet's Birthday"}

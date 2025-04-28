@@ -42,7 +42,7 @@ export const AddVet = () => {
     initialValues: initialValues,
 
     validate: {
-      name: (value) => (value.length > 0 ? null : "Vet's Name Needed!"),
+      name: (value) => !value && "Vet's Name Needed!",
     },
   });
 
@@ -51,10 +51,17 @@ export const AddVet = () => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
       const { error } = await supabase.from('vets').insert({
         name: values.name,
@@ -73,7 +80,8 @@ export const AddVet = () => {
         successModalObj.open();
         setTimeout(() => {
           successModalObj.close();
-        }, 1500);
+          router.replace('/vetsandinsurance');
+        }, 2000);
       }
     }
   };
@@ -91,7 +99,7 @@ export const AddVet = () => {
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Vets & Appointments page
+          This Vet Is Now Available In The Vet's Section
         </Text>
       </Modal>
       <Modal
@@ -185,6 +193,7 @@ export const AddVet = () => {
                 variant={'filled'}
                 key={form.key('name')}
                 {...form.getInputProps('name')}
+                withAsterisk
                 label="Vet's Name"
                 placeholder="Enter Vet's Name"
               />

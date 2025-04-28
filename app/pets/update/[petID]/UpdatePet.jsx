@@ -68,7 +68,8 @@ export const UpdatePet = (props) => {
     initialValues: initialValues,
 
     validate: {
-      name: (value) => (value.length > 0 ? null : 'Name Needed!'),
+      name: (value) => !value && 'Name Needed!',
+      birthday: (value) => !value && 'Birthday Needed!',
     },
   });
 
@@ -85,10 +86,18 @@ export const UpdatePet = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      (JSON.stringify(values) !== JSON.stringify(initialValues) ||
+        selectedImage.url !== pet.image?.signedUrl) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
 
       const { error } = await supabase
@@ -104,7 +113,8 @@ export const UpdatePet = (props) => {
         .eq('id', pet.id);
 
       const imgObj =
-        selectedImage &&
+        selectedImage.url &&
+        selectedImage.url !== pet.image?.signedUrl &&
         (await replacePetFile(
           selectedImage,
           pet.user_id,
@@ -114,9 +124,6 @@ export const UpdatePet = (props) => {
 
       if (!error & !imgObj) {
         successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
       } else {
         failModalObj.open();
         setTimeout(() => {
@@ -132,15 +139,26 @@ export const UpdatePet = (props) => {
         opened={successModalopened}
         onClose={successModalObj.close}
         centered
-        withCloseButton={false}
         size={'xs'}
       >
         <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Pet's page
+          Continue Editing Or Head Back To The Pet's page
         </Text>
+        <Center mt={'md'}>
+          <Button
+            leftSection={<IconArrowBack stroke={1} size={16} />}
+            size={'xs'}
+            variant={'outline'}
+            c={'green'}
+            color={'green'}
+            onClick={handleExit}
+          >
+            Back
+          </Button>
+        </Center>
       </Modal>
       <Modal
         opened={failModalopened}
@@ -210,6 +228,7 @@ export const UpdatePet = (props) => {
                   variant={'filled'}
                   key={form.key('name')}
                   {...form.getInputProps('name')}
+                  withAsterisk
                   label={"Pet's Name"}
                   placeholder={"Enter Pet's Name"}
                 />
@@ -218,6 +237,7 @@ export const UpdatePet = (props) => {
                   variant={'filled'}
                   key={form.key('birthday')}
                   {...form.getInputProps('birthday')}
+                  withAsterisk
                   valueFormat='MMMM D, YYYY'
                   label={"Pet's Birthday"}
                   placeholder={"Enter Pet's Birthday"}
@@ -319,6 +339,7 @@ export const UpdatePet = (props) => {
                   variant={'filled'}
                   key={form.key('name')}
                   {...form.getInputProps('name')}
+                  withAsterisk
                   label={"Pet's Name"}
                   placeholder={"Enter Pet's Name"}
                 />
@@ -329,6 +350,7 @@ export const UpdatePet = (props) => {
                   variant={'filled'}
                   key={form.key('birthday')}
                   {...form.getInputProps('birthday')}
+                  withAsterisk
                   valueFormat='MMMM D, YYYY'
                   label={"Pet's Birthday"}
                   placeholder={"Enter Pet's Birthday"}

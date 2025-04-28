@@ -47,7 +47,7 @@ export const UpdateVet = (props) => {
     initialValues: initialValues,
 
     validate: {
-      name: (value) => (value.length > 0 ? null : "Vet's Name Needed!"),
+      name: (value) => !value && "Vet's Name Needed!",
     },
   });
 
@@ -69,10 +69,17 @@ export const UpdateVet = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
       const { error } = await supabase
         .from('vets')
@@ -92,9 +99,6 @@ export const UpdateVet = (props) => {
         }, 1500);
       } else {
         successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
       }
     }
   };
@@ -105,15 +109,26 @@ export const UpdateVet = (props) => {
         opened={successModalopened}
         onClose={successModalObj.close}
         centered
-        withCloseButton={false}
         size={'xs'}
       >
         <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Vets & Appointments page
+          Continue Editing Or Head Back To The Vet's Section
         </Text>
+        <Center mt={'md'}>
+          <Button
+            leftSection={<IconArrowBack stroke={1} size={16} />}
+            size={'xs'}
+            variant={'outline'}
+            c={'green'}
+            color={'green'}
+            onClick={handleExit}
+          >
+            Back
+          </Button>
+        </Center>
       </Modal>
       <Modal
         opened={failModalopened}

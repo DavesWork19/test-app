@@ -55,8 +55,8 @@ export const AddAppointment = (props) => {
     initialValues: initialValues,
 
     validate: {
-      title: (value) => (value ? null : 'Title Required!'),
-      startTime: (value) => (value ? null : 'Start Time Required!'),
+      title: (value) => !value && 'Title Required!',
+      startTime: (value) => !value && 'Start Time Required!',
     },
   });
 
@@ -113,7 +113,8 @@ export const AddAppointment = (props) => {
         successModalObj.open();
         setTimeout(() => {
           successModalObj.close();
-        }, 1500);
+          router.replace('/appointments');
+        }, 2000);
       }
     }
   };
@@ -130,7 +131,7 @@ export const AddAppointment = (props) => {
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Appointments page
+          This Appointment Is Now Available In The Appointments's page
         </Text>
       </Modal>
       <Modal
@@ -165,6 +166,7 @@ export const AddAppointment = (props) => {
                     { label: 'Canceled', value: '0' },
                   ]}
                   allowDeselect={false}
+                  withAsterisk
                   label='Appointment Status'
                 />
               </Center>
@@ -336,6 +338,7 @@ export const AddAppointment = (props) => {
                   { label: 'Canceled', value: '0' },
                 ]}
                 allowDeselect={false}
+                withAsterisk
                 label='Appointment Status'
               />
             </Group>

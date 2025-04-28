@@ -66,9 +66,8 @@ export const UpdateAppointment = (props) => {
     initialValues: initialValues,
 
     validate: {
-      title: (value) => (value.length > 0 ? null : 'Title Required!'),
-      startTime: (value) =>
-        value.toString().length > 0 ? null : 'Start Time Required!',
+      title: (value) => !value && 'Title Required!',
+      startTime: (value) => !value && 'Start Time Required!',
     },
   });
 
@@ -142,9 +141,6 @@ export const UpdateAppointment = (props) => {
         }, 1500);
       } else {
         successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
       }
     }
   };
@@ -154,15 +150,26 @@ export const UpdateAppointment = (props) => {
         opened={successModalopened}
         onClose={successModalObj.close}
         centered
-        withCloseButton={false}
         size={'xs'}
       >
         <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Appointments page
+          Continue Editing Or Head Back To The Appointment's page
         </Text>
+        <Center mt={'md'}>
+          <Button
+            leftSection={<IconArrowBack stroke={1} size={16} />}
+            size={'xs'}
+            variant={'outline'}
+            c={'green'}
+            color={'green'}
+            onClick={handleExit}
+          >
+            Back
+          </Button>
+        </Center>
       </Modal>
       <Modal
         opened={failModalopened}
@@ -198,6 +205,7 @@ export const UpdateAppointment = (props) => {
                       { label: 'Canceled', value: '0' },
                     ]}
                     allowDeselect={false}
+                    withAsterisk
                     label='Appointment Status'
                   />
                 ) : (
@@ -210,6 +218,7 @@ export const UpdateAppointment = (props) => {
                       { label: 'Canceled', value: '0' },
                     ]}
                     allowDeselect={false}
+                    withAsterisk
                     label='Appointment Status'
                   />
                 )}
@@ -244,6 +253,7 @@ export const UpdateAppointment = (props) => {
                     radius='xl'
                     onClick={() => setEditButton(false)}
                     me={6}
+                    w={37}
                   >
                     Edit
                   </Button>
@@ -256,6 +266,7 @@ export const UpdateAppointment = (props) => {
                     radius='xl'
                     onClick={() => setEditButton(true)}
                     me={6}
+                    w={37}
                   >
                     View
                   </Button>
@@ -295,179 +306,177 @@ export const UpdateAppointment = (props) => {
               </Center>
             </Group>
 
-            <Grid>
-              <Grid.Col span={12}>
-                <Title order={3} size='h3' mt={'xl'}>
-                  {'Details'}
-                </Title>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Text size={'lg'} fw={700}>
-                  {'Start'}
-                </Text>
-                {editButton ? (
-                  <DateTimePicker
-                    disabled
-                    key={form.key('startTime')}
-                    {...form.getInputProps('startTime')}
-                    valueFormat='dddd, MMMM D @ h:mm A'
-                    placeholder='Enter Appointment Start Time'
-                  />
-                ) : (
-                  <DateTimePicker
-                    key={form.key('startTime')}
-                    {...form.getInputProps('startTime')}
-                    valueFormat='dddd, MMMM D @ h:mm A'
-                    placeholder='Enter Appointment Start Time'
-                  />
-                )}
-                <Text size={'lg'} fw={700} mt={'xs'}>
-                  {'Pick Up'}
-                </Text>
-                {editButton ? (
-                  <DateTimePicker
-                    disabled
-                    key={form.key('endTime')}
-                    {...form.getInputProps('endTime')}
-                    valueFormat='dddd, MMMM D @ h:mm A'
-                    placeholder='Enter Appointment End Time'
-                  />
-                ) : (
-                  <DateTimePicker
-                    key={form.key('endTime')}
-                    {...form.getInputProps('endTime')}
-                    valueFormat='dddd, MMMM D @ h:mm A'
-                    placeholder='Enter Appointment End Time'
-                  />
-                )}
-                <Text size={'lg'} fw={700} mt={'xs'}>
-                  {'Price'}
-                </Text>
-                {editButton ? (
-                  <NumberInput
-                    disabled
-                    prefix='$'
-                    step={0.01}
-                    key={form.key('price')}
-                    {...form.getInputProps('price')}
-                    placeholder='Enter Price'
-                  />
-                ) : (
-                  <NumberInput
-                    prefix='$'
-                    step={0.01}
-                    key={form.key('price')}
-                    {...form.getInputProps('price')}
-                    placeholder='Enter Price'
-                  />
-                )}
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Text size={'lg'} fw={700}>
-                  {'Vet'}
-                </Text>
-                {editButton ? (
-                  <Select
-                    disabled
-                    key={form.key('vet')}
-                    {...form.getInputProps('vet')}
-                    data={vetNames}
-                    placeholder='Add Vet'
-                  />
-                ) : (
-                  <Select
-                    key={form.key('vet')}
-                    {...form.getInputProps('vet')}
-                    data={vetNames}
-                    placeholder='Add Vet'
-                  />
-                )}
-                <Text size={'lg'} fw={700} mt={'xs'}>
-                  {'Insurance'}
-                </Text>
-                {editButton ? (
-                  <Select
-                    disabled
-                    key={form.key('insurance')}
-                    {...form.getInputProps('insurance')}
-                    data={insuranceNames}
-                    placeholder='Add Insurance'
-                  />
-                ) : (
-                  <Select
-                    key={form.key('insurance')}
-                    {...form.getInputProps('insurance')}
-                    data={insuranceNames}
-                    placeholder='Add Insurance'
-                  />
-                )}
-                <Text size={'lg'} fw={700} mt={'xs'}>
-                  {'Category'}
-                </Text>
-                {editButton ? (
-                  <Select
-                    disabled
-                    value={categorySelected}
-                    onChange={setCategorySelected}
-                    data={[
-                      { label: 'Add New Vet', value: '0' },
-                      { label: 'Dental', value: '1' },
-                      { label: 'for fun', value: '2' },
-                      { label: 'others', value: '3' },
-                    ]}
-                    placeholder='Select Category'
-                  />
-                ) : (
-                  <Select
-                    // value={categorySelected}
-                    // onChange={setCategorySelected}
-                    searchable
-                    searchValue={categorySelected}
-                    onSearchChange={setCategorySelected}
-                    data={[
-                      { label: 'Add New Vet', value: '0' },
-                      { label: 'Dental', value: '1' },
-                      { label: 'for fun', value: '2' },
-                      { label: 'others', value: '3' },
-                    ]}
-                    placeholder='Select Category'
-                  />
-                )}
-              </Grid.Col>
-            </Grid>
-
             <Title order={3} size='h3' mt={'xl'}>
-              {'Review'}
+              {'Details'}
             </Title>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              {editButton ? (
+                <DateTimePicker
+                  disabled
+                  key={form.key('startTime')}
+                  {...form.getInputProps('startTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  withAsterisk
+                  label='Appointment Start Time'
+                  placeholder='Enter Appointment Start Time'
+                />
+              ) : (
+                <DateTimePicker
+                  key={form.key('startTime')}
+                  {...form.getInputProps('startTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  withAsterisk
+                  label='Appointment Start Time'
+                  placeholder='Enter Appointment Start Time'
+                />
+              )}
+              {editButton ? (
+                <Select
+                  disabled
+                  key={form.key('vet')}
+                  {...form.getInputProps('vet')}
+                  data={vetNames}
+                  label='Vet Used'
+                  placeholder='Select Vet Used'
+                />
+              ) : (
+                <Select
+                  key={form.key('vet')}
+                  {...form.getInputProps('vet')}
+                  data={vetNames}
+                  label='Vet Used'
+                  placeholder='Select Vet Used'
+                />
+              )}
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              {editButton ? (
+                <DateTimePicker
+                  disabled
+                  key={form.key('endTime')}
+                  {...form.getInputProps('endTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  label='Appointment End Time'
+                  placeholder='Enter Appointment End Time'
+                />
+              ) : (
+                <DateTimePicker
+                  key={form.key('endTime')}
+                  {...form.getInputProps('endTime')}
+                  valueFormat='dddd, MMMM D @ h:mm A'
+                  label='Appointment End Time'
+                  placeholder='Enter Appointment End Time'
+                />
+              )}
+              {editButton ? (
+                <Select
+                  disabled
+                  key={form.key('insurance')}
+                  {...form.getInputProps('insurance')}
+                  data={insuranceNames}
+                  label='Insurance Used'
+                  placeholder='Select Insurance Used'
+                />
+              ) : (
+                <Select
+                  key={form.key('insurance')}
+                  {...form.getInputProps('insurance')}
+                  data={insuranceNames}
+                  label='Insurance Used'
+                  placeholder='Select Insurance Used'
+                />
+              )}
+            </Group>
+            <Group justify='space-between' grow mt='md' mb='xs'>
+              {editButton ? (
+                <NumberInput
+                  disabled
+                  prefix='$'
+                  step={0.01}
+                  key={form.key('price')}
+                  {...form.getInputProps('price')}
+                  label='Appointment Price'
+                  placeholder='Enter Appointment Price'
+                />
+              ) : (
+                <NumberInput
+                  prefix='$'
+                  step={0.01}
+                  key={form.key('price')}
+                  {...form.getInputProps('price')}
+                  label='Appointment Price'
+                  placeholder='Enter Appointment Price'
+                />
+              )}
+              {editButton ? (
+                <Select
+                  disabled
+                  searchable
+                  searchValue={categorySelected}
+                  onSearchChange={setCategorySelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Dental', value: '1' },
+                    { label: 'for fun', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  label='Category(ies?)'
+                  placeholder='Select Category'
+                />
+              ) : (
+                <Select
+                  searchable
+                  searchValue={categorySelected}
+                  onSearchChange={setCategorySelected}
+                  data={[
+                    { label: 'Add New Vet', value: '0' },
+                    { label: 'Dental', value: '1' },
+                    { label: 'for fun', value: '2' },
+                    { label: 'others', value: '3' },
+                  ]}
+                  label='Category(ies?)'
+                  placeholder='Select Category'
+                />
+              )}
+            </Group>
+
+            <Title order={3} size='h3' mt={'xl'} mb={'sm'}>
+              {'Description'}
+            </Title>
+
             {editButton ? (
-              <TextInput
+              <Textarea
                 disabled
                 key={form.key('description')}
                 {...form.getInputProps('description')}
+                autosize
                 placeholder='Enter Description'
               />
             ) : (
-              <TextInput
+              <Textarea
                 key={form.key('description')}
                 {...form.getInputProps('description')}
+                autosize
                 placeholder='Enter Description'
               />
             )}
 
-            <Title order={3} size='h3' mt={'md'}>
+            <Title order={3} size='h3' mt={'xl'} mb={'sm'}>
               {'Next Steps'}
             </Title>
             {editButton ? (
-              <TextInput
+              <Textarea
                 disabled
                 key={form.key('nextsteps')}
                 {...form.getInputProps('nextsteps')}
+                autosize
                 placeholder='Enter Next Steps'
               />
             ) : (
-              <TextInput
+              <Textarea
                 key={form.key('nextsteps')}
                 {...form.getInputProps('nextsteps')}
+                autosize
                 placeholder='Enter Next Steps'
               />
             )}

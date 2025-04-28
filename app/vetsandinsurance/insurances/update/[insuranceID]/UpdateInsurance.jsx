@@ -53,8 +53,9 @@ export const UpdateInsurance = (props) => {
     initialValues: initialValues,
 
     validate: {
+      company: (value) => !value && 'Company Needed!',
       policy_end: (value, values) =>
-        (value >= values.policy_start) | (value === null)
+        (value >= values.policy_start) | !value
           ? null
           : 'End Date Must Be Later Than Start Date or Empty!',
     },
@@ -82,12 +83,18 @@ export const UpdateInsurance = (props) => {
   };
 
   const handleSubmit = async (values) => {
+    let formValidation = null;
     if (values === 'mobile') {
       values = form.getValues();
+      formValidation = form.validate();
+    } else {
+      formValidation = { hasErrors: false };
     }
-    if (JSON.stringify(values) !== JSON.stringify(initialValues)) {
+    if (
+      JSON.stringify(values) !== JSON.stringify(initialValues) &&
+      !formValidation.hasErrors
+    ) {
       const supabase = createClient();
-      console.log(values, 'v');
       const { error } = await supabase
         .from('insurances')
         .update({
@@ -100,7 +107,7 @@ export const UpdateInsurance = (props) => {
           pet: values.pet,
         })
         .eq('id', insurance.id);
-      console.log('error', error, values);
+
       if (error) {
         failModalObj.open();
         setTimeout(() => {
@@ -108,9 +115,6 @@ export const UpdateInsurance = (props) => {
         }, 1500);
       } else {
         successModalObj.open();
-        setTimeout(() => {
-          successModalObj.close();
-        }, 1500);
       }
     }
   };
@@ -121,15 +125,26 @@ export const UpdateInsurance = (props) => {
         opened={successModalopened}
         onClose={successModalObj.close}
         centered
-        withCloseButton={false}
         size={'xs'}
       >
         <Text size='md' fw={600} c={'green'} ta='center' pb={12}>
           Successfully Saved!
         </Text>
         <Text size='xs' fw={500} c={'green'} ta='center'>
-          Continue editing or exit and return to the Vets & Insurances page
+          Continue Editing Or Head Back To The Insurance Section
         </Text>
+        <Center mt={'md'}>
+          <Button
+            leftSection={<IconArrowBack stroke={1} size={16} />}
+            size={'xs'}
+            variant={'outline'}
+            c={'green'}
+            color={'green'}
+            onClick={handleExit}
+          >
+            Back
+          </Button>
+        </Center>
       </Modal>
       <Modal
         opened={failModalopened}
@@ -199,6 +214,7 @@ export const UpdateInsurance = (props) => {
                   variant={'filled'}
                   key={form.key('company')}
                   {...form.getInputProps('company')}
+                  withAsterisk
                   label='Insurance Company'
                   placeholder='Enter Insurance Company'
                 />
@@ -288,6 +304,7 @@ export const UpdateInsurance = (props) => {
                   variant={'filled'}
                   key={form.key('company')}
                   {...form.getInputProps('company')}
+                  withAsterisk
                   label='Insurance Company'
                   placeholder='Enter Insurance Company'
                 />
