@@ -22,9 +22,24 @@ export default async function CreateAppointmentPage() {
     };
   });
 
+  const { data: category } = await supabase
+    .from('appointments')
+    .select('category');
+
+  const allCategories = [];
+  for (let i = 0; i < category.length; i++) {
+    if (category[i].category) {
+      allCategories.push(...category[i].category.split(','));
+    }
+  }
+
   return (
     <main>
-      <AddAppointment vetNames={vetNames} insuranceNames={insuranceNames} />
+      <AddAppointment
+        vetNames={vetNames}
+        insuranceNames={insuranceNames}
+        categories={[...new Set(allCategories)]}
+      />
     </main>
   );
 }

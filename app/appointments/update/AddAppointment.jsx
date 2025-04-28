@@ -15,6 +15,7 @@ import {
   Select,
   Menu,
   useMantineTheme,
+  TagsInput,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -34,10 +35,9 @@ export const AddAppointment = (props) => {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.xs})`);
 
-  const [categorySelected, setCategorySelected] = useState();
-
   const vetNames = props.vetNames;
   const insuranceNames = props.insuranceNames;
+  const categories = props.categories;
 
   const initialValues = {
     title: null,
@@ -48,6 +48,7 @@ export const AddAppointment = (props) => {
     insurance: null,
     description: null,
     nextsteps: null,
+    category: [],
   };
 
   const form = useForm({
@@ -86,6 +87,7 @@ export const AddAppointment = (props) => {
     } else {
       formValidation = { hasErrors: false };
     }
+
     if (
       (JSON.stringify(values) !== JSON.stringify(initialValues) ||
         status !== '2') &&
@@ -102,6 +104,7 @@ export const AddAppointment = (props) => {
         insurance: values.insurance,
         description: values.description,
         next_steps: values.nextsteps,
+        category: values.category.length !== 0 && values.category.join(),
       });
 
       if (error) {
@@ -249,18 +252,12 @@ export const AddAppointment = (props) => {
                 label='Appointment Price'
                 placeholder='Enter Appointment Price'
               />
-              <Select
-                searchable
-                searchValue={categorySelected}
-                onSearchChange={setCategorySelected}
-                data={[
-                  { label: 'Add New Vet', value: '0' },
-                  { label: 'Dental', value: '1' },
-                  { label: 'for fun', value: '2' },
-                  { label: 'others', value: '3' },
-                ]}
+              <TagsInput
+                key={form.key('category')}
+                {...form.getInputProps('category')}
                 label='Category(ies?)'
                 placeholder='Select Category'
+                data={categories}
               />
             </Group>
 
@@ -388,18 +385,12 @@ export const AddAppointment = (props) => {
               />
             </Group>
             <Group justify='space-between' grow mt='md' mb='xl'>
-              <Select
-                searchable
-                searchValue={categorySelected}
-                onSearchChange={setCategorySelected}
-                data={[
-                  { label: 'Add New Vet', value: '0' },
-                  { label: 'Dental', value: '1' },
-                  { label: 'for fun', value: '2' },
-                  { label: 'others', value: '3' },
-                ]}
+              <TagsInput
+                key={form.key('category')}
+                {...form.getInputProps('category')}
                 label='Category(ies?)'
                 placeholder='Select Category'
+                data={categories}
               />
             </Group>
 

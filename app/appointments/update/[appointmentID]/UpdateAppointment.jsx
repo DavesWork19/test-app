@@ -16,6 +16,7 @@ import {
   Menu,
   Group,
   Textarea,
+  TagsInput,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -46,6 +47,7 @@ export const UpdateAppointment = (props) => {
   const appointment = props.appointment;
   const vetNames = props.vetNames;
   const insuranceNames = props.insuranceNames;
+  const categories = props.categories;
 
   const [status, setStatus] = useState(String(appointment.status));
   const [categorySelected, setCategorySelected] = useState();
@@ -59,6 +61,7 @@ export const UpdateAppointment = (props) => {
     insurance: appointment.insurance,
     description: appointment.description,
     nextsteps: appointment.next_steps,
+    category: appointment.category ? appointment.category.split(',') : [],
   };
 
   const form = useForm({
@@ -131,6 +134,7 @@ export const UpdateAppointment = (props) => {
           insurance: values.insurance,
           description: values.description,
           next_steps: values.nextsteps,
+          category: values.category.length !== 0 && values.category.join(),
         })
         .eq('id', appointment.id);
 
@@ -409,33 +413,21 @@ export const UpdateAppointment = (props) => {
                 />
               )}
               {editButton ? (
-                <Select
+                <TagsInput
                   disabled
-                  searchable
-                  searchValue={categorySelected}
-                  onSearchChange={setCategorySelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Dental', value: '1' },
-                    { label: 'for fun', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
+                  key={form.key('category')}
+                  {...form.getInputProps('category')}
                   label='Category(ies?)'
                   placeholder='Select Category'
+                  defaultValue={form.getValues().category}
                 />
               ) : (
-                <Select
-                  searchable
-                  searchValue={categorySelected}
-                  onSearchChange={setCategorySelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Dental', value: '1' },
-                    { label: 'for fun', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
+                <TagsInput
+                  key={form.key('category')}
+                  {...form.getInputProps('category')}
                   label='Category(ies?)'
                   placeholder='Select Category'
+                  data={categories}
                 />
               )}
             </Group>
@@ -695,33 +687,21 @@ export const UpdateAppointment = (props) => {
             </Group>
             <Group justify='space-between' grow mt='md' mb='xl'>
               {editButton ? (
-                <Select
+                <TagsInput
                   disabled
-                  searchable
-                  searchValue={categorySelected}
-                  onSearchChange={setCategorySelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Dental', value: '1' },
-                    { label: 'for fun', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
+                  key={form.key('category')}
+                  {...form.getInputProps('category')}
                   label='Category(ies?)'
                   placeholder='Select Category'
+                  defaultValue={form.getValues().category}
                 />
               ) : (
-                <Select
-                  searchable
-                  searchValue={categorySelected}
-                  onSearchChange={setCategorySelected}
-                  data={[
-                    { label: 'Add New Vet', value: '0' },
-                    { label: 'Dental', value: '1' },
-                    { label: 'for fun', value: '2' },
-                    { label: 'others', value: '3' },
-                  ]}
+                <TagsInput
+                  key={form.key('category')}
+                  {...form.getInputProps('category')}
                   label='Category(ies?)'
                   placeholder='Select Category'
+                  data={categories}
                 />
               )}
             </Group>

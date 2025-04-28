@@ -32,12 +32,24 @@ export default async function UpdateAppointmentPage({ params }) {
     };
   });
 
+  const { data: category } = await supabase
+    .from('appointments')
+    .select('category');
+
+  const allCategories = [];
+  for (let i = 0; i < category.length; i++) {
+    if (category[i].category) {
+      allCategories.push(...category[i].category.split(','));
+    }
+  }
+
   return (
     <main>
       <UpdateAppointment
         appointment={appointment}
         vetNames={vetNames}
         insuranceNames={insuranceNames}
+        categories={[...new Set(allCategories)]}
       />
     </main>
   );
