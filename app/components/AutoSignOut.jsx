@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '../utils/supabase/client';
 
-const MAX_INACTIVITY_MS = 60000; // Example: 60 seconds
+const MAX_INACTIVITY_MS = 60000 * 15; // Example: 60 seconds
 
 export default function AutoSignOut() {
   const router = useRouter();
