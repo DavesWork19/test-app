@@ -10,23 +10,25 @@ export default async function NotesPage() {
     .select()
     .order('last_updated', { ascending: false });
 
-  const userID = pets[0].user_id;
+  if (pets.length !== 0) {
+    const userID = pets[0].user_id;
 
-  for (let i = 0; i < pets.length; i++) {
-    const petID = pets[i].id;
-    const { data } = await supabase.storage
-      .from('docs')
-      .list(`private/privateier/pets/${userID}/${petID}`);
-    if (data[0]) {
-      const petImg = await supabase.storage
+    for (let i = 0; i < pets.length; i++) {
+      const petID = pets[i].id;
+      const { data } = await supabase.storage
         .from('docs')
-        .createSignedUrl(
-          `private/privateier/pets/${userID}/${petID}/${data[0].name}`,
-          600
-        );
-      pets[i].image = petImg.data;
-    } else {
-      pets[i].image = null;
+        .list(`private/privateier/pets/${userID}/${petID}`);
+      if (data[0]) {
+        const petImg = await supabase.storage
+          .from('docs')
+          .createSignedUrl(
+            `private/privateier/pets/${userID}/${petID}/${data[0].name}`,
+            600
+          );
+        pets[i].image = petImg.data;
+      } else {
+        pets[i].image = null;
+      }
     }
   }
 

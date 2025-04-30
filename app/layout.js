@@ -10,20 +10,9 @@ import {
 } from '@mantine/core';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Header } from './components/Header';
 import AutoSignOut from './components/AutoSignOut';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata = {
   title: 'Integral Information',
@@ -37,9 +26,7 @@ export default function RootLayout({ children }) {
         <ColorSchemeScript />
         <script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script>
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
         <MantineProvider>
           <Header />
           {children}
