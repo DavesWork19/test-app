@@ -2,6 +2,7 @@
 
 import {
   TextInput,
+  NumberInput,
   Text,
   Title,
   Card,
@@ -213,7 +214,7 @@ export const AddPet = (props) => {
                 />
               </Group>
               <Group justify='space-between' grow mt='md' mb='xs'>
-                <TextInput
+                <NumberInput
                   variant={'filled'}
                   key={form.key('weight')}
                   {...form.getInputProps('weight')}
@@ -319,7 +320,7 @@ export const AddPet = (props) => {
                 />
               </Group>
               <Group justify='space-between' grow mt='md' mb='xs'>
-                <TextInput
+                <NumberInput
                   variant={'filled'}
                   key={form.key('weight')}
                   {...form.getInputProps('weight')}

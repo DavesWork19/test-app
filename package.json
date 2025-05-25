@@ -31,7 +31,8 @@
     "pg": "^8.13.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "recharts": "^2.15.0"
+    "recharts": "^2.15.0",
+    "resend": "^4.5.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

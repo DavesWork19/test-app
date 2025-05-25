@@ -43,6 +43,8 @@ export const AddVet = () => {
 
     validate: {
       name: (value) => !value && "Vet's Name Needed!",
+      email: (value) =>
+        value && (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
   });
 

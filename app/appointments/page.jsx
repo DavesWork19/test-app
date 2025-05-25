@@ -10,14 +10,10 @@ export default async function AppointmentPage() {
     .select()
     .order('start_time', { ascending: false });
 
-  const { data: category } = await supabase
-    .from('appointments')
-    .select('category');
-
   const allCategories = [];
-  for (let i = 0; i < category.length; i++) {
-    if (category[i].category) {
-      allCategories.push(...category[i].category.split(','));
+  for (let i = 0; i < appointments.length; i++) {
+    if (appointments[i].category) {
+      allCategories.push(...appointments[i].category.split(','));
     }
   }
 

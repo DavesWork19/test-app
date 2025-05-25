@@ -2,6 +2,7 @@
 
 import {
   TextInput,
+  NumberInput,
   Text,
   Title,
   Card,
@@ -48,6 +49,8 @@ export const UpdateVet = (props) => {
 
     validate: {
       name: (value) => !value && "Vet's Name Needed!",
+      email: (value) =>
+        value && (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
   });
 
@@ -236,6 +239,7 @@ export const UpdateVet = (props) => {
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Group justify='space-between' grow mt='md' mb='xs'>
               <TextInput
+                withAsterisk
                 variant={'filled'}
                 key={form.key('name')}
                 {...form.getInputProps('name')}
@@ -262,7 +266,7 @@ export const UpdateVet = (props) => {
               />
             </Group>
             <Group justify='space-between' grow mt='md' mb='xs'>
-              <TextInput
+              <NumberInput
                 variant={'filled'}
                 key={form.key('phone_number')}
                 {...form.getInputProps('phone_number')}
