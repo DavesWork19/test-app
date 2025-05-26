@@ -597,7 +597,8 @@ export const EmailTemplate = ({
         >{`From Integral Information on Behalf of, ${account.first_name} ${account.last_name}`}</Text>
         <Text c='dimmed' size='sm'>
           {userEmail}
-          {account.phone_number && account.phone_number}
+          {account.phone_number &&
+            ` - (${account.phone_number.slice(0, 3)})${account.phone_number.slice(3, 6)}-${account.phone_number.slice(6)}`}
         </Text>
         <Text c='dimmed' size='sm'>
           {account.address && `${account.address}`}

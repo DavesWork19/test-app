@@ -396,7 +396,13 @@ export const SendEmail = ({
           >
             Appointments
           </h3>
-          <table style={{ width: '100%' }}>
+          <table
+            style={{
+              width: '100%',
+              borderSpacing: '0px',
+              border: '1px solid lightgrey',
+            }}
+          >
             <thead>
               <tr>
                 {apptExists && (
@@ -539,7 +545,13 @@ export const SendEmail = ({
           >
             Documents
           </h3>
-          <table style={{ border: '1px solid lightgrey', width: '100%' }}>
+          <table
+            style={{
+              width: '100%',
+              borderSpacing: '0px',
+              border: '1px solid lightgrey',
+            }}
+          >
             <thead>
               <tr style={{ border: '1px solid lightgrey' }}>
                 {docExists && (
@@ -610,7 +622,13 @@ export const SendEmail = ({
           >
             Vets
           </h3>
-          <table style={{ border: '1px solid lightgrey', width: '100%' }}>
+          <table
+            style={{
+              width: '100%',
+              borderSpacing: '0px',
+              border: '1px solid lightgrey',
+            }}
+          >
             <thead>
               <tr style={{ border: '1px solid lightgrey' }}>
                 {vetExists && (
@@ -695,7 +713,13 @@ export const SendEmail = ({
           >
             Insurances
           </h3>
-          <table style={{ border: '1px solid lightgrey', width: '100%' }}>
+          <table
+            style={{
+              width: '100%',
+              borderSpacing: '0px',
+              border: '1px solid lightgrey',
+            }}
+          >
             <thead>
               <tr style={{ border: '1px solid lightgrey' }}>
                 {insuranceExists && (
@@ -794,7 +818,8 @@ export const SendEmail = ({
       >{`From Integral Information on Behalf of, ${account.first_name} ${account.last_name}`}</div>
       <div style={{ color: 'gray', fontSize: '14px' }}>
         {userEmail}
-        {account.phone_number && account.phone_number}
+        {account.phone_number &&
+          ` - (${account.phone_number.slice(0, 3)})${account.phone_number.slice(3, 6)}-${account.phone_number.slice(6)}`}
       </div>
       <div style={{ color: 'gray', fontSize: '14px' }}>
         {account.address && `${account.address}`}

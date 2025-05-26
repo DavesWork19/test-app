@@ -149,9 +149,7 @@ export const HomePageInfo = (props) => {
         userEmail: props.userEmail,
       }),
     });
-    if (data.statusText === 'OK') {
-      setActive(3);
-    }
+    setActive(3);
   };
 
   const AccordionControl = (props) => {
