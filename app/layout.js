@@ -11,7 +11,7 @@ import {
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
-import { Header } from './components/Header';
+import { Header } from './components/Headers/Header';
 import AutoSignOut from './components/AutoSignOut';
 
 export const metadata = {

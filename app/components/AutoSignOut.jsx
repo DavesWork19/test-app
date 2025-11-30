@@ -15,6 +15,7 @@ export default function AutoSignOut() {
     const { error } = await supabase.auth.signOut();
     if (!error) {
       router.replace('/login');
+      router.refresh();
     }
   }, [router]);
 

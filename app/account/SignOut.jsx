@@ -89,6 +89,7 @@ export const SignOut = (props) => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
       router.replace('/login');
+      router.refresh();
     }
   };
 

@@ -93,6 +93,7 @@ export function Login() {
         setStatus('loginError');
       }
       router.push('/home');
+      router.refresh();
     }
   };
 
@@ -215,23 +216,31 @@ export function Login() {
               size={'xs'}
             >
               {status === 'Register' ? (
-                <Group gap={1}>
-                  <Text size={'xs'} c='dimmed'>
-                    {'Already have an account?'}
-                  </Text>
-                  <Text size={'sm'} mb={1}>
-                    {'Login'}
-                  </Text>
-                </Group>
+                <>
+                  <Group gap={1}>
+                    <Text size={'xs'} c='dimmed'>
+                      {'Already have an account?'}
+                    </Text>
+                  </Group>
+                  <Group gap={1}>
+                    <Text size={'sm'} mb={1}>
+                      {'Login'}
+                    </Text>
+                  </Group>
+                </>
               ) : (
-                <Group gap={1}>
-                  <Text size={'xs'} c='dimmed'>
-                    {"Don't have an account?"}
-                  </Text>
-                  <Text size={'sm'} mb={1}>
-                    {'Register'}
-                  </Text>
-                </Group>
+                <>
+                  <Group gap={1}>
+                    <Text size={'xs'} c='dimmed'>
+                      {"Don't have an account?"}
+                    </Text>
+                  </Group>
+                  <Group gap={1}>
+                    <Text size={'sm'} mb={1}>
+                      {'Register'}
+                    </Text>
+                  </Group>
+                </>
               )}
             </Anchor>
             {(status === 'Login' || status === 'loginError') && (

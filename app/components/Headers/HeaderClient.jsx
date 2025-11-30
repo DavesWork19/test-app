@@ -14,11 +14,10 @@ import {
   IconMenu2,
 } from '@tabler/icons-react';
 import classes from './Header.module.css';
-import { Burger } from '@mantine/core';
 import { useState } from 'react';
-import { createClient } from '../utils/supabase/client';
+import { createClient } from '../../utils/supabase/client';
 
-export const Header = () => {
+export const HeaderClient = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState(pathname.split('/')[1]);
@@ -33,6 +32,7 @@ export const Header = () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
       router.replace('/login');
+      router.refresh();
     }
   };
 
@@ -41,7 +41,7 @@ export const Header = () => {
   };
 
   return (
-    <header className='p-8'>
+    <>
       <Tabs variant='outline' visibleFrom='sm' value={activeTab}>
         <Tabs.List justify='flex-end'>
           <Tabs.Tab
@@ -51,7 +51,7 @@ export const Header = () => {
             onClick={() => handleOnClick('home')}
           >
             <Text size={'lg'} fw={500}>
-              PetPosts
+              HealthyDawgs
             </Text>
           </Tabs.Tab>
           <Tabs.Tab
@@ -119,7 +119,6 @@ export const Header = () => {
         <Grid.Col span={2}>
           <Menu shadow='md' width={225}>
             <Menu.Target>
-              {/* <Burger size='sm' aria-label='Toggle navigation' /> */}
               <IconMenu2 stroke={1} />
             </Menu.Target>
             <Menu.Dropdown>
@@ -192,6 +191,6 @@ export const Header = () => {
           </Menu>
         </Grid.Col>
       </Grid>
-    </header>
+    </>
   );
 };
