@@ -1,6 +1,7 @@
 import { Center } from '@mantine/core';
-import { Button, Group, Space } from '@mantine/core';
+import { Group, Space } from '@mantine/core';
 import { Login } from './Login';
+import { GamblingButton } from '../components/GamblingButton';
 
 export default function LoginPage() {
   return (
@@ -15,9 +16,7 @@ export default function LoginPage() {
       <Space h='xl' />
       <Space h='xl' />
       <Group justify='flex-end'>
-        <Button variant='filled' color='rgba(0, 0, 0, 1)' size='xs' radius='xl'>
-          {'???'}
-        </Button>
+        <GamblingButton />
       </Group>
     </div>
   );

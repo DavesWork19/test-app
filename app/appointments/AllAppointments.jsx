@@ -37,6 +37,15 @@ export const AllAppointments = (props) => {
 
   return (
     <>
+      {/* <Group justify={'flex-end'}>
+        <Paper shadow='xs' withBorder p='xs' radius='md'>
+          <Select
+            data={categories}
+            label='Filter By Category'
+            placeholder='Select Category'
+          />
+        </Paper>
+      </Group> */}
       <Center>
         <Timeline active={activeAppointments} bulletSize={24} lineWidth={2}>
           {appointments.map((appointment) => {
