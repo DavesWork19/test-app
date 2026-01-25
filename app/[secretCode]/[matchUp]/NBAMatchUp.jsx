@@ -22,18 +22,30 @@ const NBAMatchUpPage = () => {
       element.split(',')[2]?.includes(homeTeam)
   );
 
-  const [homeTeamSpread, homeTeamCover, overUnder, overUnderCover] = results
-    .split(',')
-    .slice(3);
+  const [
+    homeTeamSpread,
+    homeTeamCover,
+    overUnder,
+    overUnderCover,
+    awayMoneyLine,
+    homeMoneyLine,
+    homeMoneyLineCover,
+  ] = results.split(',').slice(3);
   const [gameTime] = results.split(',')[0];
   const hour = gameTime.split(':')[0];
 
+  const moneyLineText = +homeMoneyLineCover
+    ? `${homeTeam} predicted to win and cover ${homeMoneyLine}`
+    : `${awayTeam} predicted to win and cover ${awayMoneyLine}`;
   const homeCover = +homeTeamCover ? 'cover ' : 'not cover ';
   const overUnderCoverName = +overUnderCover ? 'over' : 'under';
 
   return (
     <main className='container-fluid text bg-black lightText'>
       <GamblingHeader title={`${awayTeam} at ${homeTeam}`} link={'back'} />
+      <Center>
+        <Text className='col-12  fs-3'>{moneyLineText}</Text>
+      </Center>
       <Center>
         <Text className='col-12  fs-3'>
           {`${homeTeam} predicted to ${homeCover} ${homeTeamSpread}`}
