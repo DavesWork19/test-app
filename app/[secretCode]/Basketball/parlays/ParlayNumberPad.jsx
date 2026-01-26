@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { parlaySecretCode2, parlaySecretCode } from '../../../constants';
-import { Container, Paper, Text, Button, Grid, Stack } from '@mantine/core';
+import {
+  Container,
+  Paper,
+  Text,
+  Button,
+  Grid,
+  Stack,
+  Center,
+} from '@mantine/core';
 
 const NumberPad = () => {
   const router = useRouter();
@@ -45,9 +53,11 @@ const NumberPad = () => {
     <Container size='sm'>
       <Stack spacing='md'>
         {/* Display */}
-        <Text size='xl' weight={500} p='md'>
-          {!!guess ? guess : '_'}
-        </Text>
+        <Center>
+          <Text size='xl' weight={500} p='md'>
+            {!!guess ? guess : '_'}
+          </Text>
+        </Center>
 
         {/* Number Pad */}
         <Paper withBorder radius='md' p='xs' bg={'black'}>
