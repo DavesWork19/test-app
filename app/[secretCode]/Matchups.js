@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import ATLogo from '../logos/atLogo1.png';
+// import ATLogo from '../logos/atLogo1.png';
 import '../Fonts.css';
 import { todaysGames } from '../commonComps/todaysGames';
 import { Paper, Text, Group, Image, Stack, Button } from '@mantine/core';
@@ -60,18 +60,12 @@ const NBAMatchups = () => {
               </Text>
 
               <Group justify='space-between'>
-                <div>{setTeam(awayTeam, 'start')}</div>
+                {setTeam(awayTeam, 'start')}
 
-                <div style={{ flex: 0, textAlign: 'center', color: 'black' }}>
-                  <Image
-                    src={ATLogo}
-                    alt='atLogo'
-                    className='atSymbol'
-                    width='auto'
-                  />
-                </div>
+                {/* <Image src={ATLogo} className='atSymbol' width='auto' /> */}
+                <Text c={'black'}>{'@'}</Text>
 
-                <div>{setTeam(homeTeam, 'end')}</div>
+                {setTeam(homeTeam, 'end')}
               </Group>
             </Stack>
           </Paper>
