@@ -37,7 +37,7 @@ const NBAMatchUpPage = () => {
   const moneyLineText = +homeMoneyLineCover
     ? `${homeTeam} predicted to win and cover ${homeMoneyLine}`
     : `${awayTeam} predicted to win and cover ${awayMoneyLine}`;
-  const homeCover = homeTeamCover == 'True' ? 'cover ' : 'not cover ';
+  const homeCover = +homeTeamCover ? 'cover ' : 'not cover ';
   const overUnderCoverName = +overUnderCover ? 'over' : 'under';
 
   return (
