@@ -35,9 +35,15 @@ const NBAMatchUpPage = () => {
   const hour = gameTime.split(':')[0];
 
   const moneyLineText = +homeMoneyLineCover
-    ? `${homeTeam} predicted to win and cover ${homeMoneyLine}`
-    : `${awayTeam} predicted to win and cover ${awayMoneyLine}`;
-  const homeCover = +homeTeamCover ? 'cover ' : 'not cover ';
+    ? `${homeTeam} predicted to win ( ${homeMoneyLine} )`
+    : `${awayTeam} predicted to win ( ${awayMoneyLine} )`;
+  const awaySpread =
+    homeTeamSpread[0] === '-'
+      ? `+${homeTeamSpread.slice(1)}`
+      : `-${homeTeamSpread.slice(1)}`;
+  const homeCover = +homeTeamCover
+    ? `${homeTeam} predicted to cover ${homeTeamSpread}`
+    : `${awayTeam} predicted to cover ${awaySpread}`;
   const overUnderCoverName = +overUnderCover ? 'over' : 'under';
 
   return (
@@ -47,9 +53,7 @@ const NBAMatchUpPage = () => {
         <Text className='col-12  fs-3'>{moneyLineText}</Text>
       </Center>
       <Center>
-        <Text className='col-12  fs-3'>
-          {`${homeTeam} predicted to ${homeCover} ${homeTeamSpread}`}
-        </Text>
+        <Text className='col-12  fs-3'>{homeCover}</Text>
       </Center>
       <Center pb={'xl'}>
         <Text className='col-12  fs-3'>
