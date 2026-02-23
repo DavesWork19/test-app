@@ -1,11 +1,11 @@
 import '../Fonts.css';
 
 const PercentDataTableGameDayRow = (props) => {
-  const { title, spread, overUnder, parlay, checksAndXs } = props.data;
+  const { title, spread, overUnder, moneyLine, checksAndXs } = props.data;
 
   const formatValue = (value) => {
     if (!checksAndXs) return value;
-    return value === '100.00%' ? '☑' : '☐';
+    return value === '1.00%' ? '☑' : '☐';
   };
 
   const cellStyle = {
@@ -22,7 +22,7 @@ const PercentDataTableGameDayRow = (props) => {
       </td>
       <td style={cellStyle}>{formatValue(spread)}</td>
       <td style={cellStyle}>{formatValue(overUnder)}</td>
-      <td style={cellStyle}>{formatValue(parlay)}</td>
+      <td style={cellStyle}>{formatValue(moneyLine)}</td>
     </tr>
   );
 };

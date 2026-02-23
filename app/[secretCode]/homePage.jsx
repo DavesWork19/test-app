@@ -22,9 +22,9 @@ const NBAHomePage = () => {
   const todaysDate = todaysGames.slice(1, 2)[0].split(',')[0];
   const date = `${todaysDayName}, ${todaysDate}`;
 
-  const times = todaysGames.slice(2).map((data) => data.split(',')[0]);
-  const hours = times.map((data) => data.split(':')[0]);
-  const unqiueHours = new Set(hours);
+  // const times = todaysGames.slice(2).map((data) => data.split(',')[0]);
+  // const hours = times.map((data) => data.split(':')[0]);
+  // const unqiueHours = new Set(hours);
 
   const handleNoCode = async () => {
     if (!secretCodeEntered) {
@@ -47,7 +47,7 @@ const NBAHomePage = () => {
 
         <NBAMatchups />
 
-        <OverallPercents hours={unqiueHours} />
+        <OverallPercents />
 
         <Center>
           <Text size={'xs'}>{footerMessage1}</Text>

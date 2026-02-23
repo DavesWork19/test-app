@@ -41,7 +41,7 @@ const NBAMatchUpPage = () => {
     homeTeamSpread[0] === '-'
       ? `+${homeTeamSpread.slice(1)}`
       : `-${homeTeamSpread.slice(1)}`;
-  const homeCover = +homeTeamCover
+  const spreadCover = +homeTeamCover
     ? `${homeTeam} predicted to cover ${homeTeamSpread}`
     : `${awayTeam} predicted to cover ${awaySpread}`;
   const overUnderCoverName = +overUnderCover ? 'over' : 'under';
@@ -53,7 +53,7 @@ const NBAMatchUpPage = () => {
         <Text className='col-12  fs-3'>{moneyLineText}</Text>
       </Center>
       <Center>
-        <Text className='col-12  fs-3'>{homeCover}</Text>
+        <Text className='col-12  fs-3'>{spreadCover}</Text>
       </Center>
       <Center pb={'xl'}>
         <Text className='col-12  fs-3'>

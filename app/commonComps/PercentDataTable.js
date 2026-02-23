@@ -1,5 +1,5 @@
 import '../Fonts.css';
-import { percentages } from './percentages';
+import { newPercentages } from './newPercents';
 import { todaysGames } from './todaysGames';
 import PercentDataTableGameDayRow from '../percentDataTableComps/PercentDataTableGameDayRow';
 import { Table, Paper, Title, Box } from '@mantine/core';
@@ -7,9 +7,9 @@ import { Table, Paper, Title, Box } from '@mantine/core';
 const PercentDataTable = (props) => {
   const title = props.title;
   const percentagesName = props.percentagesName;
-  const hours = props.hours;
+  // const hours = props.hours;
   const checksAndXs = props?.checksAndXs;
-  const hoursArray = [...hours];
+  // const hoursArray = [...hours];
   const today = todaysGames.slice(0, 1)[0];
 
   const addPercentText = (text) => `${text}%`;
@@ -22,69 +22,70 @@ const PercentDataTable = (props) => {
   };
 
   const spread = addPercentText(
-    checkNA(percentages[`${percentagesName}_spread`])
+    checkNA(newPercentages[`${percentagesName}_spread`])
   );
   const overUnder = addPercentText(
-    checkNA(percentages[`${percentagesName}_overUnder`])
+    checkNA(newPercentages[`${percentagesName}_overUnder`])
   );
-  const parlay = addPercentText(
-    checkNA(percentages[`${percentagesName}_parlay`])
+  const moneyLine = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_moneyLine`])
   );
 
   const daySpread = addPercentText(
-    checkNA(percentages[`${percentagesName}_${today}_spread`])
+    checkNA(newPercentages[`${percentagesName}_${today}_spread`])
   );
   const dayOverUnder = addPercentText(
-    checkNA(percentages[`${percentagesName}_${today}_overUnder`])
+    checkNA(newPercentages[`${percentagesName}_${today}_overUnder`])
   );
-  const dayParlay = addPercentText(
-    checkNA(percentages[`${percentagesName}_${today}_parlay`])
+  const daymoneyLine = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_${today}_moneyLine`])
   );
 
   const spread1dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_spread_1`])
+    checkNA(newPercentages[`${percentagesName}_prev_1_spread`])
   );
+  console.log('testing 2', spread1dayago);
   const overUnder1dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_overUnder_1`])
+    checkNA(newPercentages[`${percentagesName}_prev_1_overUnder`])
   );
-  const parlay1dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_parlay_1`])
+  const moneyLine1dayago = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_prev_1_moneyLine`])
   );
   const spread2dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_spread_2`])
+    checkNA(newPercentages[`${percentagesName}_prev_2_spread`])
   );
   const overUnder2dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_overUnder_2`])
+    checkNA(newPercentages[`${percentagesName}_prev_2_overUnder`])
   );
-  const parlay2dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_parlay_2`])
+  const moneyLine2dayago = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_prev_2_moneyLine`])
   );
   const spread3dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_spread_3`])
+    checkNA(newPercentages[`${percentagesName}_prev_3_spread`])
   );
   const overUnder3dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_overUnder_3`])
+    checkNA(newPercentages[`${percentagesName}_prev_3_overUnder`])
   );
-  const parlay3dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_parlay_3`])
+  const moneyLine3dayago = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_prev_3_moneyLine`])
   );
   const spread4dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_spread_4`])
+    checkNA(newPercentages[`${percentagesName}_prev_4_spread`])
   );
   const overUnder4dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_overUnder_4`])
+    checkNA(newPercentages[`${percentagesName}_prev_4_overUnder`])
   );
-  const parlay4dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_parlay_4`])
+  const moneyLine4dayago = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_prev_4_moneyLine`])
   );
   const spread5dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_spread_5`])
+    checkNA(newPercentages[`${percentagesName}_prev_5_spread`])
   );
   const overUnder5dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_overUnder_5`])
+    checkNA(newPercentages[`${percentagesName}_prev_5_overUnder`])
   );
-  const parlay5dayago = addPercentText(
-    checkNA(percentages[`${percentagesName}_last_games_parlay_5`])
+  const moneyLine5dayago = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_prev_5_moneyLine`])
   );
 
   const gameDay1Text = checksAndXs ? ' Game Ago' : ' Day Ago';
@@ -123,7 +124,9 @@ const PercentDataTable = (props) => {
             <th style={{ color: '#d3d3d3', textAlign: 'center' }}>
               Over Under
             </th>
-            <th style={{ color: '#d3d3d3', textAlign: 'center' }}>Parlay</th>
+            <th style={{ color: '#d3d3d3', textAlign: 'center' }}>
+              Money Line
+            </th>
           </tr>
         </thead>
         <tbody style={{ backgroundColor: 'black' }}>
@@ -134,10 +137,12 @@ const PercentDataTable = (props) => {
             <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
               {overUnder}
             </td>
-            <td style={{ color: '#d3d3d3', textAlign: 'center' }}>{parlay}</td>
+            <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
+              {moneyLine}
+            </td>
           </tr>
 
-          {/* Time-based Rows */}
+          {/* Time-based Rows
           {hoursArray.map((hour) => (
             <tr key={hour}>
               <td
@@ -146,7 +151,7 @@ const PercentDataTable = (props) => {
               <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
                 {addPercentText(
                   checkNA(
-                    percentages[
+                    newPercentages[
                       `${percentagesName}_Time_${hour}_${hour}59_spread`
                     ]
                   )
@@ -155,7 +160,7 @@ const PercentDataTable = (props) => {
               <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
                 {addPercentText(
                   checkNA(
-                    percentages[
+                    newPercentages[
                       `${percentagesName}_Time_${hour}_${hour}59_overUnder`
                     ]
                   )
@@ -164,14 +169,14 @@ const PercentDataTable = (props) => {
               <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
                 {addPercentText(
                   checkNA(
-                    percentages[
-                      `${percentagesName}_Time_${hour}_${hour}59_parlay`
+                    newPercentages[
+                      `${percentagesName}_Time_${hour}_${hour}59_moneyLine`
                     ]
                   )
                 )}
               </td>
             </tr>
-          ))}
+          ))} */}
 
           {/* Today Row */}
           <tr>
@@ -183,7 +188,7 @@ const PercentDataTable = (props) => {
               {dayOverUnder}
             </td>
             <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
-              {dayParlay}
+              {daymoneyLine}
             </td>
           </tr>
         </tbody>
@@ -207,7 +212,7 @@ const PercentDataTable = (props) => {
               title: `1 ${gameDay1Text}`,
               spread: spread1dayago,
               overUnder: overUnder1dayago,
-              parlay: parlay1dayago,
+              moneyLine: moneyLine1dayago,
               checksAndXs,
             }}
           />
@@ -216,7 +221,7 @@ const PercentDataTable = (props) => {
               title: `2 ${gameDayText}`,
               spread: spread2dayago,
               overUnder: overUnder2dayago,
-              parlay: parlay2dayago,
+              moneyLine: moneyLine2dayago,
               checksAndXs,
             }}
           />
@@ -225,7 +230,7 @@ const PercentDataTable = (props) => {
               title: `3 ${gameDayText}`,
               spread: spread3dayago,
               overUnder: overUnder3dayago,
-              parlay: parlay3dayago,
+              moneyLine: moneyLine3dayago,
               checksAndXs,
             }}
           />
@@ -234,7 +239,7 @@ const PercentDataTable = (props) => {
               title: `4 ${gameDayText}`,
               spread: spread4dayago,
               overUnder: overUnder4dayago,
-              parlay: parlay4dayago,
+              moneyLine: moneyLine4dayago,
               checksAndXs,
             }}
           />
@@ -243,7 +248,7 @@ const PercentDataTable = (props) => {
               title: `5 ${gameDayText}`,
               spread: spread5dayago,
               overUnder: overUnder5dayago,
-              parlay: parlay5dayago,
+              moneyLine: moneyLine5dayago,
               checksAndXs,
             }}
           />
