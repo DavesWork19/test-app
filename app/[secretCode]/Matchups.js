@@ -28,6 +28,27 @@ const NBAMatchups = () => {
     const lastAwayElement = awayTeamILL.split(' ').length - 1;
     const lastHomeElement = homeTeamILL.split(' ').length - 1;
     const updatedGameTime = gameTime.slice(0, secondLastElement);
+    const updatedEasternTime = `${updatedGameTime} ${gameTime.slice(secondLastElement).toUpperCase()}M`;
+
+    const [time, modifier] = updatedEasternTime.split(' ');
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours);
+
+    if (modifier === 'PM' && hours !== 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+
+    // Create date string with Eastern timezone offset
+    const date = new Date(
+      `2024-01-15T${String(hours).padStart(2, '0')}:${minutes}:00-05:00`
+    );
+
+    const mountainTime = date.toLocaleString('en-US', {
+      timeZone: 'America/Denver',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
     const ampm = gameTime[secondLastElement].toUpperCase();
     const awayTeam = awayTeamILL.split(' ')[lastAwayElement];
     const homeTeam = homeTeamILL.split(' ')[lastHomeElement];
@@ -56,7 +77,7 @@ const NBAMatchups = () => {
                 pb='sm'
                 style={{ borderBottom: '1px solid black' }}
               >
-                {`${updatedGameTime} ${ampm}M EDT`}
+                {`${mountainTime} MST`}
               </Text>
 
               <Group justify='space-between'>
