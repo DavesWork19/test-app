@@ -120,7 +120,15 @@ const PercentDataTable = (props) => {
         <thead style={{ backgroundColor: 'black' }}>
           <tr>
             <th style={{ color: '#d3d3d3', textAlign: 'left' }}></th>
-            <th style={{ color: '#d3d3d3', textAlign: 'center' }}>Spread</th>
+            <th
+              style={{
+                color: '#d3d3d3',
+                textAlign: 'center',
+                'padding-left': '50px',
+              }}
+            >
+              Spread
+            </th>
             <th style={{ color: '#d3d3d3', textAlign: 'center' }}>
               Over Under
             </th>
@@ -133,7 +141,15 @@ const PercentDataTable = (props) => {
           {/* Overall Row */}
           <tr>
             <td style={{ color: '#d3d3d3', fontWeight: 'normal' }}>Overall</td>
-            <td style={{ color: '#d3d3d3', textAlign: 'center' }}>{spread}</td>
+            <td
+              style={{
+                color: '#d3d3d3',
+                textAlign: 'center',
+                'padding-left': '50px',
+              }}
+            >
+              {spread}
+            </td>
             <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
               {overUnder}
             </td>
@@ -178,7 +194,7 @@ const PercentDataTable = (props) => {
             </tr>
           ))} */}
 
-          {/* Today Row */}
+          {/* Today Row
           <tr>
             <td style={{ color: '#d3d3d3', fontWeight: 'normal' }}>{today}</td>
             <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
@@ -190,7 +206,7 @@ const PercentDataTable = (props) => {
             <td style={{ color: '#d3d3d3', textAlign: 'center' }}>
               {daymoneyLine}
             </td>
-          </tr>
+          </tr> */}
         </tbody>
       </Table>
 

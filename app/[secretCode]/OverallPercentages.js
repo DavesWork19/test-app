@@ -4,9 +4,22 @@ import { Accordion } from '@mantine/core';
 
 const OverallPercents = () => {
   return (
-    <Accordion variant='contained' defaultValue={null}>
+    <Accordion
+      variant='contained'
+      defaultValue={null}
+      styles={{
+        item: {
+          backgroundColor: 'lightslategray',
+          border: '1px solid #333',
+        },
+        control: { backgroundColor: 'lightslategray' },
+        panel: { backgroundColor: 'black' },
+        chevron: { color: 'white' },
+        itemOpened: { backgroundColor: 'black' },
+      }}
+    >
       <Accordion.Item value='overallStats'>
-        <Accordion.Control className='slateGrayBackground boldText text-black'>
+        <Accordion.Control className='boldText text-white'>
           Overall Stats
         </Accordion.Control>
         <Accordion.Panel p={0} className='lightText'>
