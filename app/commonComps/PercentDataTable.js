@@ -123,7 +123,7 @@ const PercentDataTable = (props) => {
               style={{
                 color: '#d3d3d3',
                 textAlign: 'center',
-                'padding-left': '50px',
+                paddingLeft: '50px',
               }}
             >
               Spread
@@ -144,7 +144,7 @@ const PercentDataTable = (props) => {
               style={{
                 color: '#d3d3d3',
                 textAlign: 'center',
-                'padding-left': '50px',
+                paddingLeft: '50px',
               }}
             >
               {spread}
