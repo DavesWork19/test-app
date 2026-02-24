@@ -110,9 +110,7 @@ export const HomePageInfo = (props) => {
   }
 
   const handleEmailRecipients = (event) => {
-    console.log('em222', event);
     if (emailRecipients.length === 0) {
-      console.log('em', event);
       if (!/^\S+@\S+$/.test(event)) {
         setEmailRecipientsError(true);
       } else {
@@ -121,7 +119,6 @@ export const HomePageInfo = (props) => {
       }
     } else {
       const newEmail = event[[event.length - 1]];
-      console.log('em3', newEmail);
       if (!/^\S+@\S+$/.test(newEmail) && newEmail !== undefined) {
         setEmailRecipientsError(true);
       } else {

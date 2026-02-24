@@ -44,7 +44,6 @@ const PercentDataTable = (props) => {
   const spread1dayago = addPercentText(
     checkNA(newPercentages[`${percentagesName}_prev_1_spread`])
   );
-  console.log('testing 2', spread1dayago);
   const overUnder1dayago = addPercentText(
     checkNA(newPercentages[`${percentagesName}_prev_1_overUnder`])
   );

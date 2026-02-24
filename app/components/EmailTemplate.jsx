@@ -27,8 +27,6 @@ export const EmailTemplate = ({
     insurances: {},
   };
 
-  console.log('cl', selectedItems, pets, account);
-
   const petNames = pets.map((data) => data.name);
   if (petNames.length > 1) {
     petNames.splice(petNames.length - 1, 0, ' and ');
@@ -389,7 +387,6 @@ export const EmailTemplate = ({
   );
   const insuranceExists =
     insurancePolicyExists || insuranceStartExists || insuranceEndExists;
-  console.log(account);
 
   return (
     <Container>
@@ -555,7 +552,6 @@ export const EmailTemplate = ({
               </Table.Thead>
               <Table.Tbody>
                 {Object.entries(dataCategories.insurances).map((insurance) => {
-                  console.log(insurance);
                   return (
                     <Table.Tr key={insurance[0]}>
                       {insuranceExists && <Table.Td>{'company'}</Table.Td>}
