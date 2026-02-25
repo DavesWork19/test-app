@@ -5,7 +5,7 @@ const PercentDataTableGameDayRow = (props) => {
 
   const formatValue = (value) => {
     if (!checksAndXs) return value;
-    return value === '1.00%' ? '☑' : '☐';
+    return value === '100.00%' ? '☑' : '☐';
   };
 
   const cellStyle = {
