@@ -19,7 +19,7 @@ const OverallPercents = () => {
       }}
     >
       <Accordion.Item value='overallStats'>
-        <Accordion.Control className='boldText text-white'>
+        <Accordion.Control className='boldText'>
           Overall Stats
         </Accordion.Control>
         <Accordion.Panel p={0} className='lightText'>
