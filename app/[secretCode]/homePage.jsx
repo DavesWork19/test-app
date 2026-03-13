@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import '../Fonts.css';
-import NBAMatchups from './Matchups';
 import { todaysGames } from '../commonComps/todaysGames';
 import { footerMessage1, footerMessage2 } from '../constants';
 import GamblingHeader from '../commonComps/GamblingHeader';
@@ -11,6 +9,7 @@ import { secretCode, parlaySecretCode } from '../constants';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '../utils/supabase/client';
 import { Center, Text } from '@mantine/core';
+import GameCardList from '../commonComps/newMatchupLayout';
 
 const NBAHomePage = () => {
   const pathname = usePathname();
@@ -45,7 +44,7 @@ const NBAHomePage = () => {
       <main className='container-fluid text bg-black lightText'>
         <GamblingHeader title={date} />
 
-        <NBAMatchups />
+        <GameCardList />
 
         <OverallPercents />
 
