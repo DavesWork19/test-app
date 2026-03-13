@@ -84,9 +84,10 @@ function BetBox({ label, columnLabel, highlighted }) {
           ? 'rgba(34, 139, 34, 0.85)'
           : 'rgba(0,0,0,0.18)',
         borderRadius: 5,
-        padding: '5px 14px',
+        padding: '4px 6px',
         textAlign: 'center',
-        minWidth: 90,
+        width: 68,
+        flexShrink: 0,
         cursor: 'pointer',
         border: highlighted
           ? '1px solid rgba(34,200,34,0.5)'
@@ -95,10 +96,10 @@ function BetBox({ label, columnLabel, highlighted }) {
     >
       <Text
         style={{
-          fontSize: 10,
+          fontSize: 8,
           fontWeight: 500,
           textTransform: 'uppercase',
-          letterSpacing: '0.05em',
+          letterSpacing: '0.04em',
           color: highlighted ? 'rgba(200,255,200,0.85)' : 'rgba(0,0,0,0.5)',
         }}
       >
@@ -106,7 +107,7 @@ function BetBox({ label, columnLabel, highlighted }) {
       </Text>
       <Text
         fw={700}
-        style={{ fontSize: 14, color: highlighted ? '#fff' : '#111' }}
+        style={{ fontSize: 12, color: highlighted ? '#fff' : '#111' }}
       >
         {label}
       </Text>
@@ -120,7 +121,7 @@ function TeamRow({ team }) {
       style={{
         display: 'flex',
         alignItems: 'center',
-        padding: '8px 16px',
+        padding: '8px 12px',
         gap: 8,
         width: '100%',
       }}
@@ -128,7 +129,7 @@ function TeamRow({ team }) {
       <Text
         fw={700}
         style={{
-          fontSize: 18,
+          fontSize: 15,
           color: '#111',
           flex: '1 1 0',
           minWidth: 0,
@@ -141,22 +142,22 @@ function TeamRow({ team }) {
         {team.name}
       </Text>
       <Box
-        style={{ display: 'flex', gap: 5, alignItems: 'center', flexShrink: 0 }}
+        style={{ display: 'flex', gap: 4, alignItems: 'center', flexShrink: 0 }}
       >
         <BetBox
           columnLabel='Spread'
           label={team.spread.label}
           highlighted={team.spread.highlighted}
         />
-        <Box style={{ width: 1, height: 36, background: 'rgba(0,0,0,0.15)' }} />
+        <Box style={{ width: 1, height: 30, background: 'rgba(0,0,0,0.15)' }} />
         <BetBox
-          columnLabel='Over/Under'
+          columnLabel='O/U'
           label={team.ou.label}
           highlighted={team.ou.highlighted}
         />
-        <Box style={{ width: 1, height: 36, background: 'rgba(0,0,0,0.15)' }} />
+        <Box style={{ width: 1, height: 30, background: 'rgba(0,0,0,0.15)' }} />
         <BetBox
-          columnLabel='Moneyline'
+          columnLabel='ML'
           label={team.ml.label}
           highlighted={team.ml.highlighted}
         />
@@ -179,18 +180,18 @@ function GameCard({ game }) {
       <Box
         style={{
           textAlign: 'center',
-          padding: '8px 16px 6px',
+          padding: '6px 12px',
           borderBottom: '1px solid rgba(0,0,0,0.15)',
         }}
       >
-        <Text fw={700} style={{ fontSize: 13, color: '#111' }}>
+        <Text fw={700} style={{ fontSize: 18, color: '#111' }}>
           {game.time}
         </Text>
       </Box>
 
       <TeamRow team={game.teams[0]} />
       <Box
-        style={{ height: 1, background: 'rgba(0,0,0,0.12)', margin: '0 16px' }}
+        style={{ height: 1, background: 'rgba(0,0,0,0.12)', margin: '0 12px' }}
       />
       <TeamRow team={game.teams[1]} />
     </Box>
