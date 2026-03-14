@@ -41,11 +41,7 @@ export const todaysParlay3 = [
   'money_line',
   'True',
   'Los Angeles Clippers',
-  '+2.5',
-  'spread',
-  'True',
-  'Los Angeles Clippers',
-  '+130',
+  '-900',
   'money_line',
   'True',
 ];
