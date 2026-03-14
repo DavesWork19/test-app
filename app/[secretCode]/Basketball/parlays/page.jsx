@@ -4,11 +4,11 @@ import ParlayNumberPad from './ParlayNumberPad';
 
 export default function ParlayPage() {
   return (
-    <main className='container-fluid text bg-black lightText'>
-      <GamblingHeader />
+    <div className='container-fluid bg-black boldText lightText'>
+      <GamblingHeader link={'back'} />
       <Center pb={'xl'}>
         <ParlayNumberPad />
       </Center>
-    </main>
+    </div>
   );
 }

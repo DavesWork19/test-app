@@ -142,7 +142,14 @@ function ParlayCard({ title, rawData }) {
 
 export default function GameCardList() {
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <Box
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        paddingBottom: '60px',
+      }}
+    >
       <ParlayCard title='The Lay' rawData={todaysParlay1} />
       <ParlayCard title='Easy Money' rawData={todaysParlay2} />
       <ParlayCard title='Heave & Hope' rawData={todaysParlay3} />
