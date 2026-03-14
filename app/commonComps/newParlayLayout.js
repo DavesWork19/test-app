@@ -2,28 +2,41 @@
 
 import { Box, Text } from '@mantine/core';
 import { todaysParlay1, todaysParlay2, todaysParlay3 } from './todaysParlays';
+import { todaysGames } from './todaysGames';
 import { secretCode } from '../constants';
 import { useRouter } from 'next/navigation';
 
+const getOpponent = (name) => {
+  const row = todaysGames.slice(2).find((r) => r.includes(name));
+  if (!row) return null;
+  const [, awayTeam, homeTeam] = row.split(',');
+  return awayTeam === name ? homeTeam : awayTeam;
+};
+
 function parseGames(rawData) {
   const entries = rawData.slice(2); // skip day and date
-
   const games = [];
-  for (let i = 0; i < entries.length; i += 3) {
+
+  for (let i = 0; i < entries.length; i += 4) {
     const team = entries[i];
     const odds = entries[i + 1];
     const betType = entries[i + 2];
+    const over_under = entries[i + 3];
 
     if (!team || !odds || !betType) continue;
+    // if (highlighted === 'False') continue; // skip non-highlighted picks
+    const updated_over_under = over_under === 'False' ? 'Under' : 'Over';
 
     const betTypeLabels = {
       money_line: 'ML',
       spread: 'Spread',
-      over_under: 'O/U',
+      over_under: updated_over_under,
     };
+    const link = `${team.split(' ').at(-1)}AT${getOpponent(team).split(' ').at(-1)}`;
 
     games.push({
       team,
+      link,
       picks: [
         {
           columnLabel: betTypeLabels[betType] ?? betType,
@@ -133,7 +146,7 @@ function ParlayCard({ title, rawData }) {
         <GameRow
           key={i}
           game={game}
-          onClick={() => router.push(`${secretCode}/${game.team}`)}
+          onClick={() => router.replace(`/${secretCode}/${game.link}`)}
         />
       ))}
     </Box>

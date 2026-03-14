@@ -6,19 +6,19 @@ export const todaysParlay1 = [
 export const todaysParlay2 = [
   'Saturday',
   'March 14, 2026',
-  'SAS','230.5','over_under',
+  'San Antonio Spurs','230.5','over_under','False',
 ];
 
 export const todaysParlay3 = [
   'Saturday',
   'March 14, 2026',
-  'SAC','231.5','over_under',
-  'SAS','230.5','over_under',
-  'WAS','230.5','over_under',
-  'LAL','+130','money_line',
-  'ATL','-9.5','spread',
-  'ATL','−355','money_line',
-  'BOS','−2400','money_line',
-  'LAC','+2.5','spread',
-  'LAC','+130','money_line',
+  'Sacramento Kings','231.5','over_under','False',
+  'San Antonio Spurs','230.5','over_under','False',
+  'Washington Wizards','230.5','over_under','False',
+  'Los Angeles Lakers','+130','money_line','True',
+  'Atlanta Hawks','-9.5','spread','True',
+  'Atlanta Hawks','−355','money_line','True',
+  'Boston Celtics','−2400','money_line','True',
+  'Los Angeles Clippers','+2.5','spread','True',
+  'Los Angeles Clippers','+130','money_line','True',
 ];
