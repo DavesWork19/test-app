@@ -13,7 +13,7 @@ export const todaysParlay3 = [
   'Saturday',
   'March 14, 2026',
   'Sacramento Kings',
-  '244.5',
+  '231.5',
   'over_under',
   'False',
   'San Antonio Spurs',
