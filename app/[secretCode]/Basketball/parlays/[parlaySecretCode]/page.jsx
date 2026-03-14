@@ -4,7 +4,7 @@ import ParlayCardList from '../../../../commonComps/newParlayLayout';
 export default function ParlayRealPage() {
   return (
     <main className='container-fluid text bg-black lightText'>
-      <GamblingHeader title={'Ésessssss'} />
+      <GamblingHeader title={'Ésessssss'} link={'back'} />
       <ParlayCardList />
     </main>
   );
