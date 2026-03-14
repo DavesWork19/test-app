@@ -188,9 +188,9 @@ function ParlayCard({ title, rawData }) {
 export default function GameCardList() {
   return (
     <Box style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <ParlayCard title='Parlay 1' rawData={todaysParlay1} />
-      <ParlayCard title='Parlay 2' rawData={todaysParlay2} />
-      <ParlayCard title='Parlay 3' rawData={todaysParlay3} />
+      <ParlayCard title='The Lay' rawData={todaysParlay1} />
+      <ParlayCard title='Easy Money' rawData={todaysParlay2} />
+      <ParlayCard title='Heave & Hope' rawData={todaysParlay3} />
     </Box>
   );
 }
