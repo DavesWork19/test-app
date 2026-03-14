@@ -1,25 +1,23 @@
 export const todaysParlay1 = [
   'Friday',
   'March 13, 2026',
-  '7:30p,MEM,DET,-15.5,0,233.5,0,+850,−1450,1',
+  'DET','−1450','money_line',
 ];
 
 export const todaysParlay2 = [
   'Friday',
   'March 13, 2026',
-  '7:30p,NYK,IND,+13.5,0,227.5,0,−800,+550,1',
-  '7:30p,MEM,DET,-15.5,0,233.5,0,+850,−1450,1',
-  '10:00p,UTA,POR,-15.5,0,236.5,1,+750,−1200,0',
+  'NYK','−800','money_line',
+  'DET','−1450','money_line',
 ];
 
 export const todaysParlay3 = [
   'Friday',
   'March 13, 2026',
-  '7:30p,PHO,TOR,-5.5,0,219.5,0,+160,−192,1',
-  '7:30p,NYK,IND,+13.5,0,227.5,0,−800,+550,1',
-  '8:00p,NOP,HOU,-6.5,1,230.5,1,+230,−285,0',
-  '7:30p,MEM,DET,-15.5,0,233.5,0,+850,−1450,1',
-  '7:30p,CLE,DAL,+13.5,0,238.5,1,−750,+525,1',
-  '10:30p,CHI,LAC,-13.5,0,234.5,1,+550,−800,1',
-  '10:00p,UTA,POR,-15.5,0,236.5,1,+750,−1200,0',
+  'PHO','+160','money_line',
+  'NYK','−800','money_line',
+  'NOP','+6.5','spread',
+  'DET','−1450','money_line',
+  'CLE','−750','money_line',
+  'LAC','−800','money_line',
 ];

@@ -5,72 +5,35 @@ import { todaysParlay1, todaysParlay2, todaysParlay3 } from './todaysParlays';
 import { secretCode } from '../constants';
 import { useRouter } from 'next/navigation';
 
-function convertEstToMst(timeStr) {
-  const match = timeStr.match(/^(\d+):(\d+)p$/);
-  if (!match) return timeStr;
-
-  let hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
-
-  hours += 12;
-  hours -= 2;
-
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const displayHour = hours > 12 ? hours - 12 : hours;
-  const displayMinutes = minutes.toString().padStart(2, '0');
-
-  return `${displayHour}:${displayMinutes} ${period} MST`;
-}
-
 function parseGames(rawData) {
-  return rawData
-    .slice(2)
-    .filter((row) => row.includes(','))
-    .map((row) => {
-      const [
-        time,
-        awayTeam,
-        homeTeam,
-        spread,
-        spreadHighlighted,
-        ou,
-        ouHighlighted,
-        awayML,
-        homeML,
-        mlHighlighted,
-      ] = row.split(',');
+  const entries = rawData.slice(2); // skip day and date
 
-      const homeSpread = parseFloat(spread);
-      const awaySpread = -homeSpread;
-      const homeSpreadLabel =
-        homeSpread > 0 ? `+${homeSpread}` : `${homeSpread}`;
-      const awaySpreadLabel =
-        awaySpread > 0 ? `+${awaySpread}` : `${awaySpread}`;
+  const games = [];
+  for (let i = 0; i < entries.length; i += 3) {
+    const team = entries[i];
+    const odds = entries[i + 1];
+    const betType = entries[i + 2];
 
-      const spreadH = spreadHighlighted === '1';
-      const ouH = ouHighlighted === '1';
-      const mlH = mlHighlighted === '1';
+    if (!team || !odds || !betType) continue;
 
-      const picks = [];
-      if (spreadHighlighted === '1')
-        picks.push({
-          columnLabel: 'Spread',
-          label: spreadH ? homeSpreadLabel : awaySpreadLabel,
-        });
-      if (ouHighlighted === '1')
-        picks.push({ columnLabel: 'O/U', label: ouH ? `U ${ou}` : `O ${ou}` });
-      if (mlHighlighted === '1')
-        picks.push({ columnLabel: 'ML', label: mlH ? homeML : awayML });
+    const betTypeLabels = {
+      money_line: 'ML',
+      spread: 'Spread',
+      over_under: 'O/U',
+    };
 
-      return {
-        time: convertEstToMst(time),
-        link: `${awayTeam.split(' ').at(-1)}AT${homeTeam.split(' ').at(-1)}`,
-        awayTeam,
-        homeTeam,
-        picks,
-      };
-    })
-    .filter((game) => game.picks.length > 0);
+    games.push({
+      team,
+      picks: [
+        {
+          columnLabel: betTypeLabels[betType] ?? betType,
+          label: odds,
+        },
+      ],
+    });
+  }
+
+  return games;
 }
 
 function PickBox({ columnLabel, label }) {
@@ -127,15 +90,7 @@ function GameRow({ game, onClick }) {
             whiteSpace: 'nowrap',
           }}
         >
-          {game.awayTeam}{' '}
-          <Text
-            component='span'
-            fw={400}
-            style={{ fontSize: 13, color: 'rgba(0,0,0,0.45)' }}
-          >
-            @
-          </Text>{' '}
-          {game.homeTeam}
+          {game.team}
         </Text>
       </Box>
 
@@ -178,7 +133,7 @@ function ParlayCard({ title, rawData }) {
         <GameRow
           key={i}
           game={game}
-          onClick={() => router.push(`${secretCode}/${game.link}`)}
+          onClick={() => router.push(`${secretCode}/${game.team}`)}
         />
       ))}
     </Box>
