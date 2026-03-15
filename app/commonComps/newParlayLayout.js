@@ -6,11 +6,11 @@ import { todaysGames } from './todaysGames';
 import { secretCode } from '../constants';
 import { useRouter } from 'next/navigation';
 
-const getOpponent = (name) => {
+const getLink = (name) => {
   const row = todaysGames.slice(2).find((r) => r.includes(name));
   if (!row) return null;
   const [, awayTeam, homeTeam] = row.split(',');
-  return awayTeam === name ? homeTeam : awayTeam;
+  return `${awayTeam.split(' ').at(-1)}AT${homeTeam.split(' ').at(-1)}`;
 };
 
 function parseGames(rawData) {
@@ -32,7 +32,7 @@ function parseGames(rawData) {
       spread: 'Spread',
       over_under: updated_over_under,
     };
-    const link = `${team.split(' ').at(-1)}AT${getOpponent(team).split(' ').at(-1)}`;
+    const link = getLink(team);
 
     games.push({
       team,
