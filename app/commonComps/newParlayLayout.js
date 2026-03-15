@@ -14,8 +14,8 @@ const getLink = (name) => {
 };
 
 function parseGames(rawData) {
-  const entries = rawData.slice(2); // skip day and date
-  const games = [];
+  const entries = rawData.slice(2);
+  const gamesMap = new Map(); // team -> game object to deduplicate
 
   for (let i = 0; i < entries.length; i += 4) {
     const team = entries[i];
@@ -24,29 +24,29 @@ function parseGames(rawData) {
     const over_under = entries[i + 3];
 
     if (!team || !odds || !betType) continue;
-    // if (highlighted === 'False') continue; // skip non-highlighted picks
-    const updated_over_under = over_under === 'False' ? 'Under' : 'Over';
 
+    const updated_over_under = over_under === 'False' ? 'Under' : 'Over';
     const betTypeLabels = {
       money_line: 'ML',
       spread: 'Spread',
       over_under: updated_over_under,
     };
-    const link = getLink(team);
 
-    games.push({
-      team,
-      link,
-      picks: [
-        {
-          columnLabel: betTypeLabels[betType] ?? betType,
-          label: odds,
-        },
-      ],
-    });
+    const pick = {
+      columnLabel: betTypeLabels[betType] ?? betType,
+      label: odds,
+    };
+
+    if (gamesMap.has(team)) {
+      // Team already exists — just push the new pick
+      gamesMap.get(team).picks.push(pick);
+    } else {
+      const link = getLink(team);
+      gamesMap.set(team, { team, link, picks: [pick] });
+    }
   }
 
-  return games;
+  return Array.from(gamesMap.values());
 }
 
 function PickBox({ columnLabel, label }) {
