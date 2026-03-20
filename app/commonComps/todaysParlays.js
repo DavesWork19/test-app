@@ -1,23 +1,24 @@
 export const todaysParlay1 = [
-  'Thursday',
-  'March 19, 2026',
+  'Friday',
+  'March 20, 2026',
 ];
 
 export const todaysParlay2 = [
-  'Thursday',
-  'March 19, 2026',
+  'Friday',
+  'March 20, 2026',
 ];
 
 export const todaysParlay3 = [
-  'Thursday',
-  'March 19, 2026',
-  'Orlando Magic','+6.5','spread','True',
-  'San Antonio Spurs','228.5','over_under','False',
-  'San Antonio Spurs','−470','money_line','True',
-  'Chicago Bulls','238.5','over_under','False',
-  'Cleveland Cavaliers','−550','money_line','True',
-  'New Orleans Pelicans','228.5','over_under','False',
-  'New Orleans Pelicans','−142','money_line','True',
-  'Utah Jazz','229.5','over_under','False',
-  'Utah Jazz','+195','money_line','True',
+  'Friday',
+  'March 20, 2026',
+  'Detroit Pistons','−205','money_line','True',
+  'Boston Celtics','231.5','over_under','False',
+  'Boston Celtics','−1200','money_line','True',
+  'Brooklyn Nets','+17.5','spread','True',
+  'Minnesota Timberwolves','231.5','over_under','False',
+  'Minnesota Timberwolves','−130','money_line','True',
+  'New York Knicks','−1800','money_line','True',
+  'Denver Nuggets','−278','money_line','True',
+  'Houston Rockets','226.5','over_under','False',
+  'Atlanta Hawks','+130','money_line','True',
 ];
