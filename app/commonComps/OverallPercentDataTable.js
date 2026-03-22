@@ -1,0 +1,217 @@
+import '../Fonts.css';
+import { newPercentages } from './newPercents';
+import { todaysGames } from './todaysGames';
+import { Table, Paper, Title, Box } from '@mantine/core';
+
+const PercentDataTable = (props) => {
+  const title = props.title;
+  const percentagesName = props.percentagesName;
+  const checksAndXs = props?.checksAndXs;
+  const today = todaysGames.slice(0, 1)[0];
+
+  const addPercentText = (text) => `${text}%`;
+
+  const checkNA = (value) => {
+    if (value === 'NA' || value === undefined) return value;
+    return (value * 100).toFixed(2);
+  };
+
+  const spread = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_spread`])
+  );
+  const overUnder = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_overUnder`])
+  );
+  const moneyLine = addPercentText(
+    checkNA(newPercentages[`${percentagesName}_moneyLine`])
+  );
+
+  const days = [1, 2, 3, 4, 5].map((n) => ({
+    label: `${n} ${n === 1 ? (checksAndXs ? 'Game Ago' : 'Day Ago') : checksAndXs ? 'Games Ago' : 'Days Ago'}`,
+    spread: addPercentText(
+      checkNA(newPercentages[`${percentagesName}_prev_${n}_spread`])
+    ),
+    overUnder: addPercentText(
+      checkNA(newPercentages[`${percentagesName}_prev_${n}_overUnder`])
+    ),
+    moneyLine: addPercentText(
+      checkNA(newPercentages[`${percentagesName}_prev_${n}_moneyLine`])
+    ),
+  }));
+
+  const getColor = (val) => {
+    if (val === 'NA%' || val === 'undefined%')
+      return { bg: '#2e3d47', text: '#7a8f9a' };
+    const num = parseFloat(val);
+    if (num >= 60) return { bg: '#1e4d32', text: '#7dd4a0' };
+    if (num >= 45) return { bg: '#4a3510', text: '#f0c070' };
+    return { bg: '#4a1e1e', text: '#f09090' };
+  };
+
+  const getTag = (val) => {
+    if (val === 'NA%' || val === 'undefined%') return 'N/A';
+    const num = parseFloat(val);
+    if (num >= 60) return 'ABOVE';
+    if (num >= 45) return 'NEUTRAL';
+    return 'BELOW';
+  };
+
+  const ColHeaders = () => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '140px repeat(3, 1fr)',
+        padding: '8px 14px',
+        gap: '4px',
+        backgroundColor: '#2e3d47',
+      }}
+    >
+      {['', 'SPREAD', 'OVER/UNDER', 'MONEY LINE'].map((h, i) => (
+        <div
+          key={i}
+          style={{
+            fontSize: '9px',
+            letterSpacing: '0.08em',
+            color: '#7a8f9a',
+            fontWeight: 500,
+            textAlign: i === 0 ? 'left' : 'center',
+          }}
+        >
+          {h}
+        </div>
+      ))}
+    </div>
+  );
+
+  const HeatCell = ({ val }) => {
+    const c = getColor(val);
+    return (
+      <div
+        style={{
+          height: '48px',
+          borderRadius: '6px',
+          backgroundColor: c.bg,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '2px',
+        }}
+      >
+        <span style={{ fontSize: '14px', fontWeight: 500, color: 'black' }}>
+          {val}
+        </span>
+        <span
+          style={{
+            fontSize: '8px',
+            letterSpacing: '0.05em',
+            color: 'black',
+            opacity: 0.8,
+          }}
+        >
+          {getTag(val)}
+        </span>
+      </div>
+    );
+  };
+
+  const DataRow = ({ label, spreadVal, ouVal, mlVal, borderTop }) => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '140px repeat(3, 1fr)',
+        gap: '4px',
+        padding: '6px 14px',
+        alignItems: 'center',
+        borderTop: borderTop ? '0.5px solid rgba(255,255,255,0.07)' : 'none',
+      }}
+    >
+      <div
+        style={{
+          fontSize: '12px',
+          color: '#c8d4da',
+          fontWeight: 500,
+          color: 'black',
+        }}
+      >
+        {label}
+      </div>
+      <HeatCell val={spreadVal} />
+      <HeatCell val={ouVal} />
+      <HeatCell val={mlVal} />
+    </div>
+  );
+
+  const SectionLabel = ({ text }) => (
+    <div
+      style={{
+        fontSize: '9px',
+        letterSpacing: '0.08em',
+        color: '#8aacbc',
+        fontWeight: 500,
+        padding: '6px 14px',
+        backgroundColor: '#232f36',
+      }}
+    >
+      {text}
+    </div>
+  );
+
+  return (
+    <div
+      style={{
+        backgroundColor: '#3a4a54',
+        borderRadius: '8px',
+        overflow: 'hidden',
+      }}
+    >
+      {title ? (
+        <Box mb='lg'>
+          <Title order={2} className='boldText lightText' ta='center'>
+            {title}
+          </Title>
+        </Box>
+      ) : null}
+
+      <ColHeaders />
+
+      {/* Overall section */}
+      <div style={{ backgroundColor: '#232f36' }}>
+        <DataRow
+          label='Overall'
+          spreadVal={spread}
+          ouVal={overUnder}
+          mlVal={moneyLine}
+        />
+      </div>
+
+      {/* Last 5 days section */}
+      <div
+        style={{
+          fontSize: '9px',
+          letterSpacing: '0.08em',
+          color: '#5a7080',
+          fontWeight: 500,
+          padding: '8px 14px 4px',
+          backgroundColor: '#2a373f',
+        }}
+      >
+        LAST 5 DAYS
+      </div>
+      <div style={{ backgroundColor: '#3a4a54' }}>
+        {days.map((d, i) => (
+          <DataRow
+            key={i}
+            label={d.label}
+            spreadVal={d.spread}
+            ouVal={d.overUnder}
+            mlVal={d.moneyLine}
+            borderTop={i > 0}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PercentDataTable;

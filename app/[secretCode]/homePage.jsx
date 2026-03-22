@@ -48,7 +48,7 @@ const NBAHomePage = () => {
 
         <OverallPercents />
 
-        <Center>
+        <Center pt={'xl'}>
           <Text size={'xs'}>{footerMessage1}</Text>
         </Center>
         <button onClick={handleClick}>{'Parlays'}</button>

@@ -201,7 +201,7 @@ function GameCard({ game }) {
 export default function GameCardList() {
   const router = useRouter();
   return (
-    <Box>
+    <Box pb={'lg'}>
       <Stack gap={8}>
         {games.map((game, i) => (
           <button
