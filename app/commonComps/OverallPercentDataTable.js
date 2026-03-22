@@ -1,7 +1,7 @@
 import '../Fonts.css';
 import { newPercentages } from './newPercents';
 import { todaysGames } from './todaysGames';
-import { Table, Paper, Title, Box } from '@mantine/core';
+import { Title, Box } from '@mantine/core';
 
 const PercentDataTable = (props) => {
   const title = props.title;
@@ -56,22 +56,26 @@ const PercentDataTable = (props) => {
     return 'BELOW';
   };
 
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: '80px repeat(3, 1fr)',
+    gap: '3px',
+    padding: '5px 6px',
+    alignItems: 'center',
+    width: '100%',
+    boxSizing: 'border-box',
+  };
+
   const ColHeaders = () => (
     <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '140px repeat(3, 1fr)',
-        padding: '8px 14px',
-        gap: '4px',
-        backgroundColor: '#2e3d47',
-      }}
+      style={{ ...gridStyle, padding: '8px 6px', backgroundColor: '#2e3d47' }}
     >
       {['', 'SPREAD', 'OVER/UNDER', 'MONEY LINE'].map((h, i) => (
         <div
           key={i}
           style={{
-            fontSize: '9px',
-            letterSpacing: '0.08em',
+            fontSize: '8px',
+            letterSpacing: '0.06em',
             color: '#7a8f9a',
             fontWeight: 500,
             textAlign: i === 0 ? 'left' : 'center',
@@ -88,7 +92,7 @@ const PercentDataTable = (props) => {
     return (
       <div
         style={{
-          height: '48px',
+          height: '52px',
           borderRadius: '6px',
           backgroundColor: c.bg,
           display: 'flex',
@@ -96,9 +100,11 @@ const PercentDataTable = (props) => {
           alignItems: 'center',
           justifyContent: 'center',
           gap: '2px',
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
-        <span style={{ fontSize: '14px', fontWeight: 500, color: 'black' }}>
+        <span style={{ fontSize: '13px', fontWeight: 500, color: 'black' }}>
           {val}
         </span>
         <span
@@ -118,20 +124,19 @@ const PercentDataTable = (props) => {
   const DataRow = ({ label, spreadVal, ouVal, mlVal, borderTop }) => (
     <div
       style={{
-        display: 'grid',
-        gridTemplateColumns: '140px repeat(3, 1fr)',
-        gap: '4px',
-        padding: '6px 14px',
-        alignItems: 'center',
+        ...gridStyle,
         borderTop: borderTop ? '0.5px solid rgba(255,255,255,0.07)' : 'none',
       }}
     >
       <div
         style={{
-          fontSize: '12px',
-          color: '#c8d4da',
-          fontWeight: 500,
+          fontSize: '11px',
           color: 'black',
+          fontWeight: 500,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          paddingRight: '4px',
         }}
       >
         {label}
@@ -142,27 +147,14 @@ const PercentDataTable = (props) => {
     </div>
   );
 
-  const SectionLabel = ({ text }) => (
-    <div
-      style={{
-        fontSize: '9px',
-        letterSpacing: '0.08em',
-        color: '#8aacbc',
-        fontWeight: 500,
-        padding: '6px 14px',
-        backgroundColor: '#232f36',
-      }}
-    >
-      {text}
-    </div>
-  );
-
   return (
     <div
       style={{
         backgroundColor: '#3a4a54',
         borderRadius: '8px',
         overflow: 'hidden',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
     >
       {title ? (
@@ -176,7 +168,7 @@ const PercentDataTable = (props) => {
       <ColHeaders />
 
       {/* Overall section */}
-      <div style={{ backgroundColor: '#232f36' }}>
+      <div style={{ backgroundColor: '#3a4a54' }}>
         <DataRow
           label='Overall'
           spreadVal={spread}
@@ -192,7 +184,7 @@ const PercentDataTable = (props) => {
           letterSpacing: '0.08em',
           color: '#5a7080',
           fontWeight: 500,
-          padding: '8px 14px 4px',
+          padding: '8px 10px 4px',
           backgroundColor: '#2a373f',
         }}
       >
