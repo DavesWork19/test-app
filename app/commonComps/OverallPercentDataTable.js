@@ -41,11 +41,12 @@ const PercentDataTable = (props) => {
 
   const getColor = (val) => {
     if (val === 'NA%' || val === 'undefined%')
-      return { bg: '#2e3d47', text: '#7a8f9a' };
+      return { bg: '#2e3d47', text: '#a0b4bf', tag: '#7a8f9a' };
     const num = parseFloat(val);
-    if (num >= 60) return { bg: '#1e4d32', text: '#7dd4a0' };
-    if (num >= 45) return { bg: '#4a3510', text: '#f0c070' };
-    return { bg: '#4a1e1e', text: '#f09090' };
+    if (num >= 60)
+      return { bg: 'rgba(34, 139, 34, 0.85)', text: '#ffffff', tag: '#a8f0c0' };
+    if (num >= 45) return { bg: '#b87800', text: '#ffffff', tag: '#ffe0a0' };
+    return { bg: '#9b1c1c', text: '#ffffff', tag: '#ffb0b0' };
   };
 
   const getTag = (val) => {
