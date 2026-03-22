@@ -49,14 +49,6 @@ const PercentDataTable = (props) => {
     return { bg: '#9b1c1c', text: '#ffffff', tag: '#ffb0b0' };
   };
 
-  const getTag = (val) => {
-    if (val === 'NA%' || val === 'undefined%') return 'N/A';
-    const num = parseFloat(val);
-    if (num >= 60) return 'ABOVE';
-    if (num >= 45) return 'NEUTRAL';
-    return 'BELOW';
-  };
-
   const gridStyle = {
     display: 'grid',
     gridTemplateColumns: '80px repeat(3, 1fr)',
@@ -105,18 +97,8 @@ const PercentDataTable = (props) => {
           boxSizing: 'border-box',
         }}
       >
-        <span style={{ fontSize: '13px', fontWeight: 500, color: 'black' }}>
+        <span style={{ fontSize: '13px', fontWeight: 500, color: 'white' }}>
           {val}
-        </span>
-        <span
-          style={{
-            fontSize: '8px',
-            letterSpacing: '0.05em',
-            color: 'black',
-            opacity: 0.8,
-          }}
-        >
-          {getTag(val)}
         </span>
       </div>
     );
