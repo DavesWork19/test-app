@@ -59,14 +59,14 @@ function parseGames(rawData) {
             name: awayTeam,
             highlighted: !spreadH,
             spread: { label: awaySpreadLabel, highlighted: !spreadH },
-            ou: { label: `O ${ou}`, highlighted: ouH },
+            ou: { label: `${ou}`, header: 'OVER', highlighted: ouH },
             ml: { label: awayML, highlighted: !mlH },
           },
           {
             name: homeTeam,
             highlighted: spreadH,
             spread: { label: homeSpreadLabel, highlighted: spreadH },
-            ou: { label: `U ${ou}`, highlighted: !ouH },
+            ou: { label: `${ou}`, header: 'UNDER', highlighted: !ouH },
             ml: { label: homeML, highlighted: mlH },
           },
         ],
@@ -151,7 +151,7 @@ function TeamRow({ team }) {
         />
         <Box style={{ width: 1, height: 30, background: 'rgba(0,0,0,0.15)' }} />
         <BetBox
-          columnLabel='O/U'
+          columnLabel={team.ou.header}
           label={team.ou.label}
           highlighted={team.ou.highlighted}
         />
