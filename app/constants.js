@@ -403,4 +403,4 @@ export const legalNFLTeams = {
 
 export const secretCode = '2332220';
 export const parlaySecretCode = 'parlays';
-export const parlaySecretCode2 = '69694200';
+export const parlaySecretCode2 = '69420';
