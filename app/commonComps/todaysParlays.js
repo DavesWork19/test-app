@@ -1,23 +1,23 @@
 export const todaysParlay1 = [
-  'Friday',
-  'March 27, 2026',
+  'Saturday',
+  'March 28, 2026',
 ];
 
 export const todaysParlay2 = [
-  'Friday',
-  'March 27, 2026',
-  'Miami Heat','+5.5','spread','True',
-  'Denver Nuggets','249.5','over_under','False',
+  'Saturday',
+  'March 28, 2026',
+  'Memphis Grizzlies','+3.5','spread','True',
+  'Atlanta Hawks','236.5','over_under','False',
+  'Atlanta Hawks','−1000','money_line','True',
 ];
 
 export const todaysParlay3 = [
-  'Friday',
-  'March 27, 2026',
-  'Los Angeles Lakers','−1600','money_line','True',
-  'Miami Heat','+5.5','spread','True',
-  'Denver Nuggets','249.5','over_under','False',
-  'Brooklyn Nets','+17.5','spread','True',
-  'Oklahoma City Thunder','239.5','over_under','False',
-  'Oklahoma City Thunder','−2100','money_line','True',
-  'Chicago Bulls','+18.5','spread','True',
+  'Saturday',
+  'March 28, 2026',
+  'San Antonio Spurs','−2100','money_line','True',
+  'Phoenix Suns','231.5','over_under','False',
+  'Memphis Grizzlies','+3.5','spread','True',
+  'Charlotte Hornets','231.5','over_under','False',
+  'Atlanta Hawks','236.5','over_under','False',
+  'Atlanta Hawks','−1000','money_line','True',
 ];
