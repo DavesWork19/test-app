@@ -1,23 +1,22 @@
 export const todaysParlay1 = [
-  'Saturday',
-  'March 28, 2026',
+  'Sunday',
+  'March 29, 2026',
 ];
 
 export const todaysParlay2 = [
-  'Saturday',
-  'March 28, 2026',
-  'Memphis Grizzlies','+3.5','spread','True',
-  'Atlanta Hawks','236.5','over_under','False',
-  'Atlanta Hawks','−1000','money_line','True',
+  'Sunday',
+  'March 29, 2026',
+  'Miami Heat','−395','money_line','True',
+  'Toronto Raptors','-2.5','spread','True',
 ];
 
 export const todaysParlay3 = [
-  'Saturday',
-  'March 28, 2026',
-  'San Antonio Spurs','−2100','money_line','True',
-  'Phoenix Suns','231.5','over_under','False',
-  'Memphis Grizzlies','+3.5','spread','True',
-  'Charlotte Hornets','231.5','over_under','False',
-  'Atlanta Hawks','236.5','over_under','False',
-  'Atlanta Hawks','−1000','money_line','True',
+  'Sunday',
+  'March 29, 2026',
+  'Miami Heat','−395','money_line','True',
+  'Toronto Raptors','-2.5','spread','True',
+  'Oklahoma City Thunder','223.5','over_under','False',
+  'New York Knicks','+285','money_line','True',
+  'New Orleans Pelicans','+6.5','spread','True',
+  'New Orleans Pelicans','225.5','over_under','False',
 ];
