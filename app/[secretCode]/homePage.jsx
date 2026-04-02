@@ -19,7 +19,8 @@ const NBAHomePage = () => {
   const secretCodeEntered = pathname.includes(secretCode);
   const todaysDayName = todaysGames.slice(0, 1)[0];
   const todaysDate = todaysGames.slice(1, 2)[0].split(',')[0];
-  const date = `${todaysDayName}, ${todaysDate}`;
+  const formattedDate = todaysDate.replace(/\b0(\d)\b/, '$1');
+  const date = `${todaysDayName}, ${formattedDate}`;
 
   // const times = todaysGames.slice(2).map((data) => data.split(',')[0]);
   // const hours = times.map((data) => data.split(':')[0]);
