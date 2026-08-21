@@ -8,7 +8,7 @@ export default function ParlayPage() {
     <div className='container-fluid bg-black boldText lightText'>
       <GamblingHeader link={'back'} />
       <Center pb={'xl'}>
-        <ParlayNumberPad sportPath={`${secretCode}/Basketball`} />
+        <ParlayNumberPad sportPath={`${secretCode}/Football`} />
       </Center>
     </div>
   );

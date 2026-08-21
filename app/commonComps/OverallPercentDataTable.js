@@ -1,13 +1,12 @@
 import '../Fonts.css';
-import { newPercentages } from './newPercents';
-import { todaysGames } from './todaysGames';
 import { Title, Box } from '@mantine/core';
 
 const PercentDataTable = (props) => {
   const title = props.title;
   const percentagesName = props.percentagesName;
+  const newPercentages = props.percentagesData;
   const checksAndXs = props?.checksAndXs;
-  const today = todaysGames.slice(0, 1)[0];
+  const today = props.todayLabel;
 
   const addPercentText = (text) => `${text}%`;
 

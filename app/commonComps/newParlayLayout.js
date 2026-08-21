@@ -1,19 +1,16 @@
 'use client';
 
 import { Box, Text } from '@mantine/core';
-import { todaysParlay1, todaysParlay2, todaysParlay3 } from './todaysParlays';
-import { todaysGames } from './todaysGames';
-import { secretCode } from '../constants';
 import { useRouter } from 'next/navigation';
 
-const getLink = (name) => {
-  const row = todaysGames.slice(2).find((r) => r.includes(name));
+const getLink = (name, todaysGamesData) => {
+  const row = todaysGamesData.slice(2).find((r) => r.includes(name));
   if (!row) return null;
   const [, awayTeam, homeTeam] = row.split(',');
   return `${awayTeam.split(' ').at(-1)}AT${homeTeam.split(' ').at(-1)}`;
 };
 
-function parseGames(rawData) {
+function parseGames(rawData, todaysGamesData) {
   const entries = rawData.slice(2);
   const gamesMap = new Map(); // team -> game object to deduplicate
 
@@ -41,7 +38,7 @@ function parseGames(rawData) {
       // Team already exists — just push the new pick
       gamesMap.get(team).picks.push(pick);
     } else {
-      const link = getLink(team);
+      const link = getLink(team, todaysGamesData);
       gamesMap.set(team, { team, link, picks: [pick] });
     }
   }
@@ -118,8 +115,8 @@ function GameRow({ game, onClick }) {
   );
 }
 
-function ParlayCard({ title, rawData }) {
-  const games = parseGames(rawData);
+function ParlayCard({ title, rawData, todaysGamesData, basePath }) {
+  const games = parseGames(rawData, todaysGamesData);
   if (games.length === 0) return null;
   const router = useRouter();
 
@@ -146,14 +143,23 @@ function ParlayCard({ title, rawData }) {
         <GameRow
           key={i}
           game={game}
-          onClick={() => router.replace(`/${secretCode}/${game.link}`)}
+          onClick={() => router.replace(`/${basePath}/${game.link}`)}
         />
       ))}
     </Box>
   );
 }
 
-export default function GameCardList() {
+const DEFAULT_TITLES = ['The Lay', 'Easy Money', 'Heave & Hope'];
+
+export default function GameCardList({
+  parlay1,
+  parlay2,
+  parlay3,
+  todaysGamesData,
+  basePath,
+  titles = DEFAULT_TITLES,
+}) {
   return (
     <Box
       style={{
@@ -163,9 +169,9 @@ export default function GameCardList() {
         paddingBottom: '60px',
       }}
     >
-      <ParlayCard title='The Lay' rawData={todaysParlay1} />
-      <ParlayCard title='Easy Money' rawData={todaysParlay2} />
-      <ParlayCard title='Heave & Hope' rawData={todaysParlay3} />
+      <ParlayCard title={titles[0]} rawData={parlay1} todaysGamesData={todaysGamesData} basePath={basePath} />
+      <ParlayCard title={titles[1]} rawData={parlay2} todaysGamesData={todaysGamesData} basePath={basePath} />
+      <ParlayCard title={titles[2]} rawData={parlay3} todaysGamesData={todaysGamesData} basePath={basePath} />
     </Box>
   );
 }

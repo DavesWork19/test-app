@@ -1,8 +1,6 @@
 'use client';
 
 import { Box, Text, Stack } from '@mantine/core';
-import { todaysGames } from './todaysGames';
-import { secretCode } from '../constants';
 import { useRouter } from 'next/navigation';
 
 function convertEstToMst(timeStr) {
@@ -73,8 +71,6 @@ function parseGames(rawData) {
       };
     });
 }
-
-const games = parseGames(todaysGames);
 
 function BetBox({ label, columnLabel, highlighted }) {
   return (
@@ -198,8 +194,9 @@ function GameCard({ game }) {
   );
 }
 
-export default function GameCardList() {
+export default function GameCardList({ rawGames, basePath }) {
   const router = useRouter();
+  const games = parseGames(rawGames);
   return (
     <Box pb={'lg'}>
       <Stack gap={8}>
@@ -213,7 +210,7 @@ export default function GameCardList() {
               cursor: 'pointer',
             }}
             onClick={() => {
-              router.push(`${secretCode}/${game.link}`);
+              router.push(`/${basePath}/${game.link}`);
             }}
           >
             <GameCard game={game} />

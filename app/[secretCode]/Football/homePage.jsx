@@ -1,8 +1,8 @@
 'use client';
 
 import '../../Fonts.css';
-import { todaysGames } from '../../commonComps/todaysGames';
-import { newPercentages } from '../../commonComps/newPercents';
+import { todaysGamesFootball } from '../../commonComps/todaysGamesFootball';
+import { newPercentagesFootball } from '../../commonComps/newPercentsFootball';
 import { footerMessage1, footerMessage2 } from '../../constants';
 import GamblingHeader from '../../commonComps/GamblingHeader';
 import OverallPercents from './OverallPercentages';
@@ -12,14 +12,14 @@ import { createClient } from '../../utils/supabase/client';
 import { Center, Text } from '@mantine/core';
 import GameCardList from '../../commonComps/newMatchupLayout';
 
-const NBAHomePage = () => {
+const NFLHomePage = () => {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
 
   const secretCodeEntered = pathname.includes(secretCode);
-  const todaysDayName = todaysGames.slice(0, 1)[0];
-  const todaysDate = todaysGames.slice(1, 2)[0].split(',')[0];
+  const todaysDayName = todaysGamesFootball.slice(0, 1)[0];
+  const todaysDate = todaysGamesFootball.slice(1, 2)[0].split(',')[0];
   const formattedDate = todaysDate.replace(/\b0(\d)\b/, '$1');
   const date = `${todaysDayName}, ${formattedDate}`;
 
@@ -34,7 +34,7 @@ const NBAHomePage = () => {
   handleNoCode();
 
   const handleClick = () => {
-    router.push(`/${secretCode}/Basketball/${parlaySecretCode}/`);
+    router.push(`/${secretCode}/Football/${parlaySecretCode}/`);
   };
 
   return (
@@ -43,12 +43,12 @@ const NBAHomePage = () => {
         <GamblingHeader title={date} link={'back'} />
 
         <GameCardList
-          rawGames={todaysGames}
-          basePath={`${secretCode}/Basketball`}
+          rawGames={todaysGamesFootball}
+          basePath={`${secretCode}/Football`}
         />
 
         <OverallPercents
-          percentagesData={newPercentages}
+          percentagesData={newPercentagesFootball}
           todayLabel={todaysDayName}
         />
 
@@ -61,4 +61,4 @@ const NBAHomePage = () => {
   );
 };
 
-export default NBAHomePage;
+export default NFLHomePage;
