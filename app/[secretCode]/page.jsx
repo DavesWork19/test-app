@@ -37,7 +37,7 @@ const SportSelectPage = () => {
               color='dark'
               onClick={() => router.push(`/${secretCode}/Basketball`)}
             >
-              Basketball
+              Basketball?
             </Button>
             <Button
               size='lg'
