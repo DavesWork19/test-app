@@ -1,6 +1,8 @@
 export const todaysGamesFootball = [
-'Wednesday',
-'September 09, 2026',
+// One "DayName|Month DD, YYYY" header row per slate; game rows follow it.
+// Times are Eastern (24h); the frontend converts them to Mountain time and
+// sorts every game by day (header order) and then by kickoff time.
+'Wednesday|September 09, 2026',
 '13:00,New Orleans Saints,Detroit Lions,-7,1,49.5,0,+250,-310,1',
 '13:00,Tampa Bay Buccaneers,Cincinnati Bengals,-3.5,0,50.5,0,+164,-198,1',
 '13:00,Buffalo Bills,Houston Texans,+1.5,0,44.5,0,-118,-102,0',

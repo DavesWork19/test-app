@@ -4,7 +4,9 @@ import { Box, Text } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 
 const getLink = (name, todaysGamesData) => {
-  const row = todaysGamesData.slice(2).find((r) => r.includes(name));
+  const row = todaysGamesData
+    .filter((r) => /^\s*\d{1,2}:\d{2}\s*[ap]?m?,/i.test(String(r)))
+    .find((r) => r.includes(name));
   if (!row) return null;
   const [, awayTeam, homeTeam] = row.split(',');
   return `${awayTeam.split(' ').at(-1)}AT${homeTeam.split(' ').at(-1)}`;

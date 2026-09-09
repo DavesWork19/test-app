@@ -34,7 +34,12 @@ const NFLMatchUpPage = () => {
   ] = results.split(',').slice(3);
   const [gameTime] = results.split(',')[0];
   const hour = gameTime.split(':')[0];
-  const todayLabel = todaysGamesFootball.slice(0, 1)[0];
+  const headerRow = todaysGamesFootball.find((row) =>
+    String(row).includes('|')
+  );
+  const todayLabel = headerRow
+    ? headerRow.split('|')[0].trim()
+    : todaysGamesFootball.slice(0, 1)[0];
 
   const moneyLineText = +homeMoneyLineCover
     ? `${homeTeam} predicted to win ( ${homeMoneyLine} )`

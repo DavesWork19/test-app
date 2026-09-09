@@ -3,73 +3,126 @@
 import { Box, Text, Stack } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 
-function convertEstToMst(timeStr) {
-  const match = timeStr.match(/^(\d+):(\d+)p$/);
-  if (!match) return timeStr;
+// Converts an Eastern kickoff time to Mountain time. Accepts both the 24-hour
+// form used by football data ("13:00", "20:00") and the "6:00p" form used by
+// basketball data. Returns the display label plus a minutes-since-midnight
+// value used to sort a day's games.
+function convertEtToMt(timeStr) {
+  const match = String(timeStr)
+    .trim()
+    .match(/^(\d{1,2}):(\d{2})\s*([ap])?m?$/i);
+  if (!match) return { label: timeStr, sortMinutes: Number.MAX_SAFE_INTEGER };
 
   let hours = parseInt(match[1], 10);
   const minutes = parseInt(match[2], 10);
+  const meridiem = match[3] ? match[3].toLowerCase() : null;
 
-  hours += 12;
-  hours -= 2;
+  if (meridiem === 'p' && hours !== 12) hours += 12;
+  if (meridiem === 'a' && hours === 12) hours = 0;
+
+  // Eastern -> Mountain
+  hours = (hours - 2 + 24) % 24;
 
   const period = hours >= 12 ? 'PM' : 'AM';
-  const displayHour = hours > 12 ? hours - 12 : hours;
+  const displayHour = hours % 12 === 0 ? 12 : hours % 12;
   const displayMinutes = minutes.toString().padStart(2, '0');
 
-  return `${displayHour}:${displayMinutes} ${period} MST`;
+  return {
+    label: `${displayHour}:${displayMinutes} ${period} MT`,
+    sortMinutes: hours * 60 + minutes,
+  };
 }
 
 function parseGames(rawData) {
-  return rawData
-    .slice(2)
-    .filter((row) => row.includes(','))
-    .map((row) => {
-      const [
-        time,
-        awayTeam,
-        homeTeam,
-        spread,
-        spreadHighlighted,
-        ou,
-        ouHighlighted,
-        awayML,
-        homeML,
-        mlHighlighted,
-      ] = row.split(',');
+  const isTimeRow = (parts) =>
+    /^\s*\d{1,2}:\d{2}\s*[ap]?m?\s*$/i.test(parts[0] || '');
 
-      const homeSpread = parseFloat(spread);
-      const awaySpread = -homeSpread;
-      const homeSpreadLabel =
-        homeSpread > 0 ? `+${homeSpread}` : `${homeSpread}`;
-      const awaySpreadLabel =
-        awaySpread > 0 ? `+${awaySpread}` : `${awaySpread}`;
+  let currentDay = '';
+  let lastDayForOrder = null;
+  let dayOrder = -1;
 
-      const spreadH = spreadHighlighted === '1';
-      const ouH = ouHighlighted === '1';
-      const mlH = mlHighlighted === '1';
+  const noteDay = (day) => {
+    const trimmed = day.trim();
+    if (!trimmed) return;
+    currentDay = trimmed;
+    if (currentDay !== lastDayForOrder) {
+      dayOrder += 1;
+      lastDayForOrder = currentDay;
+    }
+  };
 
-      return {
-        time: convertEstToMst(time),
-        link: `${awayTeam.split(' ').at(-1)}AT${homeTeam.split(' ').at(-1)}`,
-        teams: [
-          {
-            name: awayTeam,
-            highlighted: !spreadH,
-            spread: { label: awaySpreadLabel, highlighted: !spreadH },
-            ou: { label: `${ou}`, header: 'OVER', highlighted: ouH },
-            ml: { label: awayML, highlighted: !mlH },
-          },
-          {
-            name: homeTeam,
-            highlighted: spreadH,
-            spread: { label: homeSpreadLabel, highlighted: spreadH },
-            ou: { label: `${ou}`, header: 'UNDER', highlighted: !ouH },
-            ml: { label: homeML, highlighted: mlH },
-          },
-        ],
-      };
+  const games = [];
+
+  rawData.forEach((row) => {
+    const raw = String(row);
+
+    // "Sunday|September 13, 2026" slate header.
+    if (raw.includes('|')) {
+      noteDay(raw.split('|')[0]);
+      return;
+    }
+
+    const parts = raw.split(',');
+
+    if (!isTimeRow(parts)) {
+      // Legacy leading rows: a bare day name ("Sunday"); a date row
+      // ("April 12, 2026") carries no day info, so it is ignored.
+      if (!raw.includes(',')) noteDay(raw);
+      return;
+    }
+
+    const [
+      time,
+      awayTeam,
+      homeTeam,
+      spread,
+      spreadHighlighted,
+      ou,
+      ouHighlighted,
+      awayML,
+      homeML,
+      mlHighlighted,
+    ] = parts;
+
+    const homeSpread = parseFloat(spread);
+    const awaySpread = -homeSpread;
+    const homeSpreadLabel = homeSpread > 0 ? `+${homeSpread}` : `${homeSpread}`;
+    const awaySpreadLabel = awaySpread > 0 ? `+${awaySpread}` : `${awaySpread}`;
+
+    const spreadH = spreadHighlighted === '1';
+    const ouH = ouHighlighted === '1';
+    const mlH = mlHighlighted === '1';
+
+    const { label: timeLabel, sortMinutes } = convertEtToMt(time);
+
+    games.push({
+      time: timeLabel,
+      day: currentDay,
+      dayOrder: Math.max(dayOrder, 0),
+      sortMinutes,
+      link: `${awayTeam.split(' ').at(-1)}AT${homeTeam.split(' ').at(-1)}`,
+      teams: [
+        {
+          name: awayTeam,
+          highlighted: !spreadH,
+          spread: { label: awaySpreadLabel, highlighted: !spreadH },
+          ou: { label: `${ou}`, header: 'OVER', highlighted: ouH },
+          ml: { label: awayML, highlighted: !mlH },
+        },
+        {
+          name: homeTeam,
+          highlighted: spreadH,
+          spread: { label: homeSpreadLabel, highlighted: spreadH },
+          ou: { label: `${ou}`, header: 'UNDER', highlighted: !ouH },
+          ml: { label: homeML, highlighted: mlH },
+        },
+      ],
     });
+  });
+
+  return games.sort(
+    (a, b) => a.dayOrder - b.dayOrder || a.sortMinutes - b.sortMinutes
+  );
 }
 
 function BetBox({ label, columnLabel, highlighted }) {
@@ -197,25 +250,47 @@ function GameCard({ game }) {
 export default function GameCardList({ rawGames, basePath }) {
   const router = useRouter();
   const games = parseGames(rawGames);
+  const multiDay = new Set(games.map((game) => game.day).filter(Boolean)).size > 1;
+
   return (
     <Box pb={'lg'}>
       <Stack gap={8}>
-        {games.map((game, i) => (
-          <button
-            key={i}
-            style={{
-              all: 'unset',
-              display: 'block',
-              width: '100%',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              router.push(`/${basePath}/${game.link}`);
-            }}
-          >
-            <GameCard game={game} />
-          </button>
-        ))}
+        {games.map((game, i) => {
+          const showDayHeader =
+            multiDay && (i === 0 || game.day !== games[i - 1].day);
+
+          return (
+            <Box key={i}>
+              {showDayHeader && (
+                <Text
+                  fw={700}
+                  style={{
+                    fontSize: 13,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    color: '#c8d4da',
+                    padding: '10px 2px 4px',
+                  }}
+                >
+                  {game.day}
+                </Text>
+              )}
+              <button
+                style={{
+                  all: 'unset',
+                  display: 'block',
+                  width: '100%',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  router.push(`/${basePath}/${game.link}`);
+                }}
+              >
+                <GameCard game={game} />
+              </button>
+            </Box>
+          );
+        })}
       </Stack>
     </Box>
   );

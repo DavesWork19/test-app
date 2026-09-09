@@ -18,10 +18,13 @@ const NFLHomePage = () => {
   const supabase = createClient();
 
   const secretCodeEntered = pathname.includes(secretCode);
-  const todaysDayName = todaysGamesFootball.slice(0, 1)[0];
-  const todaysDate = todaysGamesFootball.slice(1, 2)[0].split(',')[0];
-  const formattedDate = todaysDate.replace(/\b0(\d)\b/, '$1');
-  const date = `${todaysDayName}, ${formattedDate}`;
+  const headerRow = todaysGamesFootball.find((row) => String(row).includes('|'));
+  const [rawDayName = '', rawDate = ''] = (headerRow ?? '').split('|');
+  const todaysDayName = rawDayName.trim();
+  const formattedDate = rawDate.trim().replace(/\b0(\d)\b/, '$1');
+  const date = formattedDate
+    ? `${todaysDayName}, ${formattedDate}`
+    : todaysDayName;
 
   const handleNoCode = async () => {
     if (!secretCodeEntered) {
