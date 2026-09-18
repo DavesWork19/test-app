@@ -26,7 +26,7 @@ const SportSelectPage = () => {
 
   return (
     secretCodeEntered && (
-      <main className='container-fluid text bg-black lightText'>
+      <main className='container-fluid text bg-black lightText min-h-screen'>
         <GamblingHeader title={'Choose a Sport'} />
 
         <Center pt={'xl'}>
@@ -45,7 +45,7 @@ const SportSelectPage = () => {
               color='dark'
               onClick={() => router.push(`/${secretCode}/Football`)}
             >
-              Football
+              Football?
             </Button>
           </Stack>
         </Center>
