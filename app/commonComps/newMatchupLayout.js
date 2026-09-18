@@ -270,6 +270,7 @@ export default function GameCardList({ rawGames, basePath }) {
                     letterSpacing: '0.06em',
                     color: '#c8d4da',
                     padding: '10px 2px 4px',
+                    textAlign: 'center',
                   }}
                 >
                   {game.day}

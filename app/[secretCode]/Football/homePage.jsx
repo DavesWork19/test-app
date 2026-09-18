@@ -22,9 +22,7 @@ const NFLHomePage = () => {
   const [rawDayName = '', rawDate = ''] = (headerRow ?? '').split('|');
   const todaysDayName = rawDayName.trim();
   const formattedDate = rawDate.trim().replace(/\b0(\d)\b/, '$1');
-  const date = formattedDate
-    ? `${todaysDayName}, ${formattedDate}`
-    : todaysDayName;
+  const date = formattedDate || todaysDayName;
 
   const handleNoCode = async () => {
     if (!secretCodeEntered) {
