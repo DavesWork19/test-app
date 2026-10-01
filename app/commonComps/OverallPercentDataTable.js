@@ -5,13 +5,12 @@ const PercentDataTable = (props) => {
   const title = props.title;
   const percentagesName = props.percentagesName;
   const newPercentages = props.percentagesData;
-  const checksAndXs = props?.checksAndXs;
   const today = props.todayLabel;
 
   const addPercentText = (text) => `${text}%`;
 
   const checkNA = (value) => {
-    if (value === 'NA' || value === undefined) return value;
+    if (value === 'NA' || value === undefined) return 'NA';
     return (value * 100).toFixed(2);
   };
 
@@ -26,7 +25,7 @@ const PercentDataTable = (props) => {
   );
 
   const days = [1, 2, 3, 4, 5].map((n) => ({
-    label: `${n} ${n === 1 ? (checksAndXs ? 'Game Ago' : 'Day Ago') : checksAndXs ? 'Games Ago' : 'Days Ago'}`,
+    label: `${n} ${n === 1 ? 'Game Ago' : 'Games Ago'}`,
     spread: addPercentText(
       checkNA(newPercentages[`${percentagesName}_prev_${n}_spread`])
     ),
@@ -159,7 +158,7 @@ const PercentDataTable = (props) => {
         />
       </div>
 
-      {/* Last 5 days section */}
+      {/* Last 5 game days section */}
       <div
         style={{
           fontSize: '9px',
@@ -170,7 +169,7 @@ const PercentDataTable = (props) => {
           backgroundColor: '#2a373f',
         }}
       >
-        LAST 5 DAYS
+        LAST 5 GAME DAYS
       </div>
       <div style={{ backgroundColor: '#3a4a54' }}>
         {days.map((d, i) => (
