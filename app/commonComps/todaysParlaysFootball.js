@@ -7,7 +7,7 @@ export const todaysParlayFootball1 = [
 export const todaysParlayFootball2 = [
   'Thursday',
   'October 8, 2026',
-  'Jacksonville Jaguars','-345','money_line','True',
+  'Jacksonville Jaguars','-395','money_line','True',
   'Cleveland Browns','+2.5','spread','True',
   'Cleveland Browns','+114','money_line','True',
   'Denver Broncos','41.5','over_under','False',
@@ -18,11 +18,11 @@ export const todaysParlayFootball2 = [
 export const todaysParlayFootball3 = [
   'Thursday',
   'October 8, 2026',
-  'Jacksonville Jaguars','-345','money_line','True',
+  'Jacksonville Jaguars','-395','money_line','True',
   'Chicago Bears','45.5','over_under','False',
   'Cleveland Browns','+2.5','spread','True',
   'Cleveland Browns','+114','money_line','True',
-  'New York Giants','+4.5','spread','True',
+  'New York Giants','+3.5','spread','True',
   'New York Giants','41.5','over_under','True',
   'Denver Broncos','41.5','over_under','False',
   'Denver Broncos','-185','money_line','True',
